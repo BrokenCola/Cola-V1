@@ -20,9 +20,12 @@ export const AI_ALLOWED_MODELS = new Set([
 	"gpt-5.4-mini",
 	"gpt-5.4",
 	"gemini-3-flash-preview",
+	"llama-3.1-8b-instant",
+	"llama-3.3-70b-versatile",
+	"mixtral-8x7b-32768",
 ]);
 
-export const AI_DEFAULT_MODEL = "gpt-5.4-mini";
+export const AI_DEFAULT_MODEL = "llama-3.1-8b-instant";
 export const AI_MAX_CONTEXT_MESSAGES = 15;
 export const AI_MAX_MESSAGE_LENGTH = 8_000;
 
