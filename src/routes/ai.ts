@@ -221,4 +221,86 @@ export const aiRoutes: RouteDefinition[] = [
 			}
 		},
 	},
+	{
+		method: "POST",
+		path: "/api/ai/gemini",
+		async handler(ctx) {
+			const rateLimit = consumeAiRateLimit(ctx.clientIp);
+			if (!rateLimit.allowed) {
+				return rateLimit.response!;
+			}
+
+			const apiKey = process.env.GEMINI_API_KEY;
+			if (!apiKey) {
+				return json(
+					{ error: "Gemini API is not configured on the server" },
+					{ status: 500 },
+				);
+			}
+
+			const body = await ctx.jsonBody<{
+				messages: Array<{ role: string; content: string }>;
+			}>();
+
+			if (!body?.messages || !Array.isArray(body.messages)) {
+				return json({ error: "Invalid request body" }, { status: 400 });
+			}
+
+			const userMessage = body.messages.find((m) => m.role === "user")?.content;
+			if (!userMessage) {
+				return json({ error: "No user message found" }, { status: 400 });
+			}
+
+			try {
+				const response = await fetch(
+					`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							contents: [
+								{
+									parts: [
+										{
+											text: userMessage,
+										},
+									],
+								},
+							],
+						}),
+					},
+				);
+
+				if (!response.ok) {
+					const error = await response.text();
+					console.error("Gemini API error:", error);
+					return json(
+						{ error: "Failed to get response from Gemini API" },
+						{ status: response.status },
+					);
+				}
+
+				const data = await response.json();
+				const aiResponse =
+					data.candidates?.[0]?.content?.parts?.[0]?.text ||
+					"Sorry, I could not generate a response.";
+
+				return json({
+					content: aiResponse,
+					model: "gemini-pro",
+				});
+			} catch (error) {
+				console.error("Gemini request failed:", error);
+				return json(
+					{
+						error:
+							error instanceof Error ? error.message : "Gemini request failed",
+					},
+					{ status: 502 },
+				);
+			}
+		},
+	},
 ];

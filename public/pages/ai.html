@@ -489,9 +489,8 @@
     </main>
 
     <script>
-        // GEMINI API CONFIG - Use your backend proxy or set via environment variable
-        const GEMINI_API_KEY = window.COLA_GEMINI_KEY || localStorage.getItem('cola_gemini_key') || '';
-        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+        // GEMINI API - Uses backend proxy at /api/ai/gemini (keeps key server-side)
+        const GEMINI_API_URL = '/api/ai/gemini';
 
         // RATE LIMITING: 5 requests per 10 minutes
         const RATE_LIMIT_MAX = 5;
@@ -647,12 +646,6 @@
                 return;
             }
 
-            const apiKey = localStorage.getItem('cola_gemini_key');
-            if (!apiKey) {
-                alert('Gemini API key not configured. Please set it first.');
-                return;
-            }
-
             const input = document.getElementById('inputField');
             const message = input.value.trim();
 
@@ -684,34 +677,33 @@
             addTypingIndicator();
 
             try {
-                const response = await fetch(GEMINI_API_URL + '?key=' + apiKey, {
+                const response = await fetch(GEMINI_API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: message
-                            }]
-                        }]
+                        messages: [
+                            { role: 'user', content: message }
+                        ]
                     })
                 });
 
                 removeTypingIndicator();
 
                 if (!response.ok) {
-                    throw new Error('API Error: ' + response.status);
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'API Error: ' + response.status);
                 }
 
                 const data = await response.json();
-                const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.';
+                const aiResponse = data.content || 'Sorry, I could not generate a response.';
                 
                 addMessage(aiResponse, 'ai', true);
             } catch (error) {
                 removeTypingIndicator();
                 console.error('Error:', error);
-                addMessage('Error: Could not connect to Gemini API. ' + error.message, 'ai', true);
+                addMessage('Error: ' + (error instanceof Error ? error.message : 'Failed to get response'), 'ai', true);
             }
 
             saveChats();
@@ -806,12 +798,6 @@
         // Initialize
         loadChats();
         updateRateLimitUI();
-        
-        // Set API key from localStorage if provided
-        const storedKey = localStorage.getItem('cola_gemini_key');
-        if (!storedKey) {
-            console.warn('Gemini API key not set. Set it via: localStorage.setItem("cola_gemini_key", "YOUR_KEY")');
-        }
         
         const lastChatId = localStorage.getItem(CURRENT_CHAT_KEY);
         if (lastChatId && allChats[lastChatId]) {
