@@ -1056,7 +1056,7 @@ function normalizeMessage(raw) {
 async function getChatSocketUrl() {
 	const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 	const hwid = await getHWID();
-	return `${protocol}
+	return `${protocol}//${window.location.host}/socket/chat?hwid=${encodeURIComponent(hwid)}`;
 }
 
 function isMessageForCurrentView(message, chat) {
