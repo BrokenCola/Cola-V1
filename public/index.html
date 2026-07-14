@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cola</title>
+    <title>Cola AI</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" />
-    <link rel="stylesheet" href="/assets/css/font.css?v=2" />
-    <link rel="stylesheet" href="/assets/css/modern-design.css" />
+    <link rel="stylesheet" href="/assets/css/chat-ui.css" />
     <link rel="stylesheet" href="/assets/css/animations.css" />
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
@@ -20,192 +19,151 @@
 </head>
 
 <body>
-    <!-- TOP ALERT -->
-    <div class="top-alert">
-        Infamous is shutting down. Going offline in 2 days 14h. All data will be deleted. 
-        <a href="javascript:void(0)">Read why →</a>
-    </div>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-brand">🥤 Cola</div>
-
-        <ul class="sidebar-menu">
-            <li class="sidebar-item">
-                <div class="sidebar-link active" onclick="navigateTo('/index.html')">
-                    <i class="fas fa-user"></i>
-                    <span>Account</span>
+    <div class="chat-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <span class="sidebar-brand-icon">🥤</span>
+                    <span>Cola AI</span>
                 </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/ai.html')">
-                    <i class="fas fa-robot"></i>
-                    <span>AI</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/chatrooms.html')">
-                    <i class="fas fa-comments"></i>
-                    <span>Chat</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/watch.html')">
-                    <i class="fas fa-eye"></i>
-                    <span>Watch</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/listen.html')">
-                    <i class="fas fa-music"></i>
-                    <span>Music</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/browse.html')">
-                    <i class="fas fa-globe"></i>
-                    <span>Browse</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/games.html')">
-                    <i class="fas fa-gamepad"></i>
-                    <span>Games</span>
-                </div>
-            </li>
-        </ul>
-
-        <div class="sidebar-bottom">
-            <div class="sidebar-stat">
-                <i class="fas fa-users"></i>
-                <span id="online-count">79 online</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="content-inner">
-            <h1 class="page-title">Cola</h1>
-            <p class="splash-text" id="splash-text">"im gonna miss evb"</p>
-
-            <div class="users-carousel">
-                <div class="user-avatar">👤</div>
-                <div class="user-avatar">🎮</div>
-            </div>
-
-            <div class="carousel-dots">
-                <div class="dot active" onclick="selectCarousel(0)"></div>
-                <div class="dot" onclick="selectCarousel(1)"></div>
-                <div class="dot" onclick="selectCarousel(2)"></div>
-                <div class="dot" onclick="selectCarousel(3)"></div>
-                <div class="dot" onclick="selectCarousel(4)"></div>
-                <div class="dot" onclick="selectCarousel(5)"></div>
-                <div class="dot" onclick="selectCarousel(6)"></div>
-                <div class="dot" onclick="selectCarousel(7)"></div>
-                <div class="dot" onclick="selectCarousel(8)"></div>
-                <div class="dot" onclick="selectCarousel(9)"></div>
-                <div class="dot" onclick="selectCarousel(10)"></div>
-                <div class="dot" onclick="selectCarousel(11)"></div>
-                <div class="dot" onclick="selectCarousel(12)"></div>
-            </div>
-
-            <div class="stats-section">
-                <div class="stat-item">
-                    <div class="stat-value">79</div>
-                    <div class="stat-label">online</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">4,485,297</div>
-                    <div class="stat-label">total visits</div>
-                </div>
-            </div>
-
-            <div class="cta-section">
-                <div class="cta-title">JOIN OUR DISCORD FOR MORE LINKS</div>
-                <button class="cta-button" onclick="joinDiscord()">
-                    <i class="fab fa-discord"></i>
-                    Join the Discord
+                <button class="new-chat-btn" onclick="newChat()" title="New Chat">
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
 
-            <div class="version-info">v1.23.19</div>
-        </div>
-    </main>
+            <input type="text" class="search-input" placeholder="Search chats...">
+
+            <div class="chat-list">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="empty-text">
+                        No chats yet<br>
+                        Start a conversation!
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="model-selector" onclick="toggleModel()">
+                    <span class="model-icon">
+                        <i class="fas fa-cpu"></i>
+                    </span>
+                    <span>Cola AI</span>
+                    <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- CHAT MESSAGES -->
+            <div class="chat-messages">
+                <div class="welcome-container">
+                    <h1 class="welcome-title">What can I help you with today?</h1>
+
+                    <div class="suggestions-grid">
+                        <div class="suggestion-card" onclick="selectSuggestion('Explain quantum computing in simple terms')">
+                            <div class="suggestion-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="suggestion-title">Explain quantum computing</div>
+                            <div class="suggestion-subtitle">in simple terms</div>
+                        </div>
+
+                        <div class="suggestion-card" onclick="selectSuggestion('Write a Python JSON parser from an API endpoint')">
+                            <div class="suggestion-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="suggestion-title">Python JSON parser</div>
+                            <div class="suggestion-subtitle">from an API endpoint</div>
+                        </div>
+
+                        <div class="suggestion-card" onclick="selectSuggestion('Creative startup ideas in the AI space')">
+                            <div class="suggestion-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="suggestion-title">Creative startup ideas</div>
+                            <div class="suggestion-subtitle">in the AI space</div>
+                        </div>
+
+                        <div class="suggestion-card" onclick="selectSuggestion('Dark sci-fi story about a rogue AI')">
+                            <div class="suggestion-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="suggestion-title">Dark sci-fi story</div>
+                            <div class="suggestion-subtitle">about a rogue AI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAT INPUT -->
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <input type="text" class="chat-input" id="messageInput" placeholder="How do I make a steak?" onkeypress="handleKeyPress(event)">
+                    <div class="input-actions">
+                        <button class="input-btn" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="send-btn" onclick="sendMessage()" title="Send">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </div>
+
+            <div class="disclaimer">
+                Cola AI can make mistakes. Please verify important information.
+            </div>
+        </main>
+    </div>
 
     <script src="/assets/js/cola.index.js"></script>
-
     <script>
-        // Navigation function
-        function navigateTo(path) {
-            window.location.href = path;
+        function newChat() {
+            const input = document.getElementById('messageInput');
+            input.value = '';
+            input.focus();
         }
 
-        // Discord link
-        function joinDiscord() {
-            window.open('https://discord.gg/hUYzETaQ9U', '_blank');
+        function selectSuggestion(text) {
+            const input = document.getElementById('messageInput');
+            input.value = text;
+            input.focus();
         }
 
-        // Splash text rotation
-        const splashTexts = [
-            '"im gonna miss evb"',
-            'the ai bubble just inflated again :(',
-            'partnered with everyone',
-            'best game site ever?',
-            'now with its own wisp server!',
-            '"SHUT UP DEKUUUU"',
-            'error: could not load splash',
-            'chatrooms work...right?',
-            'create an account for cool stuff',
-            'lights please!',
-            'in the spectacular \'26',
-            'join the discord',
-            'very customizable',
-        ];
-
-        function updateSplashText() {
-            const randomText = splashTexts[Math.floor(Math.random() * splashTexts.length)];
-            document.getElementById('splash-text').textContent = randomText;
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
         }
 
-        // Update splash on load
-        updateSplashText();
-
-        // Carousel dots
-        function selectCarousel(index) {
-            document.querySelectorAll('.dot').forEach((dot, i) => {
-                if (i === index) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                console.log('Sending:', message);
+                // TODO: Implement chat API call
+                input.value = '';
+            }
         }
 
-        // Sidebar active state
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Update online count
-        function updateOnlineCount() {
-            const count = Math.floor(Math.random() * 150) + 50;
-            document.getElementById('online-count').textContent = count + ' online';
+        function toggleModel() {
+            console.log('Toggle model selector');
+            // TODO: Implement model selector
         }
 
-        updateOnlineCount();
-        setInterval(updateOnlineCount, 30000);
-    </script>
-
-    <script src="/assets/js/lib/particles.js"></script>
-    <script>
-        particlesJS.load("particles-container", "/assets/json/config/particles.json", function() {
-            console.log('particles.js loaded...');
+        // Add smooth animations
+        document.querySelectorAll('.suggestion-card').forEach((card, index) => {
+            card.style.animation = `fadeInUp 0.6s ease-out ${0.2 + index * 0.1}s both`;
         });
     </script>
+
     <script src="/assets/js/cola.ads.js"></script>
 </body>
 
