@@ -1,4 +1,4 @@
-if ((localStorage.getItem("cherri_disabledFools") || "no") === "no") {
+if ((localStorage.getItem("Cola_disabledFools") || "no") === "no") {
 	document.querySelectorAll("*").forEach((el) => {
 		if (Math.random() < 0.1) el.style.filter = "invert(1)";
 		el.addEventListener("click", () => {
@@ -198,7 +198,7 @@ if ((localStorage.getItem("cherri_disabledFools") || "no") === "no") {
 			console.log(keyIndex);
 			if (keyIndex === keycode.length) {
 				keyIndex = 0;
-				localStorage.setItem("cherri_disabledFools", "yes");
+				localStorage.setItem("Cola_disabledFools", "yes");
 				window.top.location.reload();
 			}
 		} else {

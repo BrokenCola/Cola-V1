@@ -4341,7 +4341,7 @@ ${l}`;
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <script>
-        document.getElementById("csslink").href = "/assets/css/colors/" + (localStorage.getItem("cherri_theme") ?? "default") + ".css";
+        document.getElementById("csslink").href = "/assets/css/colors/" + (localStorage.getItem("Cola_theme") ?? "default") + ".css";
     </script>
     <style>
         * {
@@ -8015,3 +8015,4 @@ self.WASM = '${r}';`),
       document?.currentScript &&
       document.currentScript.remove();
 })();
+

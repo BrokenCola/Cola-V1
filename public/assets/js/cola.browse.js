@@ -5,7 +5,7 @@ const defaultWispUrl =
 	"/socket/";
 const wispUrl = defaultWispUrl;
 console.log("WISP URL IS CURRENTLY", wispUrl);
-const selectedTransport = localStorage.getItem("cherri_transport") || "libcurl";
+const selectedTransport = localStorage.getItem("Cola_transport") || "libcurl";
 
 switch (selectedTransport) {
 	case "libcurl":
@@ -44,7 +44,7 @@ function setBookmarksCollapsed(collapsed) {
 			? "Show bookmarks bar"
 			: "Hide bookmarks bar";
 	}
-	localStorage.setItem("cherri_bookmarks_collapsed", collapsed ? "1" : "0");
+	localStorage.setItem("Cola_bookmarks_collapsed", collapsed ? "1" : "0");
 }
 
 function toggleBookmarksBar() {
@@ -268,7 +268,7 @@ bar.addEventListener("input", () => {
 
 const BookmarkManager = {
 	bmContainer: document.querySelector(".bookmarks"),
-	bookmarks: JSON.parse(localStorage.getItem("cherri_bookmarks")) || [],
+	bookmarks: JSON.parse(localStorage.getItem("Cola_bookmarks")) || [],
 	normalizeBookmark(bookmark) {
 		if (!bookmark) {
 			return null;
@@ -302,11 +302,11 @@ const BookmarkManager = {
 		}
 	},
 	saveBookmarks() {
-		localStorage.setItem("cherri_bookmarks", JSON.stringify(this.bookmarks));
+		localStorage.setItem("Cola_bookmarks", JSON.stringify(this.bookmarks));
 	},
 	async loadBookmarks() {
 		const bookmarks =
-			JSON.parse(localStorage.getItem("cherri_bookmarks")) || [];
+			JSON.parse(localStorage.getItem("Cola_bookmarks")) || [];
 		this.bookmarks = bookmarks
 			.map((bookmark) => this.normalizeBookmark(bookmark))
 			.filter(Boolean);
@@ -356,8 +356,9 @@ if (toggleBookmarksButton) {
 }
 
 setBookmarksCollapsed(
-	localStorage.getItem("cherri_bookmarks_collapsed") === "1",
+	localStorage.getItem("Cola_bookmarks_collapsed") === "1",
 );
 
 newTab();
 BookmarkManager.loadBookmarks();
+

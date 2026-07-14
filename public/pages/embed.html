@@ -214,7 +214,7 @@
 		frame.addEventListener("load", hideLoader);
 
 		(async function () {
-			const selectedTransport = localStorage.getItem("cherri_transport") || "libcurl";
+			const selectedTransport = localStorage.getItem("Cola_transport") || "libcurl";
 
 			switch (selectedTransport) {
 				case "libcurl":
@@ -248,7 +248,7 @@
 
 				if (!(await connection.getTransport())) {
 					setLoadingStatus("Waiting on transport...");
-					const selectedTransport = localStorage.getItem("cherri_transport") || "libcurl";
+					const selectedTransport = localStorage.getItem("Cola_transport") || "libcurl";
 
 					switch (selectedTransport) {
 						case "libcurl":
@@ -274,7 +274,7 @@
 	</script>
 	<script>
 		document.getElementById("csslink").href =
-			`/assets/css/colors/${localStorage.getItem("cherri_theme") ?? "default"}.css`;
+			`/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
 	</script>
 	<script>
 		window.addEventListener("keydown", (e) => {
@@ -284,7 +284,8 @@
 		});
 	</script>
 
-	<script src="/assets/js/cherri.ads.js"></script>
+	<script src="/assets/js/Cola.ads.js"></script>
 </body>
 
 </html>
+

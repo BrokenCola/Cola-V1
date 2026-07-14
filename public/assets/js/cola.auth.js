@@ -1,4 +1,4 @@
-const AUTH_UID_STORAGE_KEY = "cherri_auth_uid";
+const AUTH_UID_STORAGE_KEY = "Cola_auth_uid";
 
 function escapeChars(value) {
 	return String(value || "").replace(/<\/?[^>]+(>|$)/g, "");
@@ -342,3 +342,4 @@ async function handleLogout() {
 document.addEventListener("DOMContentLoaded", async () => {
 	await checkUser();
 });
+

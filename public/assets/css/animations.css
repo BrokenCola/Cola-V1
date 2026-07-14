@@ -1,0 +1,408 @@
+/* Smooth UI Animations for Cola */
+
+/* Global smooth transitions */
+* {
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.25s ease;
+}
+
+/* Entrance animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Enhanced button animations */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Card animations */
+.card, .bento-card, .home-game-card, .home-tool-card {
+  animation: fadeInScale 0.5s ease-out;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.card:hover, .bento-card:hover, .home-game-card:hover, .home-tool-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.card::before, .bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card:hover::before, .bento-card:hover::before {
+  opacity: 1;
+}
+
+/* Smooth text animations */
+h1, h2, h3, h4, h5, h6 {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+p, span {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Input field smooth animations */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 2px var(--accent, #00ff00);
+}
+
+/* Modal animations */
+.modal-backdrop {
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  animation: fadeInScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Loader animation */
+.loader {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Link animations */
+a {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent, #00ff00);
+  transition: width 0.3s ease;
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/* Smooth page transitions */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: pageEnter 0.4s ease-out;
+}
+
+/* Scrollbar smooth styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent, #00ff00);
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-bright, #00ff44);
+}
+
+/* Particle effects for interactive elements */
+.interactive {
+  position: relative;
+}
+
+/* Smooth hover states for images */
+img {
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+img:hover {
+  filter: brightness(1.1) saturate(1.1);
+}
+
+/* Badge animations */
+.badge, .tag {
+  animation: fadeInScale 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+.badge:hover, .tag:hover {
+  transform: scale(1.05);
+}
+
+/* Success/Error animations */
+.success {
+  animation: slideInLeft 0.4s ease-out;
+  color: #3dd56d;
+}
+
+.error {
+  animation: slideInLeft 0.4s ease-out;
+  color: #f04747;
+}
+
+/* Pulse animation for important elements */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Smooth dropdown animations */
+select, dropdown {
+  transition: all 0.3s ease;
+}
+
+select:hover, dropdown:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Form group animations */
+.form-group {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Smooth gradient animations */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent, #00ff00) 0%, var(--accent-2, #00cc00) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2s infinite;
+  background-size: 200% 100%;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.glass:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Tooltip animations */
+.tooltip {
+  animation: fadeInScale 0.3s ease-out;
+  pointer-events: none;
+}
+
+/* Smooth list animations */
+li {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Progress bar animations */
+.progress-bar {
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Checkbox and radio smooth styling */
+input[type="checkbox"],
+input[type="radio"] {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:hover,
+input[type="radio"]:hover {
+  transform: scale(1.1);
+}
+
+/* Tab animations */
+.tab {
+  animation: fadeInUp 0.4s ease-out;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth search input */
+.search-input {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus-within {
+  transform: scale(1.02);
+}
+
+.search-input::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent, #00ff00);
+  transition: width 0.3s ease;
+}
+
+.search-input:focus-within::before {
+  width: 100%;
+}

@@ -10,7 +10,7 @@ const texts = [
 	"create an account for cool stuff",
 	"lights please!",
 	"in the spectacular '26",
-	"gn-math isn't the best game site, cherri is!",
+	"gn-math isn't the best game site, Cola is!",
 	"join the discord",
 	"fill out a partner request please.",
 	"you can hide the sidebar!",
@@ -50,3 +50,4 @@ const random = texts[Math.floor(Math.random() * texts.length)];
 random.includes("<a href='https://vapor.my/'")
 	? (document.getElementById("splash").innerHTML = random)
 	: (document.getElementById("splash").textContent = random);
+

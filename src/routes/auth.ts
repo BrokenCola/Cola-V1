@@ -330,8 +330,8 @@ export const authRoutes: RouteDefinition[] = [
 			const auth = await ctx.auth();
 			const cookies = parseCookies(ctx.request.headers.get("cookie"));
 			const rawToken =
-				typeof cookies.cherri_session === "string"
-					? cookies.cherri_session
+				typeof cookies.cola_session === "string"
+					? cookies.cola_session
 					: null;
 
 			if (rawToken) {
@@ -682,3 +682,4 @@ export const authRoutes: RouteDefinition[] = [
 		},
 	},
 ];
+

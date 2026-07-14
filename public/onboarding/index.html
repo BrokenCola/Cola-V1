@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cherri | Onboarding</title>
+    <title>Cola | Onboarding</title>
     <link rel="stylesheet" href="/assets/css/index.css">
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="shortcut icon" id="siteicon" href="/assets/img/fav.png" type="image/x-icon">
     <script src="/assets/js/lib/particles.js"></script>
-    <script src="/assets/js/cherri.ui.js?v=20260619a"></script>
+    <script src="/assets/js/Cola.ui.js?v=20260619a"></script>
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css">
 </head>
 <style>
@@ -77,7 +77,7 @@
             style="display: flex; flex-direction: column; height: 100%; width: 100%; align-items: center; justify-content: center;">
             <img src="/assets/img/fav.png" height="72" alt="">
             <br>
-            <h1 style="margin-bottom: 0px;">Welcome to Cherri</h1>
+            <h1 style="margin-bottom: 0px;">Welcome to Cola</h1>
             <p style="opacity: 0.5; font-size: 14px; margin-bottom: 15px;">The settings you choose can always be changed later.</p>
             <button onclick="indexPage('1')">Get Started</button>
         </div>
@@ -173,7 +173,7 @@
                     btn.classList.add("active")
                 }
             })
-            localStorage.setItem("cherri_theme", theme)
+            localStorage.setItem("Cola_theme", theme)
         }
 
         function setCloak(cloak) {
@@ -182,7 +182,7 @@
             let cloakIndex
             switch (cloak) {
                 case "none":
-                    cloakTitle = "cherri"
+                    cloakTitle = "Cola"
                     cloakIcon = "/assets/img/fav.png"
                     cloakIndex = 0
                     break
@@ -222,9 +222,9 @@
                     cloakIndex = 7
                     break
             }
-            localStorage.setItem("cherri_cloakTitle", cloakTitle)
-            localStorage.setItem("cherri_cloakIcon", cloakIcon)
-            localStorage.setItem("cherri_cloakIndex", cloakIndex)
+            localStorage.setItem("Cola_cloakTitle", cloakTitle)
+            localStorage.setItem("Cola_cloakIcon", cloakIcon)
+            localStorage.setItem("Cola_cloakIndex", cloakIndex)
             document.title = cloakTitle
             document.getElementById("siteicon").href = cloakIcon
             document.querySelectorAll(".cloak-buttons button").forEach(btn => {
@@ -241,13 +241,13 @@
         }
 
         function continueToSite() {
-            localStorage.setItem("cherri_clearCache", "yes")
-            localStorage.setItem("cherri_completedOnboarding", "yes")
+            localStorage.setItem("Cola_clearCache", "yes")
+            localStorage.setItem("Cola_completedOnboarding", "yes")
             window.location.href = "/"
         }
     </script>
     <script>
-        const AUTH_USER_ID_KEY = "cherri_auth_uid"
+        const AUTH_USER_ID_KEY = "Cola_auth_uid"
 
         function escapeChars(value) {
             return String(value || "").replace(/<\/?[^>]+(>|$)/g, "")
@@ -332,7 +332,7 @@
             frame.style.width = "100vw"
             frame.style.height = "100vh"
             doc.body.appendChild(frame)
-            localStorage.setItem("cherri_autoCloak", "yes")
+            localStorage.setItem("Cola_autoCloak", "yes")
             window.location.href = "about:blank"
         }
     </script>
@@ -340,3 +340,4 @@
 </body>
 
 </html>
+

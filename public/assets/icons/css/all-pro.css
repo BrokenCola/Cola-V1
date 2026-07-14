@@ -7429,7 +7429,7 @@
 .fa-file-video::before {
   content: "\f1c8";
 }
-.fa-cherries::before {
+.fa-Colaes::before {
   content: "\e0ec";
 }
 .fa-up-right-from-square::before {
@@ -24429,8 +24429,8 @@
 .fa-duotone.fa-file-video::after {
   content: "\f1c8\f1c8";
 }
-.fad.fa-cherries::after,
-.fa-duotone.fa-cherries::after {
+.fad.fa-Colaes::after,
+.fa-duotone.fa-Colaes::after {
   content: "\e0ec\e0ec";
 }
 .fad.fa-up-right-from-square::after,
@@ -37374,3 +37374,4 @@
 .fa-sharp-solid {
   font-weight: 900;
 }
+

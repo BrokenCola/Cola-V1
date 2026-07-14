@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cherri | profile</title>
+    <title>Cola | profile</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon">
     <link rel="stylesheet" href="/assets/css/font.css?v=2349">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
@@ -216,7 +216,7 @@
     </style>
 </head>
 <body class="obfuscate">
-<script>document.getElementById("csslink").href=`/assets/css/colors/${localStorage.getItem("cherri_theme")??"default"}.css`;</script>
+<script>document.getElementById("csslink").href=`/assets/css/colors/${localStorage.getItem("Cola_theme")??"default"}.css`;</script>
 
 <div class="up-shell">
     <div class="up-nav">
@@ -266,7 +266,7 @@
     const username = parts[parts.length - 1] || "";
 
     if (!username || username === "u") { showNotFound(); return; }
-    document.title = `cherri | @${username}`;
+    document.title = `Cola | @${username}`;
 
     try {
         const [profileRes, meRes] = await Promise.all([
@@ -302,7 +302,7 @@
     function render(p, me) {
         hide("up-loading");
         show("up-content");
-        document.title = `cherri | ${p.display} (@${p.username})`;
+        document.title = `Cola | ${p.display} (@${p.username})`;
 
         if (p.bannerUrl) {
             document.getElementById("up-banner").style.backgroundImage = `url(${JSON.stringify(p.bannerUrl)})`;
@@ -427,3 +427,4 @@
 </script>
 </body>
 </html>
+

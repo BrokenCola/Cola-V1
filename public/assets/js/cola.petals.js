@@ -1,4 +1,4 @@
-if ((localStorage.getItem("cherri_usePetals") || "yes") === "yes") {
+if ((localStorage.getItem("Cola_usePetals") || "yes") === "yes") {
 	(function () {
 				TweenLite.set("#falling-petals", { perspective: 600 });
 		TweenLite.set("img", { xPercent: "-5%", yPercent: "-5%" });

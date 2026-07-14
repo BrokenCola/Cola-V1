@@ -1,8 +1,8 @@
 const CLOUD_SAVE_API_BASE = "/api/cloud-saves";
 const GUEST_ID_KEY = "guest_id";
-const AUTH_USER_ID_KEY = "cherri_auth_uid";
+const AUTH_USER_ID_KEY = "Cola_auth_uid";
 const MAX_IMPORT_FILE_SIZE_BYTES = 5 * 1024 * 1024;
-const SAVE_FORMAT_ID = "cherri-save-v2";
+const SAVE_FORMAT_ID = "Cola-save-v2";
 const SAVE_FORMAT_VERSION = 2;
 
 const SENSITIVE_KEY_PATTERNS = [
@@ -138,7 +138,7 @@ function createSaveDocument(data, source) {
 			format: SAVE_FORMAT_ID,
 			version: SAVE_FORMAT_VERSION,
 			exported_at: new Date().toISOString(),
-			app_version: localStorage.getItem("cherri_version") || null,
+			app_version: localStorage.getItem("Cola_version") || null,
 			source,
 			key_count: Object.keys(data).length,
 		},
@@ -339,7 +339,7 @@ async function downloadJson() {
 
 		const { safeData } = sanitizeSaveData(rawData);
 		const saveDocument = createSaveDocument(safeData, source);
-		downloadPayload(saveDocument, `Cherri_Save_${Date.now()}.json`);
+		downloadPayload(saveDocument, `Cola_Save_${Date.now()}.json`);
 
 		if (typeof toast === "function") {
 			toast("fa-check-circle", "Downloaded!");
@@ -401,7 +401,7 @@ async function uploadFromJson() {
 			);
 			downloadPayload(
 				backupDoc,
-				`Cherri_Backup_Before_Import_${Date.now()}.json`,
+				`Cola_Backup_Before_Import_${Date.now()}.json`,
 			);
 
 			const { importedKeyCount: appliedCount } =
@@ -434,3 +434,4 @@ window.saveNewData = saveNewData;
 window.getNewData = getNewData;
 window.downloadJson = downloadJson;
 window.uploadFromJson = uploadFromJson;
+

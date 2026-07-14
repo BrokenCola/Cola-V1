@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cherri | settings</title>
+    <title>Cola | settings</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon">
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink" id="csslink">
@@ -512,9 +512,9 @@
                     </div>
                     <hr
                         style="width: 100%; border: 0; margin: 0; border-bottom: 1px solid var(--border-4); height: 0px;">
-                    <input onkeyup="localStorage.setItem('cherri_cloakTitle', this.value.trim())" id="tabtitleinput"
+                    <input onkeyup="localStorage.setItem('Cola_cloakTitle', this.value.trim())" id="tabtitleinput"
                         type="text" placeholder="Enter a tab title here...">
-                    <input onkeyup="localStorage.setItem('cherri_cloakIcon', this.value.trim())" id="tabiconinput"
+                    <input onkeyup="localStorage.setItem('Cola_cloakIcon', this.value.trim())" id="tabiconinput"
                         type="text" placeholder="Enter an image URL here...">
                 </div>
                 <div class="setting-card flex-row" style="justify-content: left; position: relative;">
@@ -547,7 +547,7 @@
                     <div class="setting-info">
                         <h3>Enable Ads</h3>
                         <p style="width: 80%;">We ask that you keep this toggle enabled. They only affect the homepage,
-                            and Cherri runs soley on ad revenue. <strong>This switch only affects popunders.</strong>
+                            and Cola runs soley on ad revenue. <strong>This switch only affects popunders.</strong>
                         </p>
                     </div>
                     <label id="adswitch" class="switch"
@@ -587,7 +587,7 @@
                 <div class="setting-card flex-col" style="justify-content: left; align-items:flex-start;">
                     <div class="setting-info">
                         <h3>Credits</h3>
-                        <p>Thank you to everyone who helped develop Cherri!</p>
+                        <p>Thank you to everyone who helped develop Cola!</p>
                     </div>
                     <div style="width: 100%;">
                         <h3 style="margin: 0 0 7px 0; color: var(--accent);">Core Team</h3>
@@ -740,10 +740,10 @@
         })
 
         function setTransport(t) {
-            localStorage.setItem("cherri_transport", t)
+            localStorage.setItem("Cola_transport", t)
         }
 
-        let savedTheme = localStorage.getItem("cherri_theme") ?? "default";
+        let savedTheme = localStorage.getItem("Cola_theme") ?? "default";
         themeCards.forEach(card => {
             const themeName = card.querySelector('.theme-name').textContent.toLowerCase().replace(" ", "");
             savedTheme = savedTheme.includes("catppuccin") ? savedTheme.replace("catppuccin", "c.") : savedTheme;
@@ -776,7 +776,7 @@
         function setTheme(theme) {
             const csslink = document.getElementById("csslink")
             csslink.href = `/assets/css/colors/${theme}.css`
-            localStorage.setItem("cherri_theme", theme)
+            localStorage.setItem("Cola_theme", theme)
             theme === "blossom" ? document.querySelector(".petalswitchdiv").classList.remove("container-disabled") : document.querySelector(".petalswitchdiv").classList.add("container-disabled")
         }
 
@@ -788,7 +788,7 @@
             const inputIcon = document.getElementById("tabiconinput")
             switch (cloak) {
                 case "none":
-                    cloakTitle = "cherri"
+                    cloakTitle = "Cola"
                     cloakIcon = "/assets/img/fav.png"
                     cloakIndex = 0
                     break
@@ -830,32 +830,32 @@
             }
             inputTitle.value = cloakTitle
             inputIcon.value = cloakIcon
-            localStorage.setItem("cherri_cloakTitle", cloakTitle)
-            localStorage.setItem("cherri_cloakIcon", cloakIcon)
-            localStorage.setItem("cherri_cloakIndex", cloakIndex)
+            localStorage.setItem("Cola_cloakTitle", cloakTitle)
+            localStorage.setItem("Cola_cloakIcon", cloakIcon)
+            localStorage.setItem("Cola_cloakIndex", cloakIndex)
         }
 
         document.getElementById("cloakswitch").addEventListener("change", () => {
             if (document.getElementById("cloakswitch").querySelector("input").checked) {
-                localStorage.setItem("cherri_autoCloak", "yes")
+                localStorage.setItem("Cola_autoCloak", "yes")
             } else {
-                localStorage.setItem("cherri_autoCloak", "no")
+                localStorage.setItem("Cola_autoCloak", "no")
             }
         })
 
         document.getElementById("antiswitch").addEventListener("change", () => {
             if (document.getElementById("antiswitch").querySelector("input").checked) {
-                localStorage.setItem("cherri_antiClose", "yes")
+                localStorage.setItem("Cola_antiClose", "yes")
             } else {
-                localStorage.setItem("cherri_antiClose", "no")
+                localStorage.setItem("Cola_antiClose", "no")
             }
         })
 
         document.getElementById("overlayswitch").addEventListener("change", () => {
             if (document.getElementById("overlayswitch").querySelector("input").checked) {
-                localStorage.setItem("cherri_useOverlay", "yes")
+                localStorage.setItem("Cola_useOverlay", "yes")
             } else {
-                localStorage.setItem("cherri_useOverlay", "no")
+                localStorage.setItem("Cola_useOverlay", "no")
             }
         })
 
@@ -895,31 +895,31 @@
 
         document.getElementById("adswitch").addEventListener("change", () => {
             if (document.getElementById("adswitch").querySelector("input").checked) {
-                localStorage.setItem("cherri_enableAds", "yes")
+                localStorage.setItem("Cola_enableAds", "yes")
             } else {
-                localStorage.setItem("cherri_enableAds", "no")
+                localStorage.setItem("Cola_enableAds", "no")
             }
         })
         document.getElementById("imageblurswitch").addEventListener("change", () => {
             if (document.getElementById("imageblurswitch").querySelector("input").checked) {
-                localStorage.setItem("cherri_imageBlur", "yes")
+                localStorage.setItem("Cola_imageBlur", "yes")
             } else {
-                localStorage.setItem("cherri_imageBlur", "no")
+                localStorage.setItem("Cola_imageBlur", "no")
             }
         })
 
         document.getElementById("petalswitch").addEventListener("change", () => {
             if (document.getElementById("petalswitch").querySelector("input").checked) {
-                localStorage.setItem("cherri_usePetals", "yes")
+                localStorage.setItem("Cola_usePetals", "yes")
                 const container = window.top.document.createElement("div")
                 container.id = "falling-petals"
                 window.top.document.body.appendChild(container)
                 const script = window.top.document.createElement("script")
-                script.src = "/assets/js/cherri.petals.js"
+                script.src = "/assets/js/Cola.petals.js"
                 script.id = "petalscript"
                 window.top.document.body.appendChild(script)
             } else {
-                localStorage.setItem("cherri_usePetals", "no")
+                localStorage.setItem("Cola_usePetals", "no")
                 window.top.document.getElementById("falling-petals").remove()
                 window.top.document.getElementById("petalscript").remove()
             }
@@ -929,7 +929,7 @@
     <script>
         const inputTitle = document.getElementById("tabtitleinput")
         const inputIcon = document.getElementById("tabiconinput")
-        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("cherri_theme") ?? "default"}.css`
+        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`
         themeCards.forEach(card => {
             const accentColor = card.dataset.accent;
             const bgColor = card.dataset.bg;
@@ -940,57 +940,57 @@
         });
         transportCards.forEach(card => {
             const title = card.querySelector("span.title")
-            if ((localStorage.getItem("cherri_transport") ?? "libcurl") === title.textContent.toLowerCase()) {
+            if ((localStorage.getItem("Cola_transport") ?? "libcurl") === title.textContent.toLowerCase()) {
                 card.classList.add("selected")
             }
         })
-        const savedIndex = localStorage.getItem("cherri_cloakIndex") ?? "0"
+        const savedIndex = localStorage.getItem("Cola_cloakIndex") ?? "0"
         document.querySelectorAll(".cloak").forEach(btn => {
             btn.classList.remove("active")
             if (btn.dataset.index === savedIndex) {
                 btn.classList.add("active")
             }
         })
-        inputTitle.value = localStorage.getItem("cherri_cloakTitle") ?? "cherri"
-        inputIcon.value = localStorage.getItem("cherri_cloakIcon") ?? "/assets/img/fav.png"
-        if ((localStorage.getItem("cherri_usePetals") ?? "yes") === "yes") {
+        inputTitle.value = localStorage.getItem("Cola_cloakTitle") ?? "Cola"
+        inputIcon.value = localStorage.getItem("Cola_cloakIcon") ?? "/assets/img/fav.png"
+        if ((localStorage.getItem("Cola_usePetals") ?? "yes") === "yes") {
             document.getElementById("petalswitch").querySelector("input").checked = true
         } else {
             document.getElementById("petalswitch").querySelector("input").checked = false
         }
 
-        if ((localStorage.getItem("cherri_enableAds") ?? "yes") === "yes") {
+        if ((localStorage.getItem("Cola_enableAds") ?? "yes") === "yes") {
             document.getElementById("adswitch").querySelector("input").checked = true
         } else {
             document.getElementById("adswitch").querySelector("input").checked = false
         }
 
-        if ((localStorage.getItem("cherri_antiClose") ?? "no") === "yes") {
+        if ((localStorage.getItem("Cola_antiClose") ?? "no") === "yes") {
             document.getElementById("antiswitch").querySelector("input").checked = true
         } else {
             document.getElementById("antiswitch").querySelector("input").checked = false
         }
 
-        if ((localStorage.getItem("cherri_useOverlay") ?? "yes") === "yes") {
+        if ((localStorage.getItem("Cola_useOverlay") ?? "yes") === "yes") {
             document.getElementById("overlayswitch").querySelector("input").checked = true
         } else {
             document.getElementById("overlayswitch").querySelector("input").checked = false
         }
 
-        if ((localStorage.getItem("cherri_autoCloak") ?? "yes") === "yes") {
+        if ((localStorage.getItem("Cola_autoCloak") ?? "yes") === "yes") {
             document.getElementById("cloakswitch").querySelector("input").checked = true
         } else {
             document.getElementById("cloakswitch").querySelector("input").checked = false
         }
 
-        if ((localStorage.getItem("cherri_imageBlur") ?? "yes") === "yes") {
+        if ((localStorage.getItem("Cola_imageBlur") ?? "yes") === "yes") {
             document.getElementById("imageblurswitch").querySelector("input").checked = true
         } else {
             document.getElementById("imageblurswitch").querySelector("input").checked = false
         }
     </script>
-    <script src="/assets/js/cherri.dropdowns.js"></script>
-    <script src="/assets/js/cherri.ads.js"></script>
+    <script src="/assets/js/Cola.dropdowns.js"></script>
+    <script src="/assets/js/Cola.ads.js"></script>
 
 </body>
 

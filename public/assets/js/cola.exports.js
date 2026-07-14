@@ -334,7 +334,7 @@ export const EMOJI_MAP = {
 	strawberry: "🍓",
 	blueberries: "🫐",
 	melon: "🍈",
-	cherries: "🍒",
+	Colaes: "🍒",
 	peach: "🍑",
 	mango: "🥭",
 	pineapple: "🍍",
@@ -703,3 +703,4 @@ export const EMOJI_MAP = {
 	smirk: "😏",
 	mended_heart: "❤️‍🩹",
 };
+

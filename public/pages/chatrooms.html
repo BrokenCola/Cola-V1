@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cherri | chatrooms</title>
+    <title>Cola | chatrooms</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon">
     <link rel="stylesheet" href="/assets/css/font.css?v=2349">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/css/index.css">
     <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css">
-    <script src="/assets/js/cherri.devicetag.js"></script>
+    <script src="/assets/js/Cola.devicetag.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(regs => {
@@ -2463,7 +2463,7 @@
 
     window.toggleOnlineBoard = function () {
         document.body.classList.toggle("online-board-collapsed");
-        localStorage.setItem("cherri_online_board_collapsed", document.body.classList.contains("online-board-collapsed") ? "1" : "0");
+        localStorage.setItem("Cola_online_board_collapsed", document.body.classList.contains("online-board-collapsed") ? "1" : "0");
     };
 
     function applyMobileDefaults() {
@@ -2563,7 +2563,7 @@
                 <i class="fas fa-microphone"></i>
             </button>
             <button id="sound-toggle-btn" title="Toggle notification sounds"
-                onclick="(function(btn){ const on = localStorage.getItem('cherri_sounds') !== '0'; localStorage.setItem('cherri_sounds', on ? '0' : '1'); btn.innerHTML = on ? '<i class=\'fas fa-volume-xmark\'></i>' : '<i class=\'fas fa-volume-high\'></i>'; btn.title = on ? 'Sounds off — click to enable' : 'Sounds on — click to mute'; })(this)">
+                onclick="(function(btn){ const on = localStorage.getItem('Cola_sounds') !== '0'; localStorage.setItem('Cola_sounds', on ? '0' : '1'); btn.innerHTML = on ? '<i class=\'fas fa-volume-xmark\'></i>' : '<i class=\'fas fa-volume-high\'></i>'; btn.title = on ? 'Sounds off — click to enable' : 'Sounds on — click to mute'; })(this)">
                 <i class="fas fa-volume-high"></i>
             </button>
             <button id="chat-header-close-dm" onclick="window.chatUI.closeCurrentDm()" title="Close DM"
@@ -2725,12 +2725,12 @@
 
     <div class="modal-backdrop" id="modal-leaving">
         <div class="modal" style="width:340px">
-            <h2>You're leaving Cherri</h2>
+            <h2>You're leaving Cola</h2>
             <p style="font-size:0.88rem;color:var(--text-2);margin:0 0 12px">You're about to visit an external site:</p>
             <div id="leaving-url"
                 style="font-size:0.8rem;background:var(--bg-3);border:1px solid var(--border-4);border-radius:10px;padding:10px 14px;word-break:break-all;color:var(--text);margin-bottom:4px">
             </div>
-            <p class="modal-hint">Cherri is not responsible for external content.</p>
+            <p class="modal-hint">Cola is not responsible for external content.</p>
             <div class="modal-actions">
                 <button class="btn btn-ghost" onclick="window.chatUI.closeModal('modal-leaving')">Cancel</button>
                 <button class="btn btn-primary" id="leaving-continue">Continue</button>
@@ -2740,13 +2740,13 @@
 
     <div class="modal-backdrop" id="modal-mc">
         <div class="modal" style="width:380px;">
-            <h2>Cherri MC</h2>
+            <h2>Cola MC</h2>
             <label>Eaglercraft (1.5.2, 1.8.8, 1.12.2)</label>
             <div
                 style="display:flex;align-items:center;gap:8px;background:var(--bg-3);border:1px solid var(--border-4);border-radius:9px;padding:9px 13px;">
                 <code
-                    style="flex:1;font-size:0.85rem;color:var(--bright-text);font-family:monospace;">wss://mc.cherrion.top/</code>
-                <button onclick="navigator.clipboard.writeText('wss://mc.cherrion.top/')"
+                    style="flex:1;font-size:0.85rem;color:var(--bright-text);font-family:monospace;">wss://mc.Colaon.top/</code>
+                <button onclick="navigator.clipboard.writeText('wss://mc.Colaon.top/')"
                     style="background:none;border:none;color:var(--text-2);cursor:pointer;padding:2px 5px;border-radius:5px;font-size:12px;transition:color 0.15s;"
                     title="Copy"><i class="fas fa-copy"></i></button>
             </div>
@@ -2754,8 +2754,8 @@
             <div
                 style="display:flex;align-items:center;gap:8px;background:var(--bg-3);border:1px solid var(--border-4);border-radius:9px;padding:9px 13px;">
                 <code
-                    style="flex:1;font-size:0.85rem;color:var(--bright-text);font-family:monospace;">mc.cherrion.top</code>
-                <button onclick="navigator.clipboard.writeText('mc.cherrion.top')"
+                    style="flex:1;font-size:0.85rem;color:var(--bright-text);font-family:monospace;">mc.Colaon.top</code>
+                <button onclick="navigator.clipboard.writeText('mc.Colaon.top')"
                     style="background:none;border:none;color:var(--text-2);cursor:pointer;padding:2px 5px;border-radius:5px;font-size:12px;transition:color 0.15s;"
                     title="Copy"><i class="fas fa-copy"></i></button>
             </div>
@@ -2805,7 +2805,7 @@
         </div>
     </div>
 
-    <script src="/assets/js/cherri.chat.js?v=20260620" type="module"></script>
+    <script src="/assets/js/Cola.chat.js?v=20260620" type="module"></script>
     <script>
         function escapeHtml(text) {
             return String(text)
@@ -2816,11 +2816,11 @@
                 .replace(/'/g, "&#39;");
         }
 
-        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("cherri_theme") ?? "default"}.css`;
-        if ((localStorage.getItem("cherri_imageBlur") ?? "yes") !== "yes") document.body.classList.add("no-image-blur");
+        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
+        if ((localStorage.getItem("Cola_imageBlur") ?? "yes") !== "yes") document.body.classList.add("no-image-blur");
 
-        const CLOSED_DMS_STORAGE_KEY = "cherri_closed_dm_user_ids";
-        const DM_LAST_SEEN_STORAGE_KEY = "cherri_dm_last_seen";
+        const CLOSED_DMS_STORAGE_KEY = "Cola_closed_dm_user_ids";
+        const DM_LAST_SEEN_STORAGE_KEY = "Cola_dm_last_seen";
 
         window.chatUI = {
             dms: [],
@@ -2986,7 +2986,7 @@
             },
 
             applyOnlineBoardState() {
-                const collapsed = localStorage.getItem("cherri_online_board_collapsed") === "1";
+                const collapsed = localStorage.getItem("Cola_online_board_collapsed") === "1";
                 document.body.classList.toggle("online-board-collapsed", collapsed);
             },
 
@@ -3688,7 +3688,7 @@
             // Sync sound toggle button to saved preference
             const soundBtn = document.getElementById("sound-toggle-btn");
             if (soundBtn) {
-                const on = localStorage.getItem("cherri_sounds") !== "0";
+                const on = localStorage.getItem("Cola_sounds") !== "0";
                 soundBtn.innerHTML = on ? '<i class="fas fa-volume-high"></i>' : '<i class="fas fa-volume-xmark"></i>';
                 soundBtn.title = on ? "Sounds on — click to mute" : "Sounds off — click to enable";
             }
@@ -3731,7 +3731,7 @@
             });
         });
     </script>
-    <script src="/assets/js/cherri.ads.js"></script>
+    <script src="/assets/js/Cola.ads.js"></script>
 
 </body>
 

@@ -1,6 +1,6 @@
 export const APP_PORT = Number.parseInt(process.env.PORT ?? "2000", 10) || 2000;
 
-export const SESSION_COOKIE_NAME = "cherri_session";
+export const SESSION_COOKIE_NAME = "cola_session";
 export const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30;
 export const MAX_AVATAR_FILE_BYTES = 10 * 1024 * 1024;
 export const MAX_AVATAR_DIMENSION = 512;
@@ -103,3 +103,4 @@ export type BadgeEntry =
 export const BADGE_CONFIG: Record<string, BadgeEntry[]> = {};
 
 export const SHIELD_USERS: string[] = [];
+

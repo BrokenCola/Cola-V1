@@ -1,9 +1,9 @@
 document.getElementById("csslink") &&
 	(document.getElementById("csslink").href =
-		`/assets/css/colors/${localStorage.getItem("cherri_theme") || "default"}.css`);
+		`/assets/css/colors/${localStorage.getItem("Cola_theme") || "default"}.css`);
 const BASE = "/api/ai/chat";
 const MAX_CONTEXT = 15;
-const STORAGE_KEY = "cherri_chats";
+const STORAGE_KEY = "Cola_chats";
 const md = window.markdownit({
 	html: false,
 	linkify: true,
@@ -725,3 +725,4 @@ document.getElementById("message-input").placeholder =
 renderSidebar();
 renderMessages();
 updateSendBtn();
+

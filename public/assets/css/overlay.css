@@ -59,7 +59,7 @@
     pointer-events: none;
 }
 
-.cherri-info {
+.Cola-info {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -76,7 +76,7 @@
     color: var(--text);
 }
 
-.cherri-info .divider {
+.Cola-info .divider {
     display: inline-block;
     background: var(--border-3);
     width: 2px;

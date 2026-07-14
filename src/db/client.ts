@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/bun-sqlite";
 import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 import * as schema from "./schema";
 
-const resolvedDbPath = resolve(process.cwd(), "data/cherri.sqlite");
+const resolvedDbPath = resolve(process.cwd(), "data/cola.sqlite");
 const migrationsFolder = resolve(process.cwd(), "drizzle");
 
 mkdirSync(dirname(resolvedDbPath), { recursive: true });
@@ -131,3 +131,4 @@ export function runMigrationsIfPresent() {
 export function closeDatabase() {
 	sqlite.close();
 }
+

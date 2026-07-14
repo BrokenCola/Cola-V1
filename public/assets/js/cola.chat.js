@@ -4,7 +4,7 @@ import {
 	getData,
 	getMetaData,
 	EMOJI_MAP,
-} from "./cherri.exports.js";
+} from "./Cola.exports.js";
 
 const CHAT_FALLBACK_POLL_INTERVAL_MS = 15000;
 const DM_INBOX_POLL_INTERVAL_MS = 15000;
@@ -72,9 +72,9 @@ function getAudioCtx() {
 	}
 	return _audioCtx;
 }
-function isSoundEnabled() { return localStorage.getItem("cherri_sounds") !== "0"; }
+function isSoundEnabled() { return localStorage.getItem("Cola_sounds") !== "0"; }
 function setSoundEnabled(on) {
-	localStorage.setItem("cherri_sounds", on ? "1" : "0");
+	localStorage.setItem("Cola_sounds", on ? "1" : "0");
 	const btn = document.getElementById("sound-toggle-btn");
 	if (btn) btn.innerHTML = on ? '<i class="fas fa-volume-high"></i>' : '<i class="fas fa-volume-xmark"></i>';
 }
@@ -155,7 +155,7 @@ function sendBrowserNotification(title, body) {
 		const n = new Notification(title, {
 			body: body?.slice(0, 100) || "",
 			icon: "/assets/img/fav.png",
-			tag: "cherri-chat",
+			tag: "Cola-chat",
 		});
 		setTimeout(() => n.close(), 6000);
 	} catch {}
@@ -1376,7 +1376,7 @@ const VoiceChat = {
 		try {
 			let livekitUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/livekit`;
 			if (window.location.host === "localhost:2000")
-				livekitUrl = "wss://cherrion.top/livekit";
+				livekitUrl = "wss://Colaon.top/livekit";
 			await roomHandle.connect(livekitUrl, token);
 			await roomHandle.localParticipant.setMicrophoneEnabled(true);
 			this.room = room;
@@ -3212,3 +3212,4 @@ setInterval(() => {
 	pollDmInbox();
 }, DM_INBOX_POLL_INTERVAL_MS);
 pollDmInbox();
+

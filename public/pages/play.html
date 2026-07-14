@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cherri | play</title>
+    <title>Cola | play</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
@@ -235,7 +235,7 @@
     </div>
 
     <div id="gameOverlay">
-        <div class="cherri-info">
+        <div class="Cola-info">
             <span id="currentTime">Loading time...</span>
             <span class="divider"></span>
             <span id="temperature">Loading temp...</span>
@@ -472,7 +472,7 @@
             gameframe.focus();
         }
 
-        const useOverlay = localStorage.getItem("cherri_useOverlay") ?? "yes";
+        const useOverlay = localStorage.getItem("Cola_useOverlay") ?? "yes";
 
         if (useOverlay === "yes") {
             initOverlay();
@@ -585,7 +585,7 @@
 
                     try {
                         const handle = await window.showSaveFilePicker({
-                            suggestedName: "Cherri_Game_Recording" + Date.now() + ".mp4",
+                            suggestedName: "Cola_Game_Recording" + Date.now() + ".mp4",
                             types: [{
                                 description: "Video Files",
                                 accept: { "video/mp4": [".mp4"] }
@@ -655,7 +655,7 @@
             download.remove();
         }
 
-        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("cherri_theme") ?? "default"}.css`;
+        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
 
         function getGameName() {
             const nameParam = new URLSearchParams(window.location.search).get("name");
@@ -722,3 +722,4 @@
 </body>
 
 </html>
+

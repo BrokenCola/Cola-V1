@@ -5,7 +5,7 @@ async function getHWID() {
 
 	const canvas = document.createElement("canvas");
 	const ctx = canvas.getContext("2d");
-	ctx.fillText("cherri.hwid", 2, 15);
+	ctx.fillText("Cola.hwid", 2, 15);
 
 	const gl = document.createElement("canvas").getContext("webgl");
 	const dbg = gl?.getExtension("WEBGL_debug_renderer_info");
@@ -33,3 +33,4 @@ async function getHWID() {
 	console.log("GOT HWID!");
 	return _hwid;
 }
+
