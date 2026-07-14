@@ -1056,7 +1056,10 @@ function normalizeMessage(raw) {
 async function getChatSocketUrl() {
 	const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 	const hwid = await getHWID();
-	return `${protocol}//${window.location.host}/socket/chat?hwid=${encodeURIComponent(hwid)}`;
+	const host = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+		? window.location.host
+		: "cola-v1.onrender.com";
+	return `${protocol}//${host}/ws/chat?hwid=${encodeURIComponent(hwid)}`;
 }
 
 function isMessageForCurrentView(message, chat) {

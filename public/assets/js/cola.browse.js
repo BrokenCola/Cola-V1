@@ -1,7 +1,10 @@
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+const defaultWispHost = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+	? window.location.host
+	: "cola-v1.onrender.com";
 const defaultWispUrl =
 	(window.location.protocol === "https:" ? "wss://" : "ws://") +
-	window.location.host +
+	defaultWispHost +
 	"/socket/";
 const wispUrl = defaultWispUrl;
 console.log("WISP URL IS CURRENTLY", wispUrl);
