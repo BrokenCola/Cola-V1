@@ -96,17 +96,39 @@
             border: 1px solid transparent;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             color: #b4b4b4;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .chat-item:hover {
             background: #2a2a2a;
             color: #ecedee;
+        }
+
+        .chat-item.active {
+            background: #2a5a8a;
+            color: #ecedee;
+        }
+
+        .chat-item-delete {
+            background: none;
+            border: none;
+            color: #8a8a8a;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px;
+            display: none;
+        }
+
+        .chat-item:hover .chat-item-delete {
+            display: block;
         }
 
         .sidebar-footer {
@@ -237,6 +259,7 @@
             border-radius: 12px;
             word-wrap: break-word;
             line-height: 1.4;
+            white-space: pre-wrap;
         }
 
         .message.user .message-content {
@@ -406,19 +429,19 @@
             <i class="fas fa-plus"></i>
             New Chat
         </button>
-        <input type="text" class="search-box" placeholder="Search chats...">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search chats..." onkeyup="filterChats()">
         <div class="chat-history" id="chatHistory">
-            <!-- Chat history items will go here -->
+            <!-- Chat history items will be loaded here -->
         </div>
         <div class="sidebar-footer">
-            Cola AI v1.0
+            Cola AI v2.0
         </div>
     </aside>
 
     <!-- MAIN -->
     <main class="ai-main">
         <header class="ai-header">
-            <h1>New Chat</h1>
+            <h1 id="chatTitle">New Chat</h1>
             <div class="rate-limit-indicator" id="rateLimitIndicator">
                 5/5 requests available
             </div>
@@ -437,18 +460,18 @@
                     </div>
                     <div class="example-card" onclick="sendExamplePrompt(this)">
                         <div class="example-card-icon">🐍</div>
-                        <div class="example-card-title">Python JSON parser</div>
-                        <div class="example-card-desc">from an API endpoint</div>
+                        <div class="example-card-title">Write Python code</div>
+                        <div class="example-card-desc">for any task</div>
                     </div>
                     <div class="example-card" onclick="sendExamplePrompt(this)">
                         <div class="example-card-icon">💡</div>
-                        <div class="example-card-title">Creative startup ideas</div>
-                        <div class="example-card-desc">in the AI space</div>
+                        <div class="example-card-title">Creative ideas</div>
+                        <div class="example-card-desc">for any project</div>
                     </div>
                     <div class="example-card" onclick="sendExamplePrompt(this)">
-                        <div class="example-card-icon">🎬</div>
-                        <div class="example-card-title">Dark sci-fi story</div>
-                        <div class="example-card-desc">about a rogue AI</div>
+                        <div class="example-card-icon">❓</div>
+                        <div class="example-card-title">Ask anything</div>
+                        <div class="example-card-desc">I'll help you out</div>
                     </div>
                 </div>
             </div>
@@ -466,10 +489,117 @@
     </main>
 
     <script>
+        // GEMINI API CONFIG - Use your backend proxy or set via environment variable
+        const GEMINI_API_KEY = window.COLA_GEMINI_KEY || localStorage.getItem('cola_gemini_key') || '';
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
         // RATE LIMITING: 5 requests per 10 minutes
         const RATE_LIMIT_MAX = 5;
         const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes in ms
         const RATE_LIMIT_KEY = 'cola_ai_rate_limit';
+        const CHATS_STORAGE_KEY = 'cola_ai_chats';
+        const CURRENT_CHAT_KEY = 'cola_ai_current_chat';
+
+        let currentChatId = null;
+        let allChats = {};
+
+        function generateChatId() {
+            return 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function loadChats() {
+            const stored = localStorage.getItem(CHATS_STORAGE_KEY);
+            if (stored) {
+                allChats = JSON.parse(stored);
+            }
+            renderChatHistory();
+        }
+
+        function saveChats() {
+            localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(allChats));
+        }
+
+        function renderChatHistory() {
+            const chatHistory = document.getElementById('chatHistory');
+            chatHistory.innerHTML = '';
+
+            const sortedChats = Object.entries(allChats)
+                .sort((a, b) => b[1].timestamp - a[1].timestamp);
+
+            if (sortedChats.length === 0) {
+                chatHistory.innerHTML = '<div style="text-align: center; color: #8a8a8a; padding: 20px; font-size: 12px;">No chats yet</div>';
+                return;
+            }
+
+            sortedChats.forEach(([chatId, chat]) => {
+                const item = document.createElement('div');
+                item.className = 'chat-item' + (chatId === currentChatId ? ' active' : '');
+                
+                const title = document.createElement('span');
+                title.textContent = chat.title || 'Untitled Chat';
+                title.style.flex = '1';
+                title.style.cursor = 'pointer';
+                title.onclick = () => loadChat(chatId);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'chat-item-delete';
+                deleteBtn.textContent = '✕';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteChat(chatId);
+                };
+
+                item.appendChild(title);
+                item.appendChild(deleteBtn);
+                chatHistory.appendChild(item);
+            });
+        }
+
+        function loadChat(chatId) {
+            currentChatId = chatId;
+            const chat = allChats[chatId];
+            
+            document.getElementById('chatTitle').textContent = chat.title || 'Chat';
+            document.getElementById('messagesContainer').innerHTML = '';
+            
+            const chatEmpty = document.getElementById('chatEmpty');
+            if (chat.messages.length > 0) {
+                chatEmpty.style.display = 'none';
+            } else {
+                chatEmpty.style.display = 'flex';
+            }
+
+            chat.messages.forEach(msg => {
+                addMessage(msg.text, msg.sender, false);
+            });
+
+            localStorage.setItem(CURRENT_CHAT_KEY, chatId);
+            renderChatHistory();
+        }
+
+        function deleteChat(chatId) {
+            if (confirm('Delete this chat?')) {
+                delete allChats[chatId];
+                saveChats();
+                
+                if (currentChatId === chatId) {
+                    newChat();
+                } else {
+                    renderChatHistory();
+                }
+            }
+        }
+
+        function filterChats() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            const chatHistory = document.getElementById('chatHistory');
+            const items = chatHistory.querySelectorAll('.chat-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        }
 
         function getRateLimitData() {
             const stored = localStorage.getItem(RATE_LIMIT_KEY);
@@ -478,7 +608,6 @@
             const data = JSON.parse(stored);
             const now = Date.now();
 
-            // Remove old requests outside the 10-minute window
             data.requests = data.requests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
 
             return {
@@ -509,13 +638,18 @@
         }
 
         function canSendMessage() {
-            const data = getRateLimitData();
-            return data.remaining > 0;
+            return getRateLimitData().remaining > 0;
         }
 
-        function sendMessage() {
+        async function sendMessage() {
             if (!canSendMessage()) {
                 alert('Rate limit exceeded. You can send 5 messages per 10 minutes.');
+                return;
+            }
+
+            const apiKey = localStorage.getItem('cola_gemini_key');
+            if (!apiKey) {
+                alert('Gemini API key not configured. Please set it first.');
                 return;
             }
 
@@ -530,26 +664,61 @@
                 chatEmpty.style.display = 'none';
             }
 
+            // Create chat if needed
+            if (!currentChatId) {
+                currentChatId = generateChatId();
+                allChats[currentChatId] = {
+                    id: currentChatId,
+                    title: message.substring(0, 30) + (message.length > 30 ? '...' : ''),
+                    messages: [],
+                    timestamp: Date.now()
+                };
+            }
+
             // Add user message
-            addMessage(message, 'user');
+            addMessage(message, 'user', true);
             input.value = '';
             input.style.height = 'auto';
 
-            // Record the request
             recordRequest();
-
-            // Show typing indicator
             addTypingIndicator();
 
-            // Simulate AI response (replace with real API call)
-            setTimeout(() => {
+            try {
+                const response = await fetch(GEMINI_API_URL + '?key=' + apiKey, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: message
+                            }]
+                        }]
+                    })
+                });
+
                 removeTypingIndicator();
-                const aiResponse = generateAIResponse(message);
-                addMessage(aiResponse, 'ai');
-            }, 1500);
+
+                if (!response.ok) {
+                    throw new Error('API Error: ' + response.status);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.';
+                
+                addMessage(aiResponse, 'ai', true);
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('Error:', error);
+                addMessage('Error: Could not connect to Gemini API. ' + error.message, 'ai', true);
+            }
+
+            saveChats();
+            renderChatHistory();
         }
 
-        function addMessage(text, sender) {
+        function addMessage(text, sender, save = true) {
             const container = document.getElementById('messagesContainer');
             const message = document.createElement('div');
             message.className = `message ${sender}`;
@@ -572,6 +741,15 @@
 
             container.appendChild(message);
             container.scrollTop = container.scrollHeight;
+
+            // Save message to current chat
+            if (save && currentChatId && allChats[currentChatId]) {
+                allChats[currentChatId].messages.push({
+                    sender: sender,
+                    text: text,
+                    timestamp: Date.now()
+                });
+            }
         }
 
         function addTypingIndicator() {
@@ -600,20 +778,6 @@
             if (indicator) indicator.remove();
         }
 
-        function generateAIResponse(userMessage) {
-            const responses = [
-                'That\'s an interesting question! I\'d be happy to help you explore that further.',
-                'Great question! Here are some key points to consider...',
-                'Based on what you\'ve asked, I think the best approach would be...',
-                'That\'s a complex topic, but let me break it down for you.',
-                'Absolutely! Let me provide you with some detailed information.',
-                'I can definitely help with that. Here\'s what you should know...',
-                'Excellent inquiry! Let me share some insights with you.',
-                'That\'s something I can definitely elaborate on for you.'
-            ];
-            return responses[Math.floor(Math.random() * responses.length)];
-        }
-
         function sendExamplePrompt(card) {
             const title = card.querySelector('.example-card-title').textContent;
             document.getElementById('inputField').value = title;
@@ -625,21 +789,35 @@
                 event.preventDefault();
                 sendMessage();
             }
-            // Auto-resize textarea
             event.target.style.height = 'auto';
             event.target.style.height = Math.min(event.target.scrollHeight, 120) + 'px';
         }
 
         function newChat() {
+            const lastChatId = localStorage.getItem(CURRENT_CHAT_KEY);
+            currentChatId = null;
             document.getElementById('messagesContainer').innerHTML = '';
             document.getElementById('chatEmpty').style.display = 'flex';
             document.getElementById('inputField').value = '';
+            document.getElementById('chatTitle').textContent = 'New Chat';
+            renderChatHistory();
         }
 
         // Initialize
+        loadChats();
         updateRateLimitUI();
         
-        // Update rate limit indicator every second
+        // Set API key from localStorage if provided
+        const storedKey = localStorage.getItem('cola_gemini_key');
+        if (!storedKey) {
+            console.warn('Gemini API key not set. Set it via: localStorage.setItem("cola_gemini_key", "YOUR_KEY")');
+        }
+        
+        const lastChatId = localStorage.getItem(CURRENT_CHAT_KEY);
+        if (lastChatId && allChats[lastChatId]) {
+            loadChat(lastChatId);
+        }
+
         setInterval(updateRateLimitUI, 1000);
     </script>
 </body>
