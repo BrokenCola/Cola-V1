@@ -1,421 +1,686 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Cola Browser</title>
-		<script src="/baremux/index.js"></script>
-		<script src="/scram/scramjet.all.js"></script>
-		<link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink" />
-		<link rel="stylesheet" href="/assets/css/font.css?v=2" />
-		<link rel="stylesheet" href="/assets/icons/css/all-pro.css" />
-		<script src="/assets/js/Cola.ui.js?v=20260619a"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.4.3/eruda.min.js"></script>
-		<script>
-			navigator.serviceWorker.register("/sw.js", { scope: "/scramjet/" });
-		</script>
-		<style>
-			@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cola Browser</title>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.all.js"></script>
+  <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink" />
+  <link rel="stylesheet" href="/assets/css/font.css?v=2" />
+  <link rel="stylesheet" href="/assets/icons/css/all-pro.css" />
+  <script src="/assets/js/Cola.ui.js?v=20260619a"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-			:root {
-				--sidebar-w: 64px;
-				--controls-h: 96px;
-				--bookmarks-h: 36px;
-				--toolbar-h: 40px;
-				--btn-size: 36px;
-				--tab-h: 36px;
-				--amber: #f59e0b;
-				--amber-2: #fbbf24;
-				--amber-glow: rgba(245,158,11,0.18);
-				--glass: rgba(10, 10, 16, 0.97);
-				--glass-border: rgba(255,255,255,0.06);
-				--surface: rgba(255,255,255,0.04);
-				--surface-hover: rgba(255,255,255,0.08);
-				--text: rgba(255,255,255,0.85);
-				--text-dim: rgba(255,255,255,0.4);
-			}
+    :root {
+      --sb: 64px;           /* sidebar width */
+      --bar-h: 52px;        /* total chrome height */
+      --bm-h: 34px;         /* bookmarks bar */
+      --amber: #f59e0b;
+      --amber-bright: #fbbf24;
+      --glass: rgba(9, 9, 14, 0.98);
+      --border: rgba(255,255,255,0.06);
+      --surf: rgba(255,255,255,0.045);
+      --surf-h: rgba(255,255,255,0.085);
+    }
 
-			*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-			html, body {
-				width: 100%; height: 100%;
-				background: #0a0a10;
-				font-family: 'Inter', sans-serif;
-				color: var(--text);
-				overflow: hidden;
-			}
+    html, body {
+      width: 100%; height: 100%;
+      background: #09090e;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      color: rgba(255,255,255,0.85);
+    }
 
-			body.bookmarks-collapsed { --bookmarks-h: 0px; }
+    body { margin-left: var(--sb) !important; }
+    body.bm-collapsed { --bm-h: 0px; }
 
-			/* ─── SIDEBAR OFFSET ─────────────────────────── */
-			body {
-				margin-left: var(--sidebar-w) !important;
-			}
+    /* ─── CHROME BAR ─────────────────────────────────── */
+    #chrome {
+      position: fixed;
+      top: 0; left: var(--sb);
+      width: calc(100vw - var(--sb));
+      z-index: 200;
+      background: var(--glass);
+      border-bottom: 1px solid rgba(245,158,11,0.1);
+      box-shadow: 0 2px 30px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+    }
 
-			/* ─── IFRAME ─────────────────────────────────── */
-			iframe.viewframe {
-				position: fixed;
-				left: var(--sidebar-w);
-				top: calc(var(--controls-h) + var(--bookmarks-h));
-				width: calc(100vw - var(--sidebar-w));
-				height: calc(100vh - var(--controls-h) - var(--bookmarks-h));
-				border: none;
-				background: #0a0a10;
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 0.15s ease;
-				z-index: 1;
-			}
+    /* ── TAB ROW ── */
+    #tab-row {
+      height: var(--bar-h);
+      display: flex;
+      align-items: flex-end;
+      padding: 8px 8px 0;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #tab-row::-webkit-scrollbar { display: none; }
 
-			iframe.viewframe.active {
-				opacity: 1;
-				pointer-events: all;
-			}
+    .tab {
+      display: flex; align-items: center; gap: 7px;
+      height: 36px;
+      min-width: 130px; max-width: 210px;
+      padding: 0 10px 0 11px;
+      border-radius: 10px 10px 0 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      background: var(--surf);
+      color: rgba(255,255,255,0.45);
+      font-size: 12px; font-weight: 500;
+      cursor: default;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .tab.active {
+      background: rgba(245,158,11,0.09);
+      border-color: rgba(245,158,11,0.25);
+      color: var(--amber-bright);
+    }
+    .tab:hover:not(.active) {
+      background: var(--surf-h);
+      color: rgba(255,255,255,0.7);
+    }
+    .tab img { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    .tab .tab-title {
+      flex: 1; overflow: hidden;
+      white-space: nowrap;
+      mask-image: linear-gradient(to right, white 55%, transparent 92%);
+    }
+    .tab .tab-close {
+      flex-shrink: 0;
+      font-size: 10px;
+      opacity: 0; cursor: pointer;
+      padding: 2px 3px; border-radius: 4px;
+      transition: opacity 0.12s, color 0.12s;
+    }
+    .tab:hover .tab-close { opacity: 0.45; }
+    .tab .tab-close:hover { opacity: 1 !important; color: #ff6b6b; }
 
-			/* ─── CONTROLS BAR ───────────────────────────── */
-			.controls {
-				position: fixed;
-				top: 0;
-				left: var(--sidebar-w);
-				width: calc(100vw - var(--sidebar-w));
-				height: calc(var(--controls-h) + var(--bookmarks-h));
-				background: var(--glass);
-				backdrop-filter: blur(24px);
-				-webkit-backdrop-filter: blur(24px);
-				border-bottom: 1px solid rgba(245,158,11,0.12);
-				box-shadow: 0 1px 40px rgba(0,0,0,0.6);
-				z-index: 100;
-				display: flex;
-				flex-direction: column;
-				padding: 6px 10px 0;
-				gap: 0;
-				transition: height 0.2s ease;
-			}
+    #btn-newtab {
+      height: 30px; width: 30px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surf);
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      transition: 0.15s;
+      margin-bottom: 3px;
+    }
+    #btn-newtab:hover {
+      background: rgba(245,158,11,0.1);
+      border-color: rgba(245,158,11,0.3);
+      color: var(--amber-bright);
+    }
 
-			/* ─── TABS ROW ───────────────────────────────── */
-			.tabs {
-				display: flex;
-				align-items: center;
-				gap: 5px;
-				height: 44px;
-				flex-shrink: 0;
-				overflow-x: auto;
-				scrollbar-width: none;
-			}
-			.tabs::-webkit-scrollbar { display: none; }
+    /* ── TOOLBAR ROW ── */
+    #toolbar-row {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 5px;
+      border-top: 1px solid var(--border);
+    }
 
-			.tab {
-				background: var(--surface);
-				border: 1px solid var(--glass-border);
-				min-width: 140px;
-				max-width: 200px;
-				height: var(--tab-h);
-				border-radius: 10px;
-				padding: 0 10px 0 10px;
-				color: var(--text-dim);
-				display: flex;
-				align-items: center;
-				gap: 7px;
-				overflow: hidden;
-				white-space: nowrap;
-				cursor: default;
-				transition: background 0.15s, border-color 0.15s, color 0.15s;
-				font-size: 12.5px;
-				font-weight: 500;
-				flex-shrink: 0;
-				position: relative;
-			}
-			.tab.active {
-				background: rgba(245,158,11,0.1);
-				border-color: rgba(245,158,11,0.32);
-				color: var(--amber-2);
-			}
-			.tab:hover:not(.active) {
-				background: var(--surface-hover);
-				border-color: rgba(255,255,255,0.1);
-				color: var(--text);
-			}
-			.tab span {
-				flex: 1;
-				overflow: hidden;
-				mask-image: linear-gradient(to right, white 55%, transparent 90%);
-			}
-			.tab img {
-				width: 14px; height: 14px;
-				border-radius: 3px;
-				flex-shrink: 0;
-			}
-			.closetab {
-				flex-shrink: 0;
-				font-size: 11px;
-				opacity: 0;
-				cursor: pointer;
-				transition: opacity 0.15s;
-				padding: 2px;
-				border-radius: 4px;
-			}
-			.tab:hover .closetab { opacity: 0.5; }
-			.closetab:hover { opacity: 1 !important; color: #ff6b6b; }
+    .tb-btn {
+      width: 32px; height: 32px; flex-shrink: 0;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      transition: 0.12s;
+    }
+    .tb-btn:hover {
+      background: var(--surf-h);
+      border-color: var(--border);
+      color: rgba(255,255,255,0.85);
+    }
+    .tb-btn:active { transform: scale(0.92); }
 
-			#newtab {
-				width: 32px; height: 32px;
-				flex-shrink: 0;
-				border-radius: 9px;
-				border: 1px solid var(--glass-border);
-				background: var(--surface);
-				color: var(--text-dim);
-				cursor: pointer;
-				display: flex; align-items: center; justify-content: center;
-				font-size: 13px;
-				transition: 0.15s;
-			}
-			#newtab:hover {
-				background: var(--amber-glow);
-				border-color: rgba(245,158,11,0.35);
-				color: var(--amber-2);
-			}
+    #address-bar-wrap {
+      flex: 1;
+      position: relative;
+      display: flex; align-items: center;
+    }
+    #address-bar-wrap .lock-icon {
+      position: absolute; left: 11px;
+      color: rgba(255,255,255,0.2);
+      font-size: 11px;
+      pointer-events: none;
+    }
+    #address-bar-wrap .lock-icon.secure { color: #4ade80; }
 
-			/* ─── TOOLBAR ROW ────────────────────────────── */
-			.toolbar {
-				height: var(--toolbar-h);
-				display: flex;
-				align-items: center;
-				gap: 6px;
-				flex-shrink: 0;
-				padding: 4px 0;
-			}
+    #bar {
+      width: 100%;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surf);
+      padding: 0 14px 0 28px;
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      caret-color: var(--amber);
+      transition: 0.15s;
+    }
+    #bar::placeholder { color: rgba(255,255,255,0.22); }
+    #bar:focus {
+      background: rgba(245,158,11,0.055);
+      border-color: rgba(245,158,11,0.42);
+      box-shadow: 0 0 0 2px rgba(245,158,11,0.08);
+      color: white;
+    }
 
-			.toolbar button {
-				width: var(--btn-size); height: var(--btn-size);
-				flex-shrink: 0;
-				border-radius: 10px;
-				border: 1px solid var(--glass-border);
-				background: var(--surface);
-				color: var(--text-dim);
-				cursor: pointer;
-				font-size: 13px;
-				display: flex; align-items: center; justify-content: center;
-				transition: 0.15s;
-			}
-			.toolbar button:hover {
-				background: var(--amber-glow);
-				border-color: rgba(245,158,11,0.35);
-				color: var(--amber-2);
-				box-shadow: 0 0 10px rgba(245,158,11,0.12);
-			}
+    /* loading progress bar */
+    #progress {
+      position: absolute;
+      bottom: -1px; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--amber), var(--amber-bright));
+      border-radius: 1px;
+      width: 0%;
+      opacity: 0;
+      transition: width 0.3s ease, opacity 0.2s;
+    }
+    #progress.loading { opacity: 1; }
 
-			#bar {
-				flex: 1;
-				height: var(--btn-size);
-				border-radius: 10px;
-				border: 1px solid var(--glass-border);
-				background: var(--surface);
-				padding: 0 14px;
-				color: var(--text);
-				font-size: 13.5px;
-				font-family: 'Inter', sans-serif;
-				outline: none;
-				caret-color: var(--amber);
-				transition: 0.15s;
-			}
-			#bar::placeholder { color: var(--text-dim); }
-			#bar:focus {
-				background: rgba(245,158,11,0.05);
-				border-color: rgba(245,158,11,0.45);
-				box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
-				color: white;
-			}
+    /* ── BOOKMARKS ROW ── */
+    #bm-row {
+      height: var(--bm-h);
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 4px;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      transition: height 0.2s, opacity 0.2s;
+      opacity: 1;
+    }
+    body.bm-collapsed #bm-row { opacity: 0; pointer-events: none; }
 
-			/* ─── BOOKMARKS ROW ──────────────────────────── */
-			.bookmarks {
-				height: var(--bookmarks-h);
-				display: flex;
-				align-items: center;
-				gap: 5px;
-				overflow-x: auto;
-				scrollbar-width: none;
-				overflow-y: hidden;
-				opacity: 1;
-				flex-shrink: 0;
-				padding-bottom: 4px;
-				transition: height 0.2s ease, opacity 0.2s ease;
-			}
-			.bookmarks::-webkit-scrollbar { display: none; }
-			body.bookmarks-collapsed .bookmarks {
-				opacity: 0;
-				pointer-events: none;
-			}
+    .bm-item {
+      height: 24px; padding: 0 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--surf);
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11.5px; font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      cursor: pointer; white-space: nowrap;
+      transition: 0.12s; flex-shrink: 0;
+    }
+    .bm-item:hover {
+      background: rgba(245,158,11,0.08);
+      border-color: rgba(245,158,11,0.25);
+      color: var(--amber-bright);
+    }
+    .bm-item img { width: 12px; height: 12px; border-radius: 2px; }
 
-			.bookmark {
-				height: 26px;
-				padding: 0 11px;
-				border-radius: 100px;
-				border: 1px solid var(--glass-border);
-				background: var(--surface);
-				display: flex;
-				align-items: center;
-				gap: 6px;
-				cursor: pointer;
-				font-size: 12px;
-				font-weight: 500;
-				white-space: nowrap;
-				color: var(--text-dim);
-				transition: 0.15s;
-				flex-shrink: 0;
-			}
-			.bookmark:hover {
-				background: var(--amber-glow);
-				border-color: rgba(245,158,11,0.3);
-				color: var(--amber-2);
-			}
-			.bookmark img { width: 13px; height: 13px; border-radius: 2px; }
-			.bookmark span { color: inherit; }
+    #btn-toggle-bm i { transition: transform 0.2s; }
+    #btn-toggle-bm.collapsed i { transform: rotate(180deg); }
 
-			#toggle-bookmarks i { transition: transform 0.2s ease; }
-			#toggle-bookmarks.collapsed i { transform: rotate(180deg); }
+    /* ─── VIEWPORT ───────────────────────────────────── */
+    #vp {
+      position: fixed;
+      left: var(--sb);
+      top: calc(var(--bar-h) + 42px + var(--bm-h));
+      width: calc(100vw - var(--sb));
+      height: calc(100vh - var(--bar-h) - 42px - var(--bm-h));
+      transition: top 0.2s, height 0.2s;
+    }
 
-			/* ─── NEW TAB SCREEN ─────────────────────────── */
-			#new-tab-screen {
-				position: fixed;
-				left: var(--sidebar-w);
-				top: calc(var(--controls-h) + var(--bookmarks-h));
-				width: calc(100vw - var(--sidebar-w));
-				height: calc(100vh - var(--controls-h) - var(--bookmarks-h));
-				background: #0a0a10;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				gap: 18px;
-				z-index: 0;
-			}
-			#new-tab-screen.hidden { display: none; }
+    iframe.tab-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+      background: #09090e;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+    iframe.tab-frame.active {
+      opacity: 1;
+      pointer-events: all;
+    }
 
-			.ntab-logo {
-				font-size: 28px;
-				font-weight: 600;
-				color: var(--amber-2);
-				letter-spacing: -0.5px;
-			}
-			.ntab-search {
-				width: 500px;
-				max-width: 90vw;
-				height: 44px;
-				border-radius: 12px;
-				border: 1px solid rgba(245,158,11,0.25);
-				background: rgba(255,255,255,0.04);
-				padding: 0 18px;
-				color: white;
-				font-size: 15px;
-				font-family: 'Inter', sans-serif;
-				outline: none;
-				caret-color: var(--amber);
-				transition: 0.15s;
-			}
-			.ntab-search::placeholder { color: rgba(255,255,255,0.25); }
-			.ntab-search:focus {
-				background: rgba(245,158,11,0.06);
-				border-color: rgba(245,158,11,0.5);
-				box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
-			}
-			.ntab-hint { font-size: 12px; color: rgba(255,255,255,0.2); }
-		</style>
-	</head>
+    /* ─── NEW TAB PAGE ───────────────────────────────── */
+    #new-tab-page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: #09090e;
+      z-index: 5;
+      transition: opacity 0.2s;
+    }
+    #new-tab-page.hidden { opacity: 0; pointer-events: none; }
 
-	<body class="obfuscate">
-		<div class="controls">
-			<!-- TABS -->
-			<div class="tabs">
-				<button id="newtab" onclick="newTab()" title="New Tab">
-					<i class="far fa-plus"></i>
-				</button>
-			</div>
+    .nt-logo {
+      font-size: 22px; font-weight: 600;
+      color: var(--amber-bright);
+      display: flex; align-items: center; gap: 10px;
+      letter-spacing: -0.3px;
+    }
+    .nt-logo img { width: 28px; height: 28px; }
 
-			<!-- TOOLBAR -->
-			<div class="toolbar">
-				<button onclick="back()" title="Back"><i class="far fa-arrow-left"></i></button>
-				<button onclick="forward()" title="Forward"><i class="far fa-arrow-right"></i></button>
-				<button onclick="refresh()" title="Refresh"><i class="far fa-rotate"></i></button>
+    .nt-search {
+      width: 480px; max-width: 90%;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid rgba(245,158,11,0.2);
+      background: rgba(255,255,255,0.04);
+      padding: 0 16px;
+      color: white; font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      caret-color: var(--amber);
+      transition: 0.15s;
+    }
+    .nt-search::placeholder { color: rgba(255,255,255,0.22); }
+    .nt-search:focus {
+      background: rgba(245,158,11,0.05);
+      border-color: rgba(245,158,11,0.45);
+      box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
+    }
 
-				<input
-					class="obfuscate"
-					type="text"
-					placeholder="Search or enter a URL..."
-					id="bar"
-				/>
+    .nt-hint { font-size: 11.5px; color: rgba(255,255,255,0.18); }
 
-				<button onclick="popout()" title="Open in new window"><i class="far fa-external-link"></i></button>
-				<button onclick="fullscreen()" title="Fullscreen"><i class="far fa-expand"></i></button>
-				<button onclick="doEruda()" title="Developer Tools"><i class="far fa-square-code"></i></button>
-				<button id="toggle-bookmarks" title="Toggle bookmarks">
-					<i class="far fa-chevron-up"></i>
-				</button>
-			</div>
+    /* connection status dot */
+    #conn-status {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: rgba(255,255,255,0.3);
+    }
+    #conn-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: background 0.3s;
+    }
+    #conn-dot.connected { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.5); }
+    #conn-dot.error { background: #f87171; }
+    #conn-dot.connecting {
+      background: var(--amber);
+      animation: pulse-dot 1s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body class="obfuscate">
 
-			<!-- BOOKMARKS -->
-			<div class="bookmarks"></div>
-		</div>
+  <!-- ─── CHROME ─────────────────────────────────────── -->
+  <div id="chrome">
+    <!-- TAB ROW -->
+    <div id="tab-row">
+      <button id="btn-newtab" title="New Tab" onclick="tabNew()">
+        <i class="far fa-plus"></i>
+      </button>
+    </div>
 
-		<!-- NEW TAB LANDING -->
-		<div id="new-tab-screen">
-			<div class="ntab-logo">🥤 Cola Browser</div>
-			<input
-				class="ntab-search"
-				type="text"
-				placeholder="Search anything or enter a URL..."
-				id="ntab-bar"
-			/>
-			<div class="ntab-hint">Press Enter to go</div>
-		</div>
+    <!-- TOOLBAR -->
+    <div id="toolbar-row">
+      <button class="tb-btn" onclick="tabBack()" title="Back"><i class="far fa-arrow-left"></i></button>
+      <button class="tb-btn" onclick="tabForward()" title="Forward"><i class="far fa-arrow-right"></i></button>
+      <button class="tb-btn" onclick="tabRefresh()" title="Refresh"><i class="far fa-rotate"></i></button>
 
-		<div id="browserframecontainer"></div>
+      <div id="address-bar-wrap">
+        <i class="far fa-lock lock-icon" id="lock-icon"></i>
+        <input id="bar" class="obfuscate" type="text" placeholder="Search or enter a URL..." />
+        <div id="progress"></div>
+      </div>
 
-		<script src="/assets/js/Cola.data.js"></script>
-		<script src="/assets/js/Cola.browse.js"></script>
-		<script>
-			// Hook new tab search bar
-			const ntabBar = document.getElementById('ntab-bar');
-			if (ntabBar) {
-				ntabBar.addEventListener('keydown', (e) => {
-					if (e.key === 'Enter') {
-						const q = ntabBar.value.trim();
-						if (q) {
-							document.getElementById('new-tab-screen').classList.add('hidden');
-							nav(q);
-						}
-					}
-				});
-			}
+      <button class="tb-btn" onclick="tabPopout()" title="Open in new window"><i class="far fa-external-link"></i></button>
+      <button class="tb-btn" onclick="tabFullscreen()" title="Fullscreen"><i class="far fa-expand"></i></button>
+      <button id="btn-toggle-bm" class="tb-btn" title="Toggle bookmarks" onclick="toggleBm()">
+        <i class="far fa-chevron-up"></i>
+      </button>
+    </div>
 
-			// Handle ?url= param
-			const params = new URLSearchParams(window.location.search);
-			if (params.has('url')) {
-				document.getElementById('new-tab-screen').classList.add('hidden');
-				(async function () {
-					await connection.setTransport('/libcurl/index.mjs', [{
-						websocket: `${window.location.protocol === 'https:' ? 'wss://' : 'ws://'}${window.location.host}/socket/`
-					}]);
-					nav(params.get('url'));
-				})();
-			}
-		</script>
-		<script>
-			document.getElementById('csslink').href =
-				`/assets/css/colors/${localStorage.getItem('Cola_theme') ?? 'default'}.css`;
-		</script>
-		<script>
-			function doEruda() {
-				const frame = document.querySelector(`.viewframe[data-frame-id="${activeTab}"]`);
-				if (!frame) return;
-				const frameWindow = frame.contentWindow;
-				const frameDocument = frame.contentDocument || frameWindow.document;
-				const script = frameDocument.createElement('script');
-				script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-				script.onload = () => { frameWindow.eruda.init(); };
-				frameDocument.head.appendChild(script);
-			}
-		</script>
-		<script src="/assets/js/Cola.ads.js"></script>
-		<script src="/assets/js/cola.sidebar.js"></script>
-	</body>
+    <!-- BOOKMARKS -->
+    <div id="bm-row"></div>
+  </div>
+
+  <!-- ─── VIEWPORT ──────────────────────────────────── -->
+  <div id="vp">
+    <div id="new-tab-page">
+      <div class="nt-logo">
+        <img src="/assets/img/cola-logo.png" alt="" onerror="this.style.display='none'" />
+        Cola Browser
+      </div>
+      <input class="nt-search" id="nt-bar" placeholder="Search or enter a URL..." type="text" />
+      <div class="nt-hint">Press Enter to browse</div>
+      <div id="conn-status">
+        <div id="conn-dot"></div>
+        <span id="conn-text">Connecting to proxy...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SCRIPTS ───────────────────────────────────── -->
+  <script src="/assets/js/Cola.data.js"></script>
+  <script>
+    // ── PROXY SETUP ────────────────────────────────────
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+    const wispHost = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? location.host
+      : "cola-v1.onrender.com";
+    const wispUrl = `${location.protocol === "https:" ? "wss:" : "ws:"}//${wispHost}/socket/`;
+
+    const { ScramjetController } = $scramjetLoadController();
+    const scramjet = new ScramjetController({
+      files: {
+        all: "/scram/scramjet.all.js",
+        wasm: "/scram/scramjet.wasm.wasm",
+        sync: "/scram/scramjet.sync.js",
+      }
+    });
+    scramjet.init();
+
+    // Register SW
+    navigator.serviceWorker.register("/sw.js", { scope: "/scramjet/" });
+
+    // ── CONNECTION ──────────────────────────────────────
+    const dot = document.getElementById("conn-dot");
+    const connText = document.getElementById("conn-text");
+    let transportReady = false;
+
+    async function initTransport() {
+      dot.className = "connecting";
+      connText.textContent = "Connecting to proxy...";
+      try {
+        const transport = localStorage.getItem("Cola_transport") || "libcurl";
+        if (transport === "epoxy") {
+          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+        } else {
+          await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+        }
+        transportReady = true;
+        dot.className = "connected";
+        connText.textContent = "Proxy connected";
+      } catch(e) {
+        dot.className = "error";
+        connText.textContent = "Proxy connection failed — try refreshing";
+        console.error("Transport init failed:", e);
+      }
+    }
+    initTransport();
+
+    // ── TAB MANAGER ────────────────────────────────────
+    let tabs = [];
+    let activeTabId = null;
+    let tabCounter = 0;
+
+    function tabNew(url) {
+      tabCounter++;
+      const id = tabCounter;
+      const data = { id, url: "", title: "New Tab", history: [], historyIdx: -1 };
+      tabs.push(data);
+
+      // Tab pill
+      const tabRow = document.getElementById("tab-row");
+      const newBtn = document.getElementById("btn-newtab");
+      const pill = document.createElement("div");
+      pill.className = "tab";
+      pill.dataset.tabId = id;
+      pill.innerHTML = `
+        <img src="/assets/img/fav.png" data-fav="${id}" />
+        <span class="tab-title" data-title="${id}">New Tab</span>
+        <i class="far fa-close tab-close" onclick="event.stopPropagation(); tabClose(${id})"></i>
+      `;
+      pill.addEventListener("click", () => tabSwitch(id));
+      tabRow.insertBefore(pill, newBtn);
+
+      // iframe
+      const frame = document.createElement("iframe");
+      frame.className = "tab-frame";
+      frame.dataset.frameId = id;
+      frame.src = "about:blank";
+      document.getElementById("vp").appendChild(frame);
+
+      tabSwitch(id);
+
+      if (url) {
+        document.getElementById("new-tab-page").classList.add("hidden");
+        tabNav(url);
+      }
+    }
+
+    function tabSwitch(id) {
+      activeTabId = id;
+      // Tab pills
+      document.querySelectorAll(".tab").forEach(t =>
+        t.classList.toggle("active", +t.dataset.tabId === id));
+      // Frames
+      document.querySelectorAll(".tab-frame").forEach(f =>
+        f.classList.toggle("active", +f.dataset.frameId === id));
+
+      const data = tabs.find(t => t.id === id);
+      const bar = document.getElementById("bar");
+      if (data && bar) bar.value = data.url || "";
+
+      updateLock();
+
+      // Show/hide new tab page
+      const ntPage = document.getElementById("new-tab-page");
+      if (data && !data.url) {
+        ntPage.classList.remove("hidden");
+        document.getElementById("nt-bar").focus();
+      } else {
+        ntPage.classList.add("hidden");
+      }
+    }
+
+    function tabClose(id) {
+      if (tabs.length <= 1) return;
+      const idx = tabs.findIndex(t => t.id === id);
+      if (idx === -1) return;
+      tabs.splice(idx, 1);
+      document.querySelector(`.tab[data-tab-id="${id}"]`)?.remove();
+      document.querySelector(`.tab-frame[data-frame-id="${id}"]`)?.remove();
+      if (activeTabId === id) {
+        tabSwitch(tabs[Math.max(0, idx - 1)].id);
+      }
+    }
+
+    function tabNav(input) {
+      if (!input?.trim()) return;
+      let url = input.trim();
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        if (url.includes(".") && !url.includes(" ")) {
+          url = "https://" + url;
+        } else {
+          url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+        }
+      }
+
+      const data = tabs.find(t => t.id === activeTabId);
+      if (!data) return;
+      data.url = url;
+      data.history.push(url);
+      data.historyIdx++;
+
+      document.getElementById("new-tab-page").classList.add("hidden");
+      document.getElementById("bar").value = url;
+      updateLock();
+      startProgress();
+
+      const frame = document.querySelector(`.tab-frame[data-frame-id="${activeTabId}"]`);
+      if (!frame) return;
+
+      const encoded = scramjet.encodeUrl(url);
+      setFrameTitle(activeTabId, "Loading...");
+
+      frame.src = encoded;
+      frame.onload = () => {
+        stopProgress();
+        try {
+          const doc = frame.contentDocument || frame.contentWindow.document;
+          const title = doc.title || new URL(url).hostname;
+          setFrameTitle(activeTabId, title);
+          try {
+            const decoded = scramjet.decodeUrl(frame.contentWindow.location.href);
+            if (decoded) {
+              data.url = decoded;
+              document.getElementById("bar").value = decoded;
+              updateLock();
+              // Update favicon
+              const fav = document.querySelector(`img[data-fav="${activeTabId}"]`);
+              if (fav) fav.src = `https://www.google.com/s2/favicons?domain=${decoded}&sz=64`;
+            }
+          } catch(_) {}
+        } catch(_) { stopProgress(); }
+      };
+    }
+
+    function setFrameTitle(id, text) {
+      const span = document.querySelector(`.tab[data-tab-id="${id}"] .tab-title`);
+      if (span) span.textContent = text;
+    }
+
+    function tabBack() {
+      const data = tabs.find(t => t.id === activeTabId);
+      if (!data || data.historyIdx <= 0) return;
+      data.historyIdx--;
+      data.url = data.history[data.historyIdx];
+      tabNav(data.url);
+    }
+    function tabForward() {
+      const data = tabs.find(t => t.id === activeTabId);
+      if (!data || data.historyIdx >= data.history.length - 1) return;
+      data.historyIdx++;
+      data.url = data.history[data.historyIdx];
+      tabNav(data.url);
+    }
+    function tabRefresh() {
+      const frame = document.querySelector(`.tab-frame[data-frame-id="${activeTabId}"]`);
+      try { frame?.contentWindow?.location.reload(); } catch(_) {}
+    }
+    function tabPopout() {
+      const frame = document.querySelector(`.tab-frame[data-frame-id="${activeTabId}"]`);
+      if (frame) window.open(frame.src, "_blank");
+    }
+    function tabFullscreen() {
+      const frame = document.querySelector(`.tab-frame[data-frame-id="${activeTabId}"]`);
+      if (frame) frame.requestFullscreen?.();
+    }
+
+    // ── PROGRESS BAR ────────────────────────────────────
+    let progTimer;
+    function startProgress() {
+      const p = document.getElementById("progress");
+      p.style.width = "0%"; p.classList.add("loading");
+      let w = 0;
+      clearInterval(progTimer);
+      progTimer = setInterval(() => {
+        w = Math.min(w + (Math.random() * 8), 88);
+        p.style.width = w + "%";
+      }, 200);
+    }
+    function stopProgress() {
+      clearInterval(progTimer);
+      const p = document.getElementById("progress");
+      p.style.width = "100%";
+      setTimeout(() => { p.style.width = "0%"; p.classList.remove("loading"); }, 300);
+    }
+
+    // ── LOCK ICON ────────────────────────────────────────
+    function updateLock() {
+      const data = tabs.find(t => t.id === activeTabId);
+      const lock = document.getElementById("lock-icon");
+      if (!lock) return;
+      if (data?.url?.startsWith("https://")) {
+        lock.classList.add("secure");
+      } else {
+        lock.classList.remove("secure");
+      }
+    }
+
+    // ── BOOKMARKS ────────────────────────────────────────
+    const BM = {
+      list: JSON.parse(localStorage.getItem("Cola_bookmarks") || "[]"),
+      save() { localStorage.setItem("Cola_bookmarks", JSON.stringify(this.list)); },
+      render() {
+        const row = document.getElementById("bm-row");
+        row.innerHTML = "";
+        this.list.forEach((bm, i) => {
+          const el = document.createElement("div");
+          el.className = "bm-item";
+          const label = bm.name || (bm.url ? new URL(bm.url.startsWith("http") ? bm.url : "https://" + bm.url).hostname.replace(/^www\./, "") : "");
+          el.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${bm.url}&sz=64" /><span>${label}</span>`;
+          el.onclick = () => tabNav(bm.url);
+          el.oncontextmenu = (e) => {
+            e.preventDefault();
+            if (confirm(`Remove bookmark: ${label}?`)) { this.list.splice(i, 1); this.save(); this.render(); }
+          };
+          row.appendChild(el);
+        });
+        // Add button
+        const add = document.createElement("div");
+        add.className = "bm-item";
+        add.innerHTML = `<i class="fas fa-plus" style="font-size:10px"></i><span>Add</span>`;
+        add.onclick = () => {
+          const u = prompt("URL to bookmark:");
+          if (!u) return;
+          const n = prompt("Name (optional):") || "";
+          this.list.push({ url: u.trim(), name: n.trim() });
+          this.save(); this.render();
+        };
+        row.appendChild(add);
+      }
+    };
+    BM.render();
+
+    function toggleBm() {
+      const collapsed = document.body.classList.toggle("bm-collapsed");
+      document.getElementById("btn-toggle-bm").classList.toggle("collapsed", collapsed);
+      localStorage.setItem("Cola_bookmarks_collapsed", collapsed ? "1" : "0");
+    }
+    if (localStorage.getItem("Cola_bookmarks_collapsed") === "1") toggleBm();
+
+    // ── ADDRESS BAR INPUT ────────────────────────────────
+    const bar = document.getElementById("bar");
+    bar.addEventListener("keydown", e => {
+      if (e.key === "Enter") { tabNav(bar.value); bar.blur(); }
+    });
+    bar.addEventListener("focus", () => bar.select());
+
+    const ntBar = document.getElementById("nt-bar");
+    ntBar.addEventListener("keydown", e => {
+      if (e.key === "Enter") { tabNav(ntBar.value); ntBar.value = ""; }
+    });
+
+    // ── INIT ─────────────────────────────────────────────
+    tabNew();
+
+    // Handle ?url= query param
+    const qp = new URLSearchParams(location.search);
+    if (qp.has("url")) tabNav(qp.get("url"));
+
+    // Theme
+    document.getElementById("csslink").href =
+      `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
+  </script>
+  <script src="/assets/js/Cola.ads.js"></script>
+  <script src="/assets/js/cola.sidebar.js"></script>
+</body>
 </html>
