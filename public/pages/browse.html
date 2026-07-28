@@ -1,329 +1,421 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Sail - Scramjet</title>
+		<title>Cola Browser</title>
 		<script src="/baremux/index.js"></script>
 		<script src="/scram/scramjet.all.js"></script>
-		<link
-			rel="stylesheet"
-			href="/assets/css/colors/default.css"
-			id="csslink"
-		/>
+		<link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink" />
 		<link rel="stylesheet" href="/assets/css/font.css?v=2" />
-		<script src="/assets/js/Cola.ui.js?v=20260619a"></script>
 		<link rel="stylesheet" href="/assets/icons/css/all-pro.css" />
+		<script src="/assets/js/Cola.ui.js?v=20260619a"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.4.3/eruda.min.js"></script>
 		<script>
 			navigator.serviceWorker.register("/sw.js", { scope: "/scramjet/" });
 		</script>
-	</head>
-
-	<body class="obfuscate">
-				<style>
-			@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 			:root {
-				--browser-controls-height: 98px;
-				--browser-bookmarks-height: 38px;
-				--browser-toolbar-height: 40px;
-				--browser-button-size: 40px;
-				--browser-tab-height: 40px;
-				--cola-amber: #f59e0b;
-				--cola-amber-2: #fbbf24;
-				--surface: rgba(255, 255, 255, 0.05);
-				--surface-hover: rgba(255, 255, 255, 0.09);
-				--glass-border: rgba(255, 255, 255, 0.07);
+				--sidebar-w: 64px;
+				--controls-h: 96px;
+				--bookmarks-h: 36px;
+				--toolbar-h: 40px;
+				--btn-size: 36px;
+				--tab-h: 36px;
+				--amber: #f59e0b;
+				--amber-2: #fbbf24;
+				--amber-glow: rgba(245,158,11,0.18);
+				--glass: rgba(10, 10, 16, 0.97);
+				--glass-border: rgba(255,255,255,0.06);
+				--surface: rgba(255,255,255,0.04);
+				--surface-hover: rgba(255,255,255,0.08);
+				--text: rgba(255,255,255,0.85);
+				--text-dim: rgba(255,255,255,0.4);
 			}
 
-			* { box-sizing: border-box; }
-			html { z-index: 111; font-family: 'Inter', sans-serif; }
-			body { background: #0a0a0f; margin: 0; }
+			*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-			body.bookmarks-collapsed { --browser-bookmarks-height: 0px; }
-
-			iframe.viewframe, iframe.browser-frame {
-				height: calc(100vh - var(--browser-controls-height) - var(--browser-bookmarks-height) - 15px);
-				width: calc(100vw - 10px);
-				background: #0a0a0f !important;
-				position: absolute;
-				left: calc(50% - 1px);
-				transform: translateX(-50%);
-				bottom: 7.5px;
-				border: none;
-				pointer-events: none;
-				opacity: 0;
-				border-radius: 14px;
-				z-index: 2;
-				transition: opacity 0.2s ease;
+			html, body {
+				width: 100%; height: 100%;
+				background: #0a0a10;
+				font-family: 'Inter', sans-serif;
+				color: var(--text);
+				overflow: hidden;
 			}
 
-			iframe.active { opacity: 1; pointer-events: all; }
+			body.bookmarks-collapsed { --bookmarks-h: 0px; }
 
-			.controls {
-				height: calc(var(--browser-controls-height) + var(--browser-bookmarks-height));
-				background: rgba(10, 10, 15, 0.95);
-				backdrop-filter: blur(20px);
-				-webkit-backdrop-filter: blur(20px);
-				border-bottom: 1px solid rgba(245,158,11,0.1);
-				box-shadow: 0 4px 32px rgba(0,0,0,0.6);
-				width: 100vw;
+			/* ─── SIDEBAR OFFSET ─────────────────────────── */
+			body {
+				margin-left: var(--sidebar-w) !important;
+			}
+
+			/* ─── IFRAME ─────────────────────────────────── */
+			iframe.viewframe {
 				position: fixed;
-				left: 0;
+				left: var(--sidebar-w);
+				top: calc(var(--controls-h) + var(--bookmarks-h));
+				width: calc(100vw - var(--sidebar-w));
+				height: calc(100vh - var(--controls-h) - var(--bookmarks-h));
+				border: none;
+				background: #0a0a10;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.15s ease;
+				z-index: 1;
+			}
+
+			iframe.viewframe.active {
+				opacity: 1;
+				pointer-events: all;
+			}
+
+			/* ─── CONTROLS BAR ───────────────────────────── */
+			.controls {
+				position: fixed;
 				top: 0;
-				padding: 5px;
+				left: var(--sidebar-w);
+				width: calc(100vw - var(--sidebar-w));
+				height: calc(var(--controls-h) + var(--bookmarks-h));
+				background: var(--glass);
+				backdrop-filter: blur(24px);
+				-webkit-backdrop-filter: blur(24px);
+				border-bottom: 1px solid rgba(245,158,11,0.12);
+				box-shadow: 0 1px 40px rgba(0,0,0,0.6);
+				z-index: 100;
+				display: flex;
+				flex-direction: column;
+				padding: 6px 10px 0;
+				gap: 0;
 				transition: height 0.2s ease;
 			}
 
+			/* ─── TABS ROW ───────────────────────────────── */
 			.tabs {
-				position: absolute;
-				left: 0;
-				top: 2.5px;
-				padding: 4px 10px;
-				width: 100%;
-				height: 44px;
 				display: flex;
-				gap: 6px;
 				align-items: center;
+				gap: 5px;
+				height: 44px;
+				flex-shrink: 0;
+				overflow-x: auto;
+				scrollbar-width: none;
 			}
+			.tabs::-webkit-scrollbar { display: none; }
 
 			.tab {
 				background: var(--surface);
 				border: 1px solid var(--glass-border);
-				width: 200px;
-				height: var(--browser-tab-height);
-				border-radius: 12px;
-				padding: 6px 12px;
-				color: rgba(255,255,255,0.6);
+				min-width: 140px;
+				max-width: 200px;
+				height: var(--tab-h);
+				border-radius: 10px;
+				padding: 0 10px 0 10px;
+				color: var(--text-dim);
 				display: flex;
 				align-items: center;
+				gap: 7px;
 				overflow: hidden;
 				white-space: nowrap;
 				cursor: default;
-				transition: 0.2s;
-				font-size: 13px;
+				transition: background 0.15s, border-color 0.15s, color 0.15s;
+				font-size: 12.5px;
 				font-weight: 500;
+				flex-shrink: 0;
+				position: relative;
 			}
-
 			.tab.active {
-				background: rgba(245,158,11,0.12);
-				border-color: rgba(245,158,11,0.35);
-				color: #fbbf24;
+				background: rgba(245,158,11,0.1);
+				border-color: rgba(245,158,11,0.32);
+				color: var(--amber-2);
 			}
-
-			.tab:hover {
+			.tab:hover:not(.active) {
 				background: var(--surface-hover);
-				border-color: rgba(255,255,255,0.12);
-				color: white;
+				border-color: rgba(255,255,255,0.1);
+				color: var(--text);
 			}
-
-			.closetab {
-				position: absolute;
-				right: 10px;
-				cursor: pointer;
-				font-size: 12px;
-				opacity: 0.4;
-				transition: opacity 0.15s;
-			}
-			.closetab:hover { opacity: 1; }
-
 			.tab span {
-				font-weight: 500;
+				flex: 1;
 				overflow: hidden;
-				width: 100%;
-				mask-image: linear-gradient(to right, white 60%, transparent 90%);
+				mask-image: linear-gradient(to right, white 55%, transparent 90%);
+			}
+			.tab img {
+				width: 14px; height: 14px;
+				border-radius: 3px;
+				flex-shrink: 0;
+			}
+			.closetab {
+				flex-shrink: 0;
+				font-size: 11px;
+				opacity: 0;
+				cursor: pointer;
+				transition: opacity 0.15s;
+				padding: 2px;
+				border-radius: 4px;
+			}
+			.tab:hover .closetab { opacity: 0.5; }
+			.closetab:hover { opacity: 1 !important; color: #ff6b6b; }
+
+			#newtab {
+				width: 32px; height: 32px;
+				flex-shrink: 0;
+				border-radius: 9px;
+				border: 1px solid var(--glass-border);
+				background: var(--surface);
+				color: var(--text-dim);
+				cursor: pointer;
+				display: flex; align-items: center; justify-content: center;
+				font-size: 13px;
+				transition: 0.15s;
+			}
+			#newtab:hover {
+				background: var(--amber-glow);
+				border-color: rgba(245,158,11,0.35);
+				color: var(--amber-2);
 			}
 
-			.tab img { width: 16px; height: 16px; margin-right: 8px; border-radius: 3px; flex-shrink: 0; }
-
+			/* ─── TOOLBAR ROW ────────────────────────────── */
 			.toolbar {
-				position: absolute;
-				top: 52px;
-				left: 0;
-				align-items: center;
-				justify-content: center;
-				height: var(--browser-toolbar-height);
+				height: var(--toolbar-h);
 				display: flex;
-				width: 100%;
+				align-items: center;
 				gap: 6px;
-				padding: 0 10px;
+				flex-shrink: 0;
+				padding: 4px 0;
+			}
+
+			.toolbar button {
+				width: var(--btn-size); height: var(--btn-size);
+				flex-shrink: 0;
+				border-radius: 10px;
+				border: 1px solid var(--glass-border);
+				background: var(--surface);
+				color: var(--text-dim);
+				cursor: pointer;
+				font-size: 13px;
+				display: flex; align-items: center; justify-content: center;
+				transition: 0.15s;
+			}
+			.toolbar button:hover {
+				background: var(--amber-glow);
+				border-color: rgba(245,158,11,0.35);
+				color: var(--amber-2);
+				box-shadow: 0 0 10px rgba(245,158,11,0.12);
 			}
 
 			#bar {
 				flex: 1;
-				border-radius: 12px;
+				height: var(--btn-size);
+				border-radius: 10px;
 				border: 1px solid var(--glass-border);
 				background: var(--surface);
-				padding: 0 16px;
-				outline: none;
-				color: rgba(255,255,255,0.9);
-				font-size: 14px;
+				padding: 0 14px;
+				color: var(--text);
+				font-size: 13.5px;
 				font-family: 'Inter', sans-serif;
-				transition: 0.2s;
-				height: var(--browser-toolbar-height);
-				caret-color: #f59e0b;
+				outline: none;
+				caret-color: var(--amber);
+				transition: 0.15s;
 			}
-			#bar::placeholder { color: rgba(255,255,255,0.25); }
+			#bar::placeholder { color: var(--text-dim); }
 			#bar:focus {
-				background: rgba(245,158,11,0.06);
-				border-color: rgba(245,158,11,0.5);
-				box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+				background: rgba(245,158,11,0.05);
+				border-color: rgba(245,158,11,0.45);
+				box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
 				color: white;
 			}
 
-			.toolbar button, #newtab {
-				width: var(--browser-button-size);
-				height: var(--browser-button-size);
-				border-radius: 12px;
-				border: 1px solid var(--glass-border);
-				background: var(--surface);
-				color: rgba(255,255,255,0.55);
-				transition: 0.2s;
-				cursor: pointer;
-				font-size: 14px;
-				flex-shrink: 0;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			.toolbar button:hover, #newtab:hover {
-				background: rgba(245,158,11,0.12);
-				border-color: rgba(245,158,11,0.35);
-				color: #fbbf24;
-				box-shadow: 0 0 12px rgba(245,158,11,0.15);
-			}
-
+			/* ─── BOOKMARKS ROW ──────────────────────────── */
 			.bookmarks {
+				height: var(--bookmarks-h);
 				display: flex;
-				flex-direction: row;
-				width: 100%;
-				height: var(--browser-bookmarks-height);
-				padding: 0 10px;
-				position: absolute;
-				top: 94px;
-				gap: 5px;
-				overflow: hidden;
-				opacity: 1;
 				align-items: center;
-				transition: height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+				gap: 5px;
+				overflow-x: auto;
+				scrollbar-width: none;
+				overflow-y: hidden;
+				opacity: 1;
+				flex-shrink: 0;
+				padding-bottom: 4px;
+				transition: height 0.2s ease, opacity 0.2s ease;
 			}
+			.bookmarks::-webkit-scrollbar { display: none; }
 			body.bookmarks-collapsed .bookmarks {
-				padding-top: 0; padding-bottom: 0;
-				opacity: 0; pointer-events: none;
+				opacity: 0;
+				pointer-events: none;
 			}
 
 			.bookmark {
+				height: 26px;
+				padding: 0 11px;
 				border-radius: 100px;
-				height: 28px;
-				padding: 0 12px;
-				font-size: 12px;
-				background: var(--surface);
 				border: 1px solid var(--glass-border);
+				background: var(--surface);
 				display: flex;
 				align-items: center;
 				gap: 6px;
 				cursor: pointer;
-				transition: 0.2s;
-				white-space: nowrap;
-				color: rgba(255,255,255,0.55);
+				font-size: 12px;
 				font-weight: 500;
+				white-space: nowrap;
+				color: var(--text-dim);
+				transition: 0.15s;
+				flex-shrink: 0;
 			}
 			.bookmark:hover {
-				background: rgba(245,158,11,0.1);
+				background: var(--amber-glow);
 				border-color: rgba(245,158,11,0.3);
-				color: #fbbf24;
+				color: var(--amber-2);
 			}
-			.bookmark img { height: 14px; width: 14px; border-radius: 2px; }
-			.bookmark span { color: inherit; font-size: 12px; }
+			.bookmark img { width: 13px; height: 13px; border-radius: 2px; }
+			.bookmark span { color: inherit; }
 
-			#toggle-bookmarks.collapsed i { transform: rotate(180deg); }
 			#toggle-bookmarks i { transition: transform 0.2s ease; }
-		</style>
+			#toggle-bookmarks.collapsed i { transform: rotate(180deg); }
 
+			/* ─── NEW TAB SCREEN ─────────────────────────── */
+			#new-tab-screen {
+				position: fixed;
+				left: var(--sidebar-w);
+				top: calc(var(--controls-h) + var(--bookmarks-h));
+				width: calc(100vw - var(--sidebar-w));
+				height: calc(100vh - var(--controls-h) - var(--bookmarks-h));
+				background: #0a0a10;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 18px;
+				z-index: 0;
+			}
+			#new-tab-screen.hidden { display: none; }
+
+			.ntab-logo {
+				font-size: 28px;
+				font-weight: 600;
+				color: var(--amber-2);
+				letter-spacing: -0.5px;
+			}
+			.ntab-search {
+				width: 500px;
+				max-width: 90vw;
+				height: 44px;
+				border-radius: 12px;
+				border: 1px solid rgba(245,158,11,0.25);
+				background: rgba(255,255,255,0.04);
+				padding: 0 18px;
+				color: white;
+				font-size: 15px;
+				font-family: 'Inter', sans-serif;
+				outline: none;
+				caret-color: var(--amber);
+				transition: 0.15s;
+			}
+			.ntab-search::placeholder { color: rgba(255,255,255,0.25); }
+			.ntab-search:focus {
+				background: rgba(245,158,11,0.06);
+				border-color: rgba(245,158,11,0.5);
+				box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+			}
+			.ntab-hint { font-size: 12px; color: rgba(255,255,255,0.2); }
+		</style>
+	</head>
+
+	<body class="obfuscate">
 		<div class="controls">
+			<!-- TABS -->
 			<div class="tabs">
-				<button id="newtab" onclick="newTab()">
+				<button id="newtab" onclick="newTab()" title="New Tab">
 					<i class="far fa-plus"></i>
 				</button>
 			</div>
+
+			<!-- TOOLBAR -->
 			<div class="toolbar">
-				<button onclick="back()">
-					<i class="far fa-arrow-left"></i>
-				</button>
-				<button onclick="forward()">
-					<i class="far fa-arrow-right"></i>
-				</button>
-				<button onclick="refresh()">
-					<i class="far fa-rotate"></i>
-				</button>
+				<button onclick="back()" title="Back"><i class="far fa-arrow-left"></i></button>
+				<button onclick="forward()" title="Forward"><i class="far fa-arrow-right"></i></button>
+				<button onclick="refresh()" title="Refresh"><i class="far fa-rotate"></i></button>
+
 				<input
 					class="obfuscate"
 					type="text"
-					placeholder="Search for something or enter a URL here..."
+					placeholder="Search or enter a URL..."
 					id="bar"
 				/>
-				<button onclick="popout()">
-					<i class="far fa-external-link"></i>
-				</button>
-				<button onclick="fullscreen()">
-					<i class="far fa-expand"></i>
-				</button>
-				<button onclick="doEruda()">
-					<i class="far fa-square-code"></i>
-				</button>
-				<button id="toggle-bookmarks" title="Toggle bookmarks bar">
+
+				<button onclick="popout()" title="Open in new window"><i class="far fa-external-link"></i></button>
+				<button onclick="fullscreen()" title="Fullscreen"><i class="far fa-expand"></i></button>
+				<button onclick="doEruda()" title="Developer Tools"><i class="far fa-square-code"></i></button>
+				<button id="toggle-bookmarks" title="Toggle bookmarks">
 					<i class="far fa-chevron-up"></i>
 				</button>
 			</div>
-			<div class="bookmarks" style="margin-top: 2px;">
-				<div class="bookmark" onclick="BookmarkManager.addBookmark()">
-					<i class="fas fa-plus" style="color: white"></i>
-					<span>New Bookmark</span>
-				</div>
-			</div>
+
+			<!-- BOOKMARKS -->
+			<div class="bookmarks"></div>
 		</div>
+
+		<!-- NEW TAB LANDING -->
+		<div id="new-tab-screen">
+			<div class="ntab-logo">🥤 Cola Browser</div>
+			<input
+				class="ntab-search"
+				type="text"
+				placeholder="Search anything or enter a URL..."
+				id="ntab-bar"
+			/>
+			<div class="ntab-hint">Press Enter to go</div>
+		</div>
+
 		<div id="browserframecontainer"></div>
+
 		<script src="/assets/js/Cola.data.js"></script>
 		<script src="/assets/js/Cola.browse.js"></script>
 		<script>
+			// Hook new tab search bar
+			const ntabBar = document.getElementById('ntab-bar');
+			if (ntabBar) {
+				ntabBar.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter') {
+						const q = ntabBar.value.trim();
+						if (q) {
+							document.getElementById('new-tab-screen').classList.add('hidden');
+							nav(q);
+						}
+					}
+				});
+			}
+
+			// Handle ?url= param
 			const params = new URLSearchParams(window.location.search);
-			if (params.has("url")) {
+			if (params.has('url')) {
+				document.getElementById('new-tab-screen').classList.add('hidden');
 				(async function () {
-					await connection.setTransport("/libcurl/index.mjs", [
-						{
-							websocket:
-								`${window.location.protocol === "https:" ? "wss://" : "ws://"}${window.location.host}/socket/`
-						},
-					]);
-					nav(params.get("url"));
+					await connection.setTransport('/libcurl/index.mjs', [{
+						websocket: `${window.location.protocol === 'https:' ? 'wss://' : 'ws://'}${window.location.host}/socket/`
+					}]);
+					nav(params.get('url'));
 				})();
 			}
 		</script>
 		<script>
-			document.getElementById("csslink").href =
-				`/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
+			document.getElementById('csslink').href =
+				`/assets/css/colors/${localStorage.getItem('Cola_theme') ?? 'default'}.css`;
 		</script>
 		<script>
 			function doEruda() {
-				const frame = document.querySelector(
-					`.viewframe[data-frame-id="${activeTab}"]`,
-				);
+				const frame = document.querySelector(`.viewframe[data-frame-id="${activeTab}"]`);
+				if (!frame) return;
 				const frameWindow = frame.contentWindow;
 				const frameDocument = frame.contentDocument || frameWindow.document;
-				const script = frameDocument.createElement("script");
-				script.src = "https://cdn.jsdelivr.net/npm/eruda";
-				script.onload = () => {
-					frameWindow.eruda.init();
-				};
+				const script = frameDocument.createElement('script');
+				script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+				script.onload = () => { frameWindow.eruda.init(); };
 				frameDocument.head.appendChild(script);
 			}
 		</script>
-
 		<script src="/assets/js/Cola.ads.js"></script>
 		<script src="/assets/js/cola.sidebar.js"></script>
-		
 	</body>
 </html>
-
-
