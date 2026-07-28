@@ -1,9 +1,9 @@
 /**
  * cola.sidebar.js
- * Expanding Hover Navigation Sidebar for Cola - Bloxy Cola Amber Theme.
- * - Collapsed by default (icons only, ~64px wide).
- * - Expands smoothly on hover to ~210px wide, revealing full item names.
- * - Glassmorphic dark amber design styled after Bloxy Cola colors.
+ * Ultra-Sleek Glassmorphic Expanding Sidebar for Cola.
+ * - Collapsed by default (~64px wide).
+ * - Expands smoothly on hover to ~210px wide with elegant glass backdrop.
+ * - Refined active pill highlights and pulse online indicator.
  */
 (function () {
     // Avoid double injection
@@ -66,10 +66,8 @@
             <ul class="csb-menu">
                 ${renderNavItems(bottomNav)}
             </ul>
-            <div class="csb-stat" title="Online users">
-                <div class="csb-icon-wrap">
-                    <i class="fas fa-users"></i>
-                </div>
+            <div class="csb-stat" title="Live online users">
+                <div class="csb-live-dot"></div>
                 <span class="csb-label" id="cola-online-count">... online</span>
             </div>
         </div>
@@ -80,17 +78,15 @@
         :root {
             --csb-collapsed-width: 64px;
             --csb-expanded-width: 210px;
-            --csb-bg: rgba(12, 11, 15, 0.92);
-            --csb-bg-expanded: rgba(10, 9, 13, 0.98);
-            --csb-border: rgba(255, 255, 255, 0.08);
-            --csb-pill-bg: rgba(255, 255, 255, 0.04);
-            --csb-pill-border: rgba(255, 255, 255, 0.06);
-            --csb-hover-bg: rgba(245, 158, 11, 0.08);
-            --csb-active-bg: rgba(245, 158, 11, 0.18);
-            --csb-active-color: #f59e0b;
+            --csb-bg: rgba(10, 10, 14, 0.75);
+            --csb-bg-hover: rgba(12, 12, 18, 0.94);
+            --csb-border: rgba(255, 255, 255, 0.06);
+            --csb-hover-bg: rgba(255, 255, 255, 0.05);
+            --csb-active-bg: rgba(251, 191, 36, 0.1);
+            --csb-active-color: #fbbf24;
             --csb-text-muted: #9e9ea6;
-            --csb-text-bright: #f0f0f5;
-            --csb-radius: 14px;
+            --csb-text-bright: #f4f4f5;
+            --csb-radius: 12px;
         }
 
         #cola-nav-sidebar {
@@ -100,8 +96,8 @@
             width: var(--csb-collapsed-width);
             height: 100vh;
             background: var(--csb-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-right: 1px solid var(--csb-border);
             display: flex;
             flex-direction: column;
@@ -117,8 +113,8 @@
 
         #cola-nav-sidebar:hover {
             width: var(--csb-expanded-width);
-            background: var(--csb-bg-expanded);
-            box-shadow: 12px 0 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(245, 158, 11, 0.15);
+            background: var(--csb-bg-hover);
+            box-shadow: 16px 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(251, 191, 36, 0.08);
         }
 
         /* Brand */
@@ -126,30 +122,30 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 6px 8px 18px 8px;
+            padding: 6px 8px 16px 8px;
             width: 100%;
             text-decoration: none;
             border-bottom: 1px solid var(--csb-border);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             cursor: pointer;
         }
 
         .csb-brand-logo {
             font-size: 22px;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.5));
+            filter: drop-shadow(0 2px 8px rgba(251, 191, 36, 0.5));
         }
 
         .csb-brand-name {
-            font-size: 17px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 700;
             color: #ffffff;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
             opacity: 0;
             transform: translateX(-8px);
             transition: opacity 0.2s ease, transform 0.2s ease;
@@ -166,7 +162,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
 
         .csb-bottom-section {
@@ -181,7 +177,7 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
             width: 100%;
         }
 
@@ -203,15 +199,16 @@
             white-space: nowrap;
             width: 100%;
             box-sizing: border-box;
+            border-left: 2px solid transparent;
         }
 
         .csb-icon-wrap {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
             flex-shrink: 0;
             transition: transform 0.18s ease, color 0.18s ease;
         }
@@ -236,39 +233,52 @@
         }
 
         .csb-link:hover .csb-icon-wrap {
-            transform: scale(1.15);
+            transform: scale(1.12);
             color: #ffffff;
         }
 
         .csb-link.active {
             background: var(--csb-active-bg);
             color: var(--csb-active-color);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-left-color: var(--csb-active-color);
+            font-weight: 600;
         }
 
         .csb-link.active .csb-icon-wrap {
             color: var(--csb-active-color);
         }
 
-        /* Online Stat */
+        /* Online Stat Pill */
         .csb-stat {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 8px 10px;
+            gap: 12px;
+            padding: 7px 10px;
             margin-top: 6px;
             border-radius: var(--csb-radius);
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            color: var(--csb-active-color);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--csb-border);
+            color: var(--csb-text-muted);
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
             width: 100%;
             box-sizing: border-box;
         }
 
-        .csb-stat .csb-icon-wrap {
-            color: var(--csb-active-color);
+        .csb-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+            flex-shrink: 0;
+            margin-left: 8px;
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
         }
 
         /* Ensure page body has margin to prevent overlapping content */
