@@ -268,19 +268,20 @@
       align-items: center;
       justify-content: center;
       gap: 16px;
-      background: #09090e;
+      background-color: #09090e;
+      background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 24px 24px;
       z-index: 5;
       transition: opacity 0.2s;
     }
     #new-tab-page.hidden { opacity: 0; pointer-events: none; }
 
-    .nt-logo {
-      font-size: 22px; font-weight: 600;
-      color: var(--amber-bright);
-      display: flex; align-items: center; gap: 10px;
-      letter-spacing: -0.3px;
+    .nt-logo img {
+      width: 220px;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 28px rgba(245,158,11,0.35));
     }
-    .nt-logo img { width: 28px; height: 28px; }
 
     .nt-search {
       width: 480px; max-width: 90%;
@@ -363,8 +364,7 @@
   <div id="vp">
     <div id="new-tab-page">
       <div class="nt-logo">
-        <img src="/assets/img/cola-logo.png" alt="" onerror="this.style.display='none'" />
-        Cola Browser
+        <img src="/assets/img/cola-logo.png" alt="Cola" />
       </div>
       <input class="nt-search" id="nt-bar" placeholder="Search or enter a URL..." type="text" />
       <div class="nt-hint">Press Enter to browse</div>
