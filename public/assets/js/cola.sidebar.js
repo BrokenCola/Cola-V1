@@ -1,9 +1,9 @@
 /**
  * cola.sidebar.js
- * Expanding Hover Navigation Sidebar for Cola.
+ * Expanding Hover Navigation Sidebar for Cola - Bloxy Cola Amber Theme.
  * - Collapsed by default (icons only, ~64px wide).
  * - Expands smoothly on hover to ~210px wide, revealing full item names.
- * - Glassmorphic dark design styled after Cherri UI.
+ * - Glassmorphic dark amber design styled after Bloxy Cola colors.
  */
 (function () {
     // Avoid double injection
@@ -80,16 +80,16 @@
         :root {
             --csb-collapsed-width: 64px;
             --csb-expanded-width: 210px;
-            --csb-bg: rgba(12, 12, 16, 0.92);
-            --csb-bg-expanded: rgba(10, 10, 14, 0.98);
+            --csb-bg: rgba(12, 11, 15, 0.92);
+            --csb-bg-expanded: rgba(10, 9, 13, 0.98);
             --csb-border: rgba(255, 255, 255, 0.08);
             --csb-pill-bg: rgba(255, 255, 255, 0.04);
             --csb-pill-border: rgba(255, 255, 255, 0.06);
-            --csb-hover-bg: rgba(255, 255, 255, 0.08);
-            --csb-active-bg: rgba(61, 213, 109, 0.15);
-            --csb-active-color: #4ade80;
-            --csb-text-muted: #8e8e93;
-            --csb-text-bright: #f2f2f7;
+            --csb-hover-bg: rgba(245, 158, 11, 0.08);
+            --csb-active-bg: rgba(245, 158, 11, 0.18);
+            --csb-active-color: #f59e0b;
+            --csb-text-muted: #9e9ea6;
+            --csb-text-bright: #f0f0f5;
             --csb-radius: 14px;
         }
 
@@ -118,7 +118,7 @@
         #cola-nav-sidebar:hover {
             width: var(--csb-expanded-width);
             background: var(--csb-bg-expanded);
-            box-shadow: 12px 0 40px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.1);
+            box-shadow: 12px 0 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(245, 158, 11, 0.15);
         }
 
         /* Brand */
@@ -142,7 +142,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            filter: drop-shadow(0 2px 8px rgba(61, 213, 109, 0.4));
+            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.5));
         }
 
         .csb-brand-name {
@@ -243,7 +243,7 @@
         .csb-link.active {
             background: var(--csb-active-bg);
             color: var(--csb-active-color);
-            border: 1px solid rgba(61, 213, 109, 0.25);
+            border: 1px solid rgba(245, 158, 11, 0.35);
         }
 
         .csb-link.active .csb-icon-wrap {
@@ -258,8 +258,8 @@
             padding: 8px 10px;
             margin-top: 6px;
             border-radius: var(--csb-radius);
-            background: rgba(61, 213, 109, 0.08);
-            border: 1px solid rgba(61, 213, 109, 0.15);
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
             color: var(--csb-active-color);
             font-size: 12px;
             font-weight: 600;
