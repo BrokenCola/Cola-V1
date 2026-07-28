@@ -427,6 +427,20 @@ html, body {
   font-size: 16px;
   border: 1px solid rgba(251, 191, 36, 0.2);
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.testi-avatar-img {
+  padding: 0;
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.testi-avatar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
 }
 
 .testi-user-info {
