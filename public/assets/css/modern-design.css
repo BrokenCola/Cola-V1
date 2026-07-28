@@ -165,21 +165,23 @@ html, body {
 /* CHERRI / COLA TITLE LOGO */
 .brand-logo-hero {
   position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  min-height: 120px;
 }
 
 .brand-logo-img {
-  max-width: 480px;
-  width: 85%;
+  max-width: 540px;
+  width: 90%;
   height: auto;
   display: block;
   margin: 0 auto;
+  mix-blend-mode: normal !important;
   object-fit: contain;
-  filter: drop-shadow(0 0 30px rgba(255, 200, 0, 0.5));
+  filter: drop-shadow(0 0 30px rgba(255, 190, 0, 0.7));
   animation: floatTitle 4s ease-in-out infinite;
   user-select: none;
 }

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cola | Home</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" />
-    <link rel="stylesheet" href="/assets/css/font.css?v=20260728b" />
-    <link rel="stylesheet" href="/assets/css/modern-design.css?v=20260728b" />
-    <link rel="stylesheet" href="/assets/icons/css/all-pro.css?v=20260728b" />
+    <link rel="stylesheet" href="/assets/css/font.css?v=20260728c" />
+    <link rel="stylesheet" href="/assets/css/modern-design.css?v=20260728c" />
+    <link rel="stylesheet" href="/assets/icons/css/all-pro.css?v=20260728c" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         if (localStorage.getItem("cola_completedOnboarding") !== "yes" && 
@@ -52,7 +52,7 @@
     <!-- MAIN HERO CONTENT -->
     <main class="hero-container">
         <div class="brand-logo-hero">
-            <img src="/assets/img/cola-logo.png?v=20260728b" alt="Cola Logo" class="brand-logo-img" />
+            <img src="/assets/img/cola-logo.png?v=20260728c" id="hero-logo-img" alt="Cola Logo" class="brand-logo-img" />
         </div>
         <p class="brand-tagline" id="splash-tagline">splishy splash</p>
 
@@ -227,6 +227,38 @@
             }
         }
         updateSplash();
+
+        function makeLogoVibrant() {
+            const img = document.getElementById('hero-logo-img');
+            if (!img) return;
+            const tempImg = new Image();
+            tempImg.crossOrigin = "Anonymous";
+            tempImg.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = tempImg.width;
+                canvas.height = tempImg.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(tempImg, 0, 0);
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imgData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    if (r > 220 && g > 220 && b > 220) {
+                        data[i + 3] = 0;
+                    }
+                }
+                ctx.putImageData(imgData, 0, 0);
+                img.src = canvas.toDataURL('image/png');
+            };
+            tempImg.src = img.src;
+        }
+        if (document.readyState === 'complete') {
+            makeLogoVibrant();
+        } else {
+            window.addEventListener('load', makeLogoVibrant);
+        }
 
         function handleHeroSearch(event) {
             if (event.key === 'Enter') {
