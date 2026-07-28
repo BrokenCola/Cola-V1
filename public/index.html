@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cola</title>
+    <title>Cola | Home</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" />
     <link rel="stylesheet" href="/assets/css/font.css?v=2" />
     <link rel="stylesheet" href="/assets/css/modern-design.css" />
-    <link rel="stylesheet" href="/assets/css/animations.css" />
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
@@ -21,180 +20,251 @@
 </head>
 
 <body>
-    <!-- TOP ALERT -->
-    <div class="top-alert">
-        Infamous is shutting down. Going offline in 2 days 14h. All data will be deleted. 
-        <a href="javascript:void(0)">Read why →</a>
-    </div>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-brand">🥤 Cola</div>
-
-        <ul class="sidebar-menu">
-            <li class="sidebar-item">
-                <div class="sidebar-link active" onclick="navigateTo('/index.html')">
-                    <i class="fas fa-user"></i>
-                    <span>Account</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/ai.html')">
-                    <i class="fas fa-robot"></i>
-                    <span>AI</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/chatrooms.html')">
-                    <i class="fas fa-comments"></i>
-                    <span>Chat</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/watch.html')">
-                    <i class="fas fa-eye"></i>
-                    <span>Watch</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/listen.html')">
-                    <i class="fas fa-music"></i>
-                    <span>Music</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/browse.html')">
-                    <i class="fas fa-globe"></i>
-                    <span>Browse</span>
-                </div>
-            </li>
-            <li class="sidebar-item">
-                <div class="sidebar-link" onclick="navigateTo('/pages/games.html')">
-                    <i class="fas fa-gamepad"></i>
-                    <span>Games</span>
-                </div>
-            </li>
-        </ul>
-
-        <div class="sidebar-bottom">
-            <div class="sidebar-stat">
-                <i class="fas fa-users"></i>
-                <span id="online-count">79 online</span>
+    <!-- TOP MOCK BROWSER HEADER BAR -->
+    <header class="top-browser-bar">
+        <div class="browser-tabs">
+            <div class="browser-tab">
+                <i class="fas fa-home tab-icon"></i>
+                <span>Home</span>
             </div>
         </div>
-    </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="content-inner">
-            <h1 class="page-title">Cola</h1>
-            <p class="splash-text" id="splash-text">"im gonna miss evb"</p>
-
-            <div class="users-carousel">
-                <div class="user-avatar">👤</div>
-                <div class="user-avatar">🎮</div>
+        <div class="address-bar-container">
+            <div class="address-bar">
+                <i class="fas fa-lock"></i>
+                <input type="text" id="url-input" value="cola://home" placeholder="Search or type a URL..." onkeydown="handleSearchKey(event)" />
             </div>
+        </div>
 
-            <div class="carousel-dots">
-                <div class="dot active" onclick="selectCarousel(0)"></div>
-                <div class="dot" onclick="selectCarousel(1)"></div>
-                <div class="dot" onclick="selectCarousel(2)"></div>
-                <div class="dot" onclick="selectCarousel(3)"></div>
-                <div class="dot" onclick="selectCarousel(4)"></div>
-                <div class="dot" onclick="selectCarousel(5)"></div>
-                <div class="dot" onclick="selectCarousel(6)"></div>
-                <div class="dot" onclick="selectCarousel(7)"></div>
-                <div class="dot" onclick="selectCarousel(8)"></div>
-                <div class="dot" onclick="selectCarousel(9)"></div>
-                <div class="dot" onclick="selectCarousel(10)"></div>
-                <div class="dot" onclick="selectCarousel(11)"></div>
-                <div class="dot" onclick="selectCarousel(12)"></div>
-            </div>
-
-            <div class="stats-section">
-                <div class="stat-item">
-                    <div class="stat-value">79</div>
-                    <div class="stat-label">online</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">4,485,297</div>
-                    <div class="stat-label">total visits</div>
+        <div class="top-bar-controls">
+            <div class="music-status">
+                <i class="fas fa-music"></i>
+                <span id="now-playing-text">Nothing playing</span>
+                <div class="media-btns">
+                    <span class="media-btn" title="Previous"><i class="fas fa-step-backward"></i></span>
+                    <span class="media-btn" title="Play/Pause"><i class="fas fa-play"></i></span>
+                    <span class="media-btn" title="Next"><i class="fas fa-step-forward"></i></span>
                 </div>
             </div>
+        </div>
+    </header>
 
-            <div class="cta-section">
-                <div class="cta-title">JOIN OUR DISCORD FOR MORE LINKS</div>
-                <button class="cta-button" onclick="joinDiscord()">
-                    <i class="fab fa-discord"></i>
-                    Join the Discord
-                </button>
+    <!-- MAIN HERO CONTENT -->
+    <main class="hero-container">
+        <div class="brand-logo-hero">
+            <h1 class="brand-title-glow">Cola</h1>
+        </div>
+        <p class="brand-tagline" id="splash-tagline">splishy splash</p>
+
+        <!-- SEARCH BAR -->
+        <div class="hero-search-box">
+            <i class="fas fa-search search-icon-inside"></i>
+            <input type="text" class="hero-search-input" id="hero-search" placeholder="Search for anything!" onkeydown="handleHeroSearch(event)" />
+        </div>
+
+        <!-- CIRCULAR QUICK ACTION BUTTONS -->
+        <div class="action-buttons-row">
+            <a href="/pages/games.html" class="action-btn-item">
+                <div class="action-icon-circle">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <span class="action-btn-label">Games</span>
+            </a>
+            <a href="/pages/ai.html" class="action-btn-item">
+                <div class="action-icon-circle">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <span class="action-btn-label">AI</span>
+            </a>
+            <a href="/pages/watch.html" class="action-btn-item">
+                <div class="action-icon-circle">
+                    <i class="fas fa-video"></i>
+                </div>
+                <span class="action-btn-label">Movies</span>
+            </a>
+            <a href="/pages/listen.html" class="action-btn-item">
+                <div class="action-icon-circle">
+                    <i class="fas fa-music"></i>
+                </div>
+                <span class="action-btn-label">Music</span>
+            </a>
+            <div class="action-btn-item" onclick="openAddModal()">
+                <div class="action-icon-circle">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <span class="action-btn-label">Add</span>
+            </div>
+            <a href="/pages/browse.html" class="action-btn-item">
+                <div class="action-icon-circle">
+                    <i class="fas fa-th-large"></i>
+                </div>
+                <span class="action-btn-label">All Apps</span>
+            </a>
+        </div>
+
+        <!-- DISCORD BANNER BUTTON -->
+        <a href="https://discord.gg/hUYzETaQ9U" target="_blank" class="discord-banner-pill">
+            <i class="fab fa-discord"></i>
+            <span>Join our Discord for more links</span>
+        </a>
+
+        <!-- TESTIMONIAL / COMMUNITY CARDS -->
+        <div class="testimonials-row">
+            <div class="testi-card">
+                <div class="testi-header">
+                    <div class="testi-avatar">👤</div>
+                    <div class="testi-user-info">
+                        <div class="testi-name">Evicly</div>
+                        <div class="testi-title">Owner of Vortex Chat</div>
+                    </div>
+                </div>
+                <div class="testi-body">
+                    Cola is one of, if not the most modern proxy site. It has all the latest features, good speeds, smooth UI, and overall just works.
+                </div>
             </div>
 
-            <div class="version-info">v1.23.19</div>
+            <div class="testi-card">
+                <div class="testi-header">
+                    <div class="testi-avatar">🔮</div>
+                    <div class="testi-user-info">
+                        <div class="testi-name">Technonyte</div>
+                        <div class="testi-title">Owner of VAPOR</div>
+                    </div>
+                </div>
+                <div class="testi-body">
+                    chair e
+                </div>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-header">
+                    <div class="testi-avatar">🌙</div>
+                    <div class="testi-user-info">
+                        <div class="testi-name">ZXS</div>
+                        <div class="testi-title">Owner of Luna</div>
+                    </div>
+                </div>
+                <div class="testi-body">
+                    cola is clean imo
+                </div>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-header">
+                    <div class="testi-avatar">⭐</div>
+                    <div class="testi-user-info">
+                        <div class="testi-name">Divine</div>
+                        <div class="testi-title">Owner of Starlight</div>
+                    </div>
+                </div>
+                <div class="testi-body">
+                    cute lil site
+                </div>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-header">
+                    <div class="testi-avatar">📮</div>
+                    <div class="testi-user-info">
+                        <div class="testi-name">TestUser</div>
+                        <div class="testi-title">Co-Owner of Hydra Network</div>
+                    </div>
+                </div>
+                <div class="testi-body">
+                    I like cola because it is sleek
+                </div>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-header">
+                    <div class="testi-avatar">🥤</div>
+                    <div class="testi-user-info">
+                        <div class="testi-name">JOSH</div>
+                        <div class="testi-title">User</div>
+                    </div>
+                </div>
+                <div class="testi-body">
+                    I like cola
+                </div>
+            </div>
         </div>
     </main>
 
-    <script src="/assets/js/cola.index.js"></script>
+    <!-- FOOTER META INFO -->
+    <div class="footer-meta">
+        Page: 120ms | v3.0.0 Beta 4
+    </div>
+
+    <!-- QUICK ADD MODAL -->
+    <div class="modal-overlay" id="add-modal" onclick="closeAddModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-title">Add Quick Shortcut</div>
+            <input type="text" class="modal-input" id="shortcut-name" placeholder="Shortcut Name (e.g. YouTube)" />
+            <input type="text" class="modal-input" id="shortcut-url" placeholder="URL (e.g. https://youtube.com)" />
+            <button class="modal-btn" onclick="saveShortcut()">Add Shortcut</button>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/assets/js/cola.sidebar.js"></script>
     <script>
-        function navigateTo(path) {
-            window.location.href = path;
-        }
-
-        function joinDiscord() {
-            window.open('https://discord.gg/hUYzETaQ9U', '_blank');
-        }
-
         const splashTexts = [
-            '"im gonna miss evb"',
+            'splishy splash',
             'the ai bubble just inflated again :(',
             'partnered with everyone',
             'best game site ever?',
             'now with its own wisp server!',
-            '"SHUT UP DEKUUUU"',
-            'error: could not load splash',
-            'chatrooms work...right?',
-            'create an account for cool stuff',
             'lights please!',
             'in the spectacular \'26',
             'join the discord',
-            'very customizable',
+            'very customizable'
         ];
 
-        function updateSplashText() {
-            const randomText = splashTexts[Math.floor(Math.random() * splashTexts.length)];
-            document.getElementById('splash-text').textContent = randomText;
+        function updateSplash() {
+            const el = document.getElementById('splash-tagline');
+            if (el) {
+                el.textContent = splashTexts[Math.floor(Math.random() * splashTexts.length)];
+            }
         }
+        updateSplash();
 
-        updateSplashText();
-
-        function selectCarousel(index) {
-            document.querySelectorAll('.dot').forEach((dot, i) => {
-                if (i === index) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
+        function handleHeroSearch(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.trim();
+                if (query) {
+                    window.location.href = `/pages/browse.html?url=${encodeURIComponent(query)}`;
                 }
-            });
+            }
         }
 
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        function updateOnlineCount() {
-            const count = Math.floor(Math.random() * 150) + 50;
-            document.getElementById('online-count').textContent = count + ' online';
+        function handleSearchKey(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.trim();
+                if (query) {
+                    if (!query.startsWith('cola://')) {
+                        window.location.href = `/pages/browse.html?url=${encodeURIComponent(query)}`;
+                    }
+                }
+            }
         }
 
-        updateOnlineCount();
-        setInterval(updateOnlineCount, 30000);
+        function openAddModal() {
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function closeAddModal(event) {
+            document.getElementById('add-modal').classList.remove('active');
+        }
+
+        function saveShortcut() {
+            const name = document.getElementById('shortcut-name').value.trim();
+            const url = document.getElementById('shortcut-url').value.trim();
+            if (name && url) {
+                alert(`Shortcut "${name}" saved!`);
+                closeAddModal();
+            }
+        }
     </script>
-
-    <script src="/assets/js/lib/particles.js"></script>
-    <script src="/assets/js/cola.ads.js"></script>
 </body>
 
 </html>
