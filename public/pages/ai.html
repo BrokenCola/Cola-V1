@@ -56,15 +56,30 @@
         /* keep previous sidebar styles below */
 
         /* SIDEBAR */
+        /* Sidebar styled as a fixed panel to the right of the left icon strip */
         .ai-sidebar {
+            position: fixed;
+            left: var(--sb);
+            top: var(--bar-h);
             width: 260px;
-            background: #1a1a1a;
-            border-right: 1px solid #2a2a2a;
+            height: calc(100vh - var(--bar-h));
+            background: #131313;
+            border-right: 1px solid rgba(255,255,255,0.03);
             display: flex;
             flex-direction: column;
             padding: 16px;
             overflow-y: auto;
+            z-index: 150;
         }
+
+        /* Left icon strip */
+        #leftbar {
+            position: fixed; left: 0; top: 0; bottom: 0; width: var(--sb); background: #060607; z-index: 300; display:flex; align-items:flex-start; padding-top: 6px; border-right: 1px solid rgba(255,255,255,0.02);
+        }
+        #leftbar .leftbar-inner { display:flex; flex-direction:column; gap:12px; width:100%; align-items:center; }
+        #leftbar .lb-item { width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; border-radius:8px; }
+        #leftbar .lb-item.active { background: rgba(255,255,255,0.03); color:var(--amber-bright); }
+        #leftbar .lb-item img { width:20px; height:20px; }
 
         .ai-sidebar-header {
             display: flex;
@@ -172,7 +187,9 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #0d0d0d 0%, #121212 100%);
+            margin-left: calc(var(--sb) + 260px);
+            margin-top: var(--bar-h);
         }
 
         .ai-header {
@@ -449,6 +466,17 @@
 </head>
 
 <body>
+    <!-- LEFT ICON STRIP (matches browser/home) -->
+    <div id="leftbar">
+      <div class="leftbar-inner">
+        <div class="lb-item active" title="Cola AI"><img src="/assets/img/icons/ai-chatbot.svg" alt="ai"/></div>
+        <div class="lb-item" title="Home"><i class="fas fa-home"></i></div>
+        <div class="lb-item" title="Browse"><i class="fas fa-compass"></i></div>
+        <div class="lb-item" title="Apps"><i class="fas fa-th"></i></div>
+        <div class="lb-item" title="Settings"><i class="fas fa-cog"></i></div>
+      </div>
+    </div>
+
     <!-- BROWSER CHROME -->
     <div id="chrome">
       <div id="tab-row">
@@ -910,6 +938,28 @@
         }
 
         setInterval(updateRateLimitUI, 1000);
+
+        // Sync API source selects (top chrome + sidebar) and model selection
+        (function(){
+            const top = document.getElementById('apiSourceSelect');
+            const side = document.getElementById('apiSourceSelectSidebar');
+            const hidden = document.getElementById('apiSourceSelectHidden');
+            function syncSource(val){
+                if(top) top.value = val;
+                if(side) side.value = val;
+                if(hidden) hidden.value = val;
+            }
+            [top, side, hidden].forEach(el => {
+                if(!el) return;
+                el.addEventListener('change', e => syncSource(e.target.value));
+            });
+
+            // Sync model dropdown placeholder behavior so users see selection
+            const modelSel = document.getElementById('attachmentModelSelect');
+            if(modelSel){
+                modelSel.addEventListener('change', ()=>{}); // placeholder in case future needs
+            }
+        })();
     </script>
     <script src="/assets/js/cola.sidebar.js"></script>
 </body>
