@@ -430,6 +430,20 @@
             New Chat
         </button>
         <input type="text" class="search-box" id="searchBox" placeholder="Search chats..." onkeyup="filterChats()">
+        <div style="margin:8px 0;">
+            <label style="font-size:12px;color:#8a8a8a;display:block;margin-bottom:6px;">AI Source</label>
+            <select id="apiSourceSelectSidebar" style="width:100%;padding:8px;border-radius:8px;background:#2a2a2a;border:1px solid #3a3a3a;color:#ecedee;">
+                <option value="cola-proxy" selected>Cola AI V1 (Proxy)</option>
+                <option value="attachment-key">Attachment Key (Local)</option>
+            </select>
+            <label style="font-size:12px;color:#8a8a8a;display:block;margin-top:8px;margin-bottom:6px;">Model</label>
+            <select id="attachmentModelSelect" style="width:100%;padding:8px;border-radius:8px;background:#2a2a2a;border:1px solid #3a3a3a;color:#ecedee;">
+                <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                <option value="gpt-5-mini">gpt-5-mini</option>
+                <option value="gpt-4o-mini">gpt-4o-mini</option>
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+            </select>
+        </div>
         <div class="chat-history" id="chatHistory">
             <!-- Chat history items will be loaded here -->
         </div>
@@ -687,8 +701,9 @@
             addTypingIndicator();
 
             try {
-                // Choose API source: proxy or attachment key
-                const apiSource = (document.getElementById('apiSourceSelect') || {}).value || 'cola-proxy';
+                // Choose API source: check header select first, then sidebar select
+                const apiSourceEl = document.getElementById('apiSourceSelect') || document.getElementById('apiSourceSelectSidebar');
+                const apiSource = (apiSourceEl && apiSourceEl.value) || 'cola-proxy';
                 let response;
                 if (apiSource === 'cola-proxy') {
                     response = await fetch(GEMINI_API_URL, {
@@ -703,7 +718,10 @@
                         })
                     });
                 } else if (apiSource === 'attachment-key') {
-                    // Call external provider directly with the attachment API key
+                    // Call external provider directly with the attachment API key and selected model
+                    const modelEl = document.getElementById('attachmentModelSelect');
+                    const chosenModel = (modelEl && modelEl.value) || 'gpt-5-mini';
+
                     response = await fetch(ATTACHMENT_API_URL, {
                         method: 'POST',
                         headers: {
@@ -711,7 +729,7 @@
                             'Authorization': 'Bearer ' + ATTACHMENT_API_KEY
                         },
                         body: JSON.stringify({
-                            model: 'gpt-5-mini',
+                            model: chosenModel,
                             messages: [
                                 { role: 'user', content: message }
                             ]
