@@ -865,7 +865,8 @@
 
             const content = document.createElement('div');
             content.className = 'message-content';
-            content.textContent = text;
+            // Render markdown/formatting into HTML
+            content.innerHTML = renderMarkdownToHTML(String(text || ''));
 
             if (sender === 'user') {
                 message.appendChild(content);
@@ -887,6 +888,69 @@
                 });
             }
         }
+
+        // Simple markdown renderer to support **bold**, *italic*, inline `code`, lists and fenced code blocks
+        window._codeBlocks = window._codeBlocks || [];
+        function escapeHTML(str){
+            return str.replace(/&/g, '&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        function renderMarkdownToHTML(md){
+            if(!md) return '';
+            // Extract fenced code blocks
+            const codeBlocks = [];
+            md = md.replace(/```(\w+)?\n([\s\S]*?)```/g, function(_, lang, code){
+                const idx = window._codeBlocks.length;
+                window._codeBlocks.push(code);
+                return `__CODE_BLOCK_${idx}__`;
+            });
+
+            // Escape remaining HTML
+            md = escapeHTML(md);
+
+            // Replace markdown constructs
+            md = md.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            md = md.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            md = md.replace(/`([^`]+)`/g, '<code class="inline">$1</code>');
+            md = md.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>');
+
+            // Lists (simple unordered lists starting with - )
+            md = md.replace(/(^|\n)(- .+(?:\n- .+)*)/g, function(_, prefix, list){
+                const items = list.split('\n').map(l => '<li>' + escapeHTML(l.replace(/^- /,'')) + '</li>').join('');
+                return (prefix || '') + '<ul>' + items + '</ul>';
+            });
+
+            // Convert double newlines to paragraph breaks, single newline to <br>
+            md = md.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
+            md = '<p>' + md + '</p>';
+
+            // Restore code blocks placeholders
+            md = md.replace(/__CODE_BLOCK_(\d+)__/g, function(_, idx){
+                const code = window._codeBlocks[Number(idx)] || '';
+                const escaped = escapeHTML(code);
+                return `<div class="code-block"><pre><code>${escaped}</code></pre><button class="copy-btn" data-code-index="${idx}">Copy</button></div>`;
+            });
+
+            return md;
+        }
+
+        // Copy button handler (event delegation)
+        document.addEventListener('click', function(e){
+            if(e.target && e.target.classList && e.target.classList.contains('copy-btn')){
+                const idx = e.target.getAttribute('data-code-index');
+                const code = window._codeBlocks[Number(idx)] || '';
+                if(navigator.clipboard && code){
+                    navigator.clipboard.writeText(code).then(()=>{
+                        const prev = e.target.textContent;
+                        e.target.textContent = 'Copied';
+                        setTimeout(()=> e.target.textContent = prev, 1800);
+                    }).catch(()=>{
+                        // Fallback: create temporary textarea
+                        const t = document.createElement('textarea'); t.value = code; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); e.target.textContent = 'Copied'; }catch(err){} t.remove(); setTimeout(()=> e.target.textContent = 'Copy', 1800);
+                    });
+                }
+            }
+        });
 
         function addTypingIndicator() {
             const container = document.getElementById('messagesContainer');
