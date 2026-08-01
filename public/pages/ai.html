@@ -473,6 +473,31 @@
                 transform: translateY(0);
             }
         }
+
+        /* Code block styling */
+        .code-block {
+            position: relative;
+            margin: 12px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .code-block pre {
+            margin: 0; padding: 14px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace; font-size: 13px; color: #e6eef8; background: transparent;
+        }
+        .code-block code { white-space: pre-wrap; }
+        .copy-btn {
+            position: absolute; right: 8px; top: 8px; z-index: 10;
+            background: rgba(0,0,0,0.45); color: #fff; border: 1px solid rgba(255,255,255,0.06);
+            padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 12px;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.03); }
+
+        /* Ensure chat area uses site spacing and centers content */
+        .chat-container { padding: 24px 40px; max-width: 1100px; margin: 0 auto; }
+        .messages { gap: 20px; }
+
     </style>
 </head>
 
