@@ -442,8 +442,14 @@
     <main class="ai-main">
         <header class="ai-header">
             <h1 id="chatTitle">New Chat</h1>
-            <div class="rate-limit-indicator" id="rateLimitIndicator">
-                5/5 requests available
+            <div style="display:flex; gap:12px; align-items:center;">
+                <select id="apiSourceSelect" title="Choose API source" style="padding:8px; border-radius:8px; background:#2a2a2a; border:1px solid #3a3a3a; color:#ecedee;">
+                    <option value="cola-proxy" selected>Cola AI V1 (Proxy)</option>
+                    <option value="attachment-key">Attachment Key (local)</option>
+                </select>
+                <div class="rate-limit-indicator" id="rateLimitIndicator">
+                    5/5 requests available
+                </div>
             </div>
         </header>
 
@@ -492,12 +498,16 @@
         // AI API - Uses backend proxy at /api/ai/chat (keeps key server-side)
         const GEMINI_API_URL = '/api/ai/chat';
 
-        // RATE LIMITING: 5 requests per 10 minutes
-        const RATE_LIMIT_MAX = 5;
-        const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes in ms
-        const RATE_LIMIT_KEY = 'cola_ai_rate_limit';
-        const CHATS_STORAGE_KEY = 'cola_ai_chats';
-        const CURRENT_CHAT_KEY = 'cola_ai_current_chat';
+    // Attachment key endpoint and key (from user-provided file)
+    const ATTACHMENT_API_URL = 'https://api.chatanywhere.tech/v1/chat/completions';
+    const ATTACHMENT_API_KEY = 'sk-0F093F5sSpnQghjmh1br9L0hZk6dTEDtMIZD06O4xiWwHv0Q';
+
+    // RATE LIMITING: 5 requests per 10 minutes
+    const RATE_LIMIT_MAX = 5;
+    const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes in ms
+    const RATE_LIMIT_KEY = 'cola_ai_rate_limit';
+    const CHATS_STORAGE_KEY = 'cola_ai_chats';
+    const CURRENT_CHAT_KEY = 'cola_ai_current_chat';
 
         let currentChatId = null;
         let allChats = {};
@@ -677,17 +687,39 @@
             addTypingIndicator();
 
             try {
-                const response = await fetch(GEMINI_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        messages: [
-                            { role: 'user', content: message }
-                        ]
-                    })
-                });
+                // Choose API source: proxy or attachment key
+                const apiSource = (document.getElementById('apiSourceSelect') || {}).value || 'cola-proxy';
+                let response;
+                if (apiSource === 'cola-proxy') {
+                    response = await fetch(GEMINI_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            messages: [
+                                { role: 'user', content: message }
+                            ]
+                        })
+                    });
+                } else if (apiSource === 'attachment-key') {
+                    // Call external provider directly with the attachment API key
+                    response = await fetch(ATTACHMENT_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + ATTACHMENT_API_KEY
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-5-mini',
+                            messages: [
+                                { role: 'user', content: message }
+                            ]
+                        })
+                    });
+                } else {
+                    throw new Error('Unknown API source selected');
+                }
 
                 removeTypingIndicator();
 
@@ -697,7 +729,7 @@
                 }
 
                 const data = await response.json();
-                const aiResponse = data.content || 'Sorry, I could not generate a response.';
+                const aiResponse = data.content || (data.choices && (data.choices[0]?.message?.content || data.choices[0]?.text)) || data.result || (typeof data === 'string' ? data : JSON.stringify(data)) || 'Sorry, I could not generate a response.';
                 
                 addMessage(aiResponse, 'ai', true);
             } catch (error) {
