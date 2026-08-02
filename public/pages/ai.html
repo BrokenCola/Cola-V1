@@ -568,30 +568,34 @@
 
     <!-- MAIN -->
     <main class="ai-main">
-        <!-- keep header for accessibility but hidden; top chrome handles controls -->
         <header class="ai-header" style="display:none;">
             <h1 id="chatTitle">New Chat</h1>
         </header>
 
-        <div class="ai-stage" style="min-height:calc(100vh - var(--bar-h)); display:flex; align-items:center; justify-content:center;">
+        <!-- Hero stage -->
+        <div class="ai-stage" style="min-height:calc(100vh - var(--bar-h)); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+            <div style="position:absolute; inset:0; background: radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.0) 40%); mix-blend-mode: overlay; pointer-events:none;"></div>
             <div class="welcome-wrap" style="width:100%; max-width:1100px;">
-                <div class="hero" style="padding:80px 20px 40px; border-radius:12px;">
-                    <div style="width:100%; display:flex; justify-content:center;">
-                        <div style="width:720px; text-align:center; margin:0 auto;">
-                            <h2 style="margin:0 0 6px 0; font-size:28px; font-weight:700; color:rgba(255,255,255,0.95);">Welcome to Cola AI</h2>
-                            <p style="margin:6px 0 18px 0; color:rgba(255,255,255,0.55);">Here are some conversation starters to get you going.</p>
+                <div class="hero" style="padding:80px 20px 40px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                    <div style="width:760px; text-align:center; margin:0 auto;">
+                        <h2 style="margin:0 0 8px 0; font-size:32px; font-weight:800; color:rgba(255,255,255,0.98); letter-spacing:0.2px;">Welcome to Cola AI</h2>
+                        <p style="margin:6px 0 22px 0; color:rgba(255,255,255,0.55);">Ask questions, generate code, or get inspired — powered by Cola AI and Onyx.</p>
 
-                            <div class="starter-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:14px;">
-                                <button class="starter-btn" data-prompt="Write me code that calculates prime numbers in Python" onclick="sendExamplePrompt(this)">Write me code that...</button>
-                                <button class="starter-btn" data-prompt="Explain quantum computing in simple terms" onclick="sendExamplePrompt(this)">Explain this in simple terms</button>
-                                <button class="starter-btn" data-prompt="Help me brainstorm ideas for a sci-fi short story" onclick="sendExamplePrompt(this)">Help me brainstorm ideas for...</button>
-                                <button class="starter-btn" data-prompt="What are the pros and cons of using functional programming in large systems?" onclick="sendExamplePrompt(this)">What are the pros and cons of...</button>
-                                <button class="starter-btn" data-prompt="Summarize this article for me" onclick="sendExamplePrompt(this)">Summarize this for me</button>
-                                <button class="starter-btn" data-prompt="Help me debug this error: [paste error message]" onclick="sendExamplePrompt(this)">Help me debug this error</button>
-                                <button class="starter-btn" data-prompt="Write a creative story about a lost robot" onclick="sendExamplePrompt(this)">Write a creative story about...</button>
-                                <button class="starter-btn" data-prompt="What's the best way to learn web development?" onclick="sendExamplePrompt(this)">What's the best way to...</button>
-                            </div>
+                        <div class="starter-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:8px;">
+                            <button class="starter-btn" data-prompt="Write me code that calculates prime numbers in Python" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">Write me code that...</button>
+                            <button class="starter-btn" data-prompt="Explain quantum computing in simple terms" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">Explain this in simple terms</button>
+                            <button class="starter-btn" data-prompt="Help me brainstorm ideas for a sci-fi short story" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">Help me brainstorm ideas...</button>
+                            <button class="starter-btn" data-prompt="What are the pros and cons of using functional programming in large systems?" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">What are the pros and cons of...</button>
+                            <button class="starter-btn" data-prompt="Summarize this article for me" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">Summarize this for me</button>
+                            <button class="starter-btn" data-prompt="Help me debug this error: [paste error message]" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">Help me debug this error</button>
+                            <button class="starter-btn" data-prompt="Write a creative story about a lost robot" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">Write a creative story about...</button>
+                            <button class="starter-btn" data-prompt="What's the best way to learn web development?" onclick="sendExamplePrompt(this)" style="background:transparent;border:1px solid rgba(255,255,255,0.06); padding:12px 14px; border-radius:10px; color:rgba(255,255,255,0.9); font-weight:600; transition:all 0.18s ease;">What's the best way to...</button>
                         </div>
+
+                        <div style="margin-top:18px; display:flex; justify-content:center; gap:12px;">
+                            <button id="btn-new" class="new-chat-btn" onclick="newChat()" style="background:transparent; border:1px solid rgba(255,255,255,0.06); color:rgba(255,255,255,0.9); padding:10px 14px; border-radius:10px;">+ New Chat</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -603,7 +607,7 @@
         <!-- Input bar pinned to bottom and centered like home UI -->
         <div class="input-area" style="position:fixed; left:calc(var(--sb) + 260px + 20px); right:40px; bottom:24px; z-index:200; display:flex; justify-content:center;">
             <div style="width:100%; max-width:1100px; display:flex; gap:12px; align-items:center;">
-                <div style="flex:1; display:flex; align-items:center; gap:12px; background:var(--surf); border:1px solid var(--border); border-radius:28px; padding:10px 14px;">
+                <div style="flex:1; display:flex; align-items:center; gap:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.04); border-radius:28px; padding:10px 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.6);">
                     <i class="fas fa-paperclip" style="color:rgba(255,255,255,0.35);"></i>
                     <textarea class="input-field" id="inputField" placeholder="Message Cola AI..." onkeydown="handleKeyPress(event)" style="background:transparent; border:none; padding:8px; height:44px; min-height:44px; max-height:120px; resize:none;"></textarea>
                     <div style="display:flex; gap:8px; align-items:center;">
@@ -614,7 +618,7 @@
                         </select>
                     </div>
                 </div>
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send" style="width:54px; height:54px; border-radius:12px;"> <i class="fas fa-paper-plane"></i></button>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send" style="width:54px; height:54px; border-radius:12px; background:linear-gradient(90deg,var(--amber),var(--amber-bright)); color:#000; border:none; box-shadow:0 10px 30px rgba(245,158,11,0.12);"> <i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
 
@@ -978,13 +982,25 @@
         function sendExamplePrompt(el) {
             const prompt = (el && (el.dataset && el.dataset.prompt)) || (el && el.textContent) || '';
             const input = document.getElementById('inputField');
-            if (input) {
-                input.value = prompt.trim();
-                input.focus();
-            }
-        }
+                    const messagesEl = document.getElementById('messagesContainer');
+                    const stage = document.querySelector('.ai-stage');
+                    if (stage) {
+                        // animate hero out
+                        stage.style.transition = 'opacity 260ms ease, transform 260ms ease';
+                        stage.style.opacity = '0';
+                        stage.style.transform = 'translateY(-8px)';
+                        setTimeout(()=> { stage.style.display = 'none'; }, 300);
+                    }
+                    if (messagesEl) {
+                        messagesEl.style.display = 'block';
+                    }
+                    if (input) {
+                        input.value = prompt.trim();
+                        input.focus();
+                    }
+                }
 
-        function addTypingIndicator() {
+                function addTypingIndicator() {
             const container = document.getElementById('messagesContainer');
             const message = document.createElement('div');
             message.className = 'message ai';
