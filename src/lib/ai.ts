@@ -10,10 +10,10 @@ export interface AiChatMessage {
 	content:
 		| string
 		| Array<{
-				type?: string;
-				text?: string;
-				image_url?: { url: string };
-		  }>;
+			type?: string;
+			text?: string;
+			image_url?: { url: string };
+		}>;
 }
 
 interface OpenAiCompatibleChoice {
@@ -88,9 +88,7 @@ export async function createAiChatCompletion(input: {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			...(AI_OPENAI_API_KEY
-				? { Authorization: `Bearer ${AI_OPENAI_API_KEY}` }
-				: {}),
+			...(AI_OPENAI_API_KEY ? { Authorization: `Bearer ${AI_OPENAI_API_KEY}` } : {}),
 		},
 		body: JSON.stringify({
 			model: normalizeModel(input.model),
@@ -98,14 +96,14 @@ export async function createAiChatCompletion(input: {
 		}),
 	});
 
+	// attempt to parse JSON but also capture raw text for clearer errors
 	const data = (await response.json().catch(() => ({}))) as OpenAiCompatibleResponse;
 
 	if (!response.ok) {
-		throw new AiProviderError(
-			data.error?.message ||
-				`AI provider request failed with status ${response.status}`,
-			response.status,
-		);
+		const raw = await response.clone().text().catch(() => "");
+		const errMsg = data.error?.message || raw || `AI provider request failed with status ${response.status}`;
+		console.error("AI provider response error:", { status: response.status, error: errMsg });
+		throw new AiProviderError(errMsg, response.status);
 	}
 
 	const content = getResponseText(data);
