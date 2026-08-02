@@ -35,6 +35,7 @@ interface AiChatRequestBody {
 		role?: string;
 		content?: AiMessageContent;
 	}>;
+	user_name?: string;
 }
 
 const aiLimiter = new MemoryRateLimiter();
@@ -158,10 +159,17 @@ export const aiRoutes: RouteDefinition[] = [
 			}
 
 			const body = await ctx.jsonBody<AiChatRequestBody>();
-			const messages = normalizeMessages(body);
+			let messages = normalizeMessages(body);
 			if (messages === null) {
 				return json({ error: "Invalid AI request body" }, { status: 400 });
 			}
+
+						// If client provided a user_name, insert an extra system instruction after the default SYSTEM_PROMPT
+						if (body?.user_name) {
+							// messages is an array where messages[0] === { role: 'system', content: SYSTEM_PROMPT }
+							const userSystem = { role: 'system', content: `Address the user as ${body.user_name} in all responses.` };
+							messages = [messages[0], userSystem, ...messages.slice(1)];
+						}
 
 			if (messages.length === 0) {
 				return json(

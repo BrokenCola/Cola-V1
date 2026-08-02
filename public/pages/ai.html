@@ -656,8 +656,14 @@
 
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                       <div>
+                        <div style="color:#8a8a8a;margin-bottom:8px;font-size:13px;">Your display name</div>
+                        <div style="display:flex;gap:8px;margin-bottom:12px;">
+                          <input id="userDisplayName" placeholder="How should the AI call you? (e.g. Sam)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
+                          <button id="saveDisplayNameBtn" style="padding:8px;border-radius:8px;background:linear-gradient(90deg,var(--amber),var(--amber-bright));border:none;color:#000;">Save</button>
+                        </div>
+
                         <div style="color:#8a8a8a;margin-bottom:8px;font-size:13px;">Providers</div>
-                        <div id="providersList" style="max-height:240px;overflow:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;"></div>
+                        <div id="providersList" style="max-height:200px;overflow:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;"></div>
                         <div style="display:flex;gap:8px;margin-top:8px;">
                           <input id="providerName" placeholder="Display name" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
                           <input id="providerEndpoint" placeholder="Endpoint (e.g. /api/ai/custom or https://api.example.com)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
@@ -674,7 +680,7 @@
 
                       <div>
                         <div style="color:#8a8a8a;margin-bottom:8px;font-size:13px;">Models</div>
-                        <div id="modelsList" style="max-height:240px;overflow:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;"></div>
+                        <div id="modelsList" style="max-height:320px;overflow:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;"></div>
                         <div style="display:flex;gap:8px;margin-top:8px;">
                           <input id="modelNameInput" placeholder="model name (e.g. gpt-5.4-mini)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
                           <button id="addModelBtn" style="padding:8px;border-radius:8px;background:linear-gradient(90deg,var(--amber),var(--amber-bright));border:none;color:#000;">Add</button>
@@ -924,6 +930,7 @@
                     },
                     body: JSON.stringify({
                         model: chosenModel,
+                        user_name: localStorage.getItem('cola_ai_user_name') || null,
                         messages: [
                             { role: 'user', content: message }
                         ]
@@ -938,6 +945,7 @@
                         },
                         body: JSON.stringify({
                             model: chosenModel,
+                            user_name: localStorage.getItem('cola_ai_user_name') || null,
                             messages: [
                                 { role: 'user', content: message }
                             ]
@@ -1175,18 +1183,30 @@
             const modal = document.getElementById('manageModal');
             const providersList = document.getElementById('providersList');
             const modelsList = document.getElementById('modelsList');
+            const nameInput = document.getElementById('userDisplayName');
             modal.style.display = 'flex';
+
+            // populate saved display name
+            if(nameInput){ nameInput.value = localStorage.getItem('cola_ai_user_name') || ''; }
 
             // populate lists
             const { providers, models } = loadSavedProvidersModels();
             providersList.innerHTML = '';
             providers.forEach(p => {
                 const row = document.createElement('div');
-                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='6px 4px';
+                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='8px';row.style.cursor='pointer';
                 const left = document.createElement('div'); left.style.color='#ecedee'; left.textContent = p.name + ' (' + p.type + ')';
                 const right = document.createElement('div');
+
+                // clicking provider selects it and closes modal
+                row.onclick = function(){
+                    const sel = document.getElementById('apiSourceSelect');
+                    if(sel) sel.value = p.id;
+                    closeManageModal();
+                };
+
                 if(!DEFAULT_PROVIDERS.find(dp=>dp.id===p.id)){
-                    const del = document.createElement('button'); del.textContent='Remove'; del.style.marginLeft='8px'; del.onclick=()=>{ removeProvider(p.id); openManageModal(); };
+                    const del = document.createElement('button'); del.textContent='Remove'; del.style.marginLeft='8px'; del.onclick=(ev)=>{ ev.stopPropagation(); removeProvider(p.id); openManageModal(); };
                     right.appendChild(del);
                 }
                 row.appendChild(left); row.appendChild(right); providersList.appendChild(row);
@@ -1195,11 +1215,21 @@
             modelsList.innerHTML = '';
             models.forEach(m => {
                 const row = document.createElement('div');
-                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='6px 4px';
+                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='8px';row.style.cursor='pointer';
                 const left = document.createElement('div'); left.style.color='#ecedee'; left.textContent = m;
                 const right = document.createElement('div');
+
+                // clicking model selects it and closes modal
+                row.onclick = function(){
+                    const top = document.getElementById('modelSelectTop');
+                    const mini = document.getElementById('miniModelSelect');
+                    if(top) top.value = m;
+                    if(mini) mini.value = m;
+                    closeManageModal();
+                };
+
                 if(!DEFAULT_MODELS.includes(m)){
-                    const del = document.createElement('button'); del.textContent='Remove'; del.style.marginLeft='8px'; del.onclick=()=>{ removeModel(m); openManageModal(); };
+                    const del = document.createElement('button'); del.textContent='Remove'; del.style.marginLeft='8px'; del.onclick=(ev)=>{ ev.stopPropagation(); removeModel(m); openManageModal(); };
                     right.appendChild(del);
                 }
                 row.appendChild(left); row.appendChild(right); modelsList.appendChild(row);
@@ -1231,6 +1261,7 @@
             if(e.target && e.target.id === 'closeManage') closeManageModal();
             if(e.target && e.target.id === 'addProviderBtn') addProvider();
             if(e.target && e.target.id === 'addModelBtn') addModel();
+            if(e.target && e.target.id === 'saveDisplayNameBtn') { const v = document.getElementById('userDisplayName').value.trim(); localStorage.setItem('cola_ai_user_name', v); alert('Saved display name: ' + v); }
         });
 
         // Replace init sequence to include providers/models
