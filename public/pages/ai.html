@@ -102,6 +102,10 @@
         /* small visual polish */
         .example-card, .new-chat-btn { transition: all 0.16s ease; }
 
+        /* Manage modal hover styles */
+        .manage-row { padding:8px; border-radius:6px; transition: transform 0.14s ease, background 0.14s ease, box-shadow 0.14s ease; }
+        .manage-row:hover { transform: translateY(-4px); background: linear-gradient(90deg, rgba(245,158,11,0.04), rgba(245,158,11,0.02)); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+
         /* preserve other rules below */
 
         /* SIDEBAR */
@@ -671,9 +675,7 @@
                         <div style="display:flex;gap:8px;margin-top:8px;">
                           <select id="providerType" style="padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;">
                             <option value="proxy">server-proxy</option>
-                            <option value="direct">direct (client key)</option>
                           </select>
-                          <input id="providerApiKey" placeholder="API key (optional, stored locally)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
                           <button id="addProviderBtn" style="padding:8px;border-radius:8px;background:linear-gradient(90deg,var(--amber),var(--amber-bright));border:none;color:#000;">Add</button>
                         </div>
                       </div>
@@ -1137,14 +1139,32 @@
         }
 
         function newChat() {
-            const lastChatId = localStorage.getItem(CURRENT_CHAT_KEY);
-            currentChatId = null;
-            document.getElementById('messagesContainer').innerHTML = '';
-            document.getElementById('chatEmpty').style.display = 'flex';
-            document.getElementById('inputField').value = '';
-            document.getElementById('chatTitle').textContent = 'New Chat';
-            renderChatHistory();
-        }
+                    // create and open a new chat so user is immediately inside it
+                    const lastChatId = localStorage.getItem(CURRENT_CHAT_KEY);
+                    const id = generateChatId();
+                    currentChatId = id;
+                    allChats[id] = {
+                        id,
+                        title: 'New Chat',
+                        messages: [],
+                        timestamp: Date.now()
+                    };
+                    saveChats();
+
+                    // show messages area and hide the hero/empty state
+                    const messagesEl = document.getElementById('messagesContainer');
+                    const chatEmpty = document.getElementById('chatEmpty');
+                    const stage = document.querySelector('.ai-stage');
+                    if(stage) stage.style.display = 'none';
+                    if(messagesEl) messagesEl.style.display = 'block';
+                    if(chatEmpty) chatEmpty.style.display = 'none';
+
+                    document.getElementById('inputField').value = '';
+                    document.getElementById('chatTitle').textContent = 'New Chat';
+                    renderChatHistory();
+                    // focus input
+                    const input = document.getElementById('inputField'); if(input) input.focus();
+                }
 
         // Providers & models management and persistence
         const DEFAULT_PROVIDERS = [
@@ -1194,7 +1214,8 @@
             providersList.innerHTML = '';
             providers.forEach(p => {
                 const row = document.createElement('div');
-                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='8px';row.style.cursor='pointer';
+                row.className = 'manage-row';
+                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.cursor='pointer';
                 const left = document.createElement('div'); left.style.color='#ecedee'; left.textContent = p.name + ' (' + p.type + ')';
                 const right = document.createElement('div');
 
@@ -1202,6 +1223,9 @@
                 row.onclick = function(){
                     const sel = document.getElementById('apiSourceSelect');
                     if(sel) sel.value = p.id;
+                    // reflect selection in UI
+                    const topModel = document.getElementById('modelSelectTop');
+                    if(topModel) topModel.selectedIndex = 0;
                     closeManageModal();
                 };
 
@@ -1215,7 +1239,8 @@
             modelsList.innerHTML = '';
             models.forEach(m => {
                 const row = document.createElement('div');
-                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='8px';row.style.cursor='pointer';
+                row.className = 'manage-row';
+                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.cursor='pointer';
                 const left = document.createElement('div'); left.style.color='#ecedee'; left.textContent = m;
                 const right = document.createElement('div');
 
