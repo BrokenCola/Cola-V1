@@ -19,41 +19,90 @@
         }
 
         :root {
-            --sb: 64px; /* sidebar width for chrome */
-            --bar-h: 52px;
+            --sb: 64px; /* left icon strip width */
+            --sidebar-w: 260px; /* left sidebar width */
+            --bar-h: 56px; /* top chrome height */
             --amber: #f59e0b;
             --amber-bright: #fbbf24;
             --glass: rgba(9, 9, 14, 0.98);
             --border: rgba(255,255,255,0.06);
-            --surf: rgba(255,255,255,0.045);
-            --surf-h: rgba(255,255,255,0.085);
+            --surf: rgba(255,255,255,0.03);
+            --surf-2: rgba(255,255,255,0.02);
+            --muted: rgba(255,255,255,0.35);
+            --accent-strong: rgba(245,158,11,0.95);
         }
 
         html, body {
             width:100%; height:100%;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #09090e;
+            background: #0b0b0d;
             color: rgba(255,255,255,0.92);
             overflow: hidden;
         }
 
+        /* Left icon strip sits at 0, sidebar pinned to right of it */
         body { margin-left: var(--sb) !important; }
 
-        /* CHROME BAR */
+        /* CHROME BAR (matches browse/home) */
         #chrome {
-            position: fixed; top: 0; left: var(--sb); width: calc(100vw - var(--sb)); z-index:200;
-            background: var(--glass); border-bottom: 1px solid rgba(245,158,11,0.06); box-shadow: 0 2px 30px rgba(0,0,0,0.6);
+            position: fixed; top: 0; left: var(--sb); width: calc(100vw - var(--sb)); z-index:220;
+            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            box-shadow: 0 6px 30px rgba(0,0,0,0.6);
             display:flex; flex-direction:column;
         }
-        #tab-row { height: var(--bar-h); display:flex; align-items:flex-end; padding:8px 8px 0; gap:4px; overflow-x:auto; }
-        #tab-row .tab { display:flex; align-items:center; gap:8px; height:36px; padding:0 10px; border-radius:10px 10px 0 0; border:1px solid var(--border); background:var(--surf); color:rgba(255,255,255,0.45); font-size:12px; font-weight:500; }
-        #tab-row .tab.active { background: rgba(245,158,11,0.09); border-color: rgba(245,158,11,0.25); color: var(--amber-bright); }
-        #toolbar-row { height:42px; display:flex; align-items:center; padding:0 8px; gap:8px; border-top:1px solid var(--border); }
+        #tab-row { height: var(--bar-h); display:flex; align-items:flex-end; padding:8px 8px 0; gap:6px; overflow-x:auto; }
+        #tab-row .tab { display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border-radius:10px 10px 0 0; border:1px solid var(--border); background:transparent; color:rgba(255,255,255,0.7); font-size:13px; font-weight:600; }
+        #tab-row .tab.active { background: linear-gradient(90deg, rgba(245,158,11,0.06), rgba(245,158,11,0.03)); border-color: rgba(245,158,11,0.14); color: var(--amber-bright); box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+        #toolbar-row { height:46px; display:flex; align-items:center; padding:0 8px; gap:12px; border-top:1px solid var(--border); }
 
         /* ensure main content sits below chrome */
         .ai-main { margin-top: var(--bar-h); }
 
-        /* keep previous sidebar styles below */
+        /* Left icon strip */
+        #leftbar { position: fixed; left: 0; top: 0; bottom: 0; width: var(--sb); background: #060607; z-index:230; display:flex; align-items:flex-start; padding-top:8px; border-right: 1px solid rgba(255,255,255,0.02); }
+        #leftbar .leftbar-inner { display:flex; flex-direction:column; gap:14px; width:100%; align-items:center; }
+        #leftbar .lb-item { width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; border-radius:8px; }
+        #leftbar .lb-item.active { background: rgba(255,255,255,0.02); color:var(--amber-bright); }
+
+        /* Sidebar pinned to right of left strip */
+        .ai-sidebar { position: fixed; left: var(--sb); top: var(--bar-h); width: var(--sidebar-w); height: calc(100vh - var(--bar-h)); background: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.02); padding:18px; box-sizing:border-box; z-index:210; overflow-y:auto; }
+        .ai-sidebar-header { font-weight:700; color:rgba(255,255,255,0.9); margin-bottom:12px; }
+
+        /* MAIN area sits to right of sidebar */
+        .ai-main { margin-left: calc(var(--sb) + var(--sidebar-w)); }
+
+        /* Centered content container */
+        .chat-container { padding: 28px 24px; max-width: 1100px; margin: 0 auto; }
+
+        /* Hero / starter grid */
+        .hero { text-align:center; }
+        .starter-grid { display:grid; grid-template-columns: repeat(2, minmax(240px,1fr)); gap:12px; justify-items:center; margin-top:12px; }
+        .starter-grid .starter-btn { width:100%; padding:12px 14px; border-radius:12px; background:transparent; border:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.9); font-weight:600; cursor:pointer; transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease; }
+        .starter-grid .starter-btn:hover { transform: translateY(-3px); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+
+        /* Messages area */
+        #messagesContainer { max-width:1100px; margin: 10px auto; height: calc(100vh - var(--bar-h) - 160px); overflow-y:auto; padding: 20px; box-sizing:border-box; }
+        .messages .message { margin-bottom:18px; }
+
+        /* Input bar centered and responsive */
+        .input-area { position:fixed; left: calc(var(--sb) + var(--sidebar-w) + 24px); right: 40px; bottom: 24px; z-index:240; display:flex; justify-content:center; }
+        .input-area .input-wrapper { width:100%; max-width:1100px; display:flex; gap:12px; align-items:center; }
+        .input-area .input-field { flex:1; padding:12px 14px; border-radius:28px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.03); color:rgba(255,255,255,0.9); min-height:44px; max-height:120px; resize:none; outline:none; }
+        .send-btn { width:54px; height:54px; border-radius:12px; background: linear-gradient(90deg,var(--amber),var(--amber-bright)); color:#000; border:none; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 12px 30px rgba(245,158,11,0.12); cursor:pointer; }
+
+        /* Code blocks and markdown */
+        .code-block { position: relative; margin: 12px 0; border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.02); }
+        .code-block pre { margin: 0; padding: 14px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace; font-size: 13px; color: #e6eef8; background: transparent; }
+        .copy-btn { position: absolute; right: 8px; top: 8px; z-index: 10; background: rgba(0,0,0,0.45); color: #fff; border: 1px solid rgba(255,255,255,0.06); padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+
+        /* Responsive tweaks */
+        @media (max-width: 900px) { .starter-grid { grid-template-columns: 1fr; } .ai-sidebar { width: 220px; } .ai-main { margin-left: calc(var(--sb) + 220px); } .input-area { left: calc(var(--sb) + 220px + 12px); right:12px; } }
+
+        /* small visual polish */
+        .example-card, .new-chat-btn { transition: all 0.16s ease; }
+
+        /* preserve other rules below */
 
         /* SIDEBAR */
         /* Sidebar styled as a fixed panel to the right of the left icon strip */
