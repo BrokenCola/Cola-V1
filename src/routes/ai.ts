@@ -303,4 +303,47 @@ export const aiRoutes: RouteDefinition[] = [
 			}
 		},
 	},
+  {
+    method: "POST",
+    path: "/api/ai/attachment",
+    async handler(ctx) {
+      const rateLimit = consumeAiRateLimit(ctx.clientIp);
+      if (!rateLimit.allowed) return rateLimit.response!;
+
+      const apiKey = process.env.ATTACHMENT_API_KEY;
+      if (!apiKey) {
+        return json({ error: "Attachment AI is not configured on the server" }, { status: 500 });
+      }
+
+      const body = await ctx.jsonBody<AiChatRequestBody>();
+      if (!body?.messages || !Array.isArray(body.messages)) {
+        return json({ error: "Invalid request body" }, { status: 400 });
+      }
+
+      try {
+        const resp = await fetch("https://api.chatanywhere.tech/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({ model: body.model, messages: body.messages }),
+        });
+
+        if (!resp.ok) {
+          const errText = await resp.text().catch(() => "");
+          console.error("Attachment AI error:", errText);
+          return json({ error: "Failed to get response from Attachment API" }, { status: resp.status });
+        }
+
+        const data = await resp.json().catch(() => ({}));
+        const content = data.content || (data.choices && (data.choices[0]?.message?.content || data.choices[0]?.text)) || data.result || (typeof data === 'string' ? data : JSON.stringify(data)) || '';
+
+        return json({ content, model: body.model || null });
+      } catch (error) {
+        console.error("Attachment request failed:", error);
+        return json({ error: error instanceof Error ? error.message : "Attachment request failed" }, { status: 502 });
+      }
+    },
+  },
 ];

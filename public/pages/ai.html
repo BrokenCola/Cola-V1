@@ -578,6 +578,12 @@
             <option value="cola-proxy" selected>Cola AI V1 (Proxy)</option>
             <option value="attachment-key">Onyx AI (Attachment Key)</option>
           </select>
+          <select id="modelSelectTop" title="Choose model" style="padding:8px;border-radius:8px;background:#171717;border:1px solid rgba(255,255,255,0.04);color:#ecedee;">
+            <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+            <option value="gpt-5-mini">gpt-5-mini</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+          </select>
           <div class="rate-limit-indicator" id="rateLimitIndicatorTop" style="background:transparent;border:none;color:#b4b4b4;">5/5 requests available</div>
         </div>
       </div>
@@ -593,20 +599,6 @@
             New Chat
         </button>
         <input type="text" class="search-box" id="searchBox" placeholder="Search chats..." onkeyup="filterChats()">
-        <div style="margin:8px 0;">
-            <label style="font-size:12px;color:#8a8a8a;display:block;margin-bottom:6px;">AI Source</label>
-            <select id="apiSourceSelectSidebar" style="width:100%;padding:8px;border-radius:8px;background:#2a2a2a;border:1px solid #3a3a3a;color:#ecedee;">
-                <option value="cola-proxy" selected>Cola AI V1 (Proxy)</option>
-                <option value="attachment-key">Onyx AI (Attachment Key)</option>
-            </select>
-            <label style="font-size:12px;color:#8a8a8a;display:block;margin-top:8px;margin-bottom:6px;">Model</label>
-            <select id="attachmentModelSelect" style="width:100%;padding:8px;border-radius:8px;background:#2a2a2a;border:1px solid #3a3a3a;color:#ecedee;">
-                <option value="gpt-5.4-mini">gpt-5.4-mini</option>
-                <option value="gpt-5-mini">gpt-5-mini</option>
-                <option value="gpt-4o-mini">gpt-4o-mini</option>
-                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-            </select>
-        </div>
         <div class="chat-history" id="chatHistory">
             <!-- Chat history items will be loaded here -->
         </div>
@@ -677,9 +669,7 @@
         // AI API - Uses backend proxy at /api/ai/chat (keeps key server-side)
         const GEMINI_API_URL = '/api/ai/chat';
 
-    // Attachment key endpoint and key (from user-provided file)
-    const ATTACHMENT_API_URL = 'https://api.chatanywhere.tech/v1/chat/completions';
-    const ATTACHMENT_API_KEY = 'sk-0F093F5sSpnQghjmh1br9L0hZk6dTEDtMIZD06O4xiWwHv0Q';
+    // Attachment API is routed through server-side proxy at /api/ai/attachment (ATTACHMENT_API_KEY must be configured server-side)
 
     // RATE LIMITING: 5 requests per 10 minutes
     const RATE_LIMIT_MAX = 5;
@@ -871,32 +861,32 @@
             addTypingIndicator();
 
             try {
-                // Choose API source: check header select first, then sidebar select
-                const apiSourceEl = document.getElementById('apiSourceSelect') || document.getElementById('apiSourceSelectSidebar');
+            // Choose API source: top toolbar select
+            const apiSourceEl = document.getElementById('apiSourceSelect');
                 const apiSource = (apiSourceEl && apiSourceEl.value) || 'cola-proxy';
-                let response;
-                if (apiSource === 'cola-proxy') {
-                    response = await fetch(GEMINI_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            messages: [
-                                { role: 'user', content: message }
-                            ]
-                        })
-                    });
-                } else if (apiSource === 'attachment-key') {
-                    // Call external provider directly with the attachment API key and selected model
-                    const modelEl = document.getElementById('attachmentModelSelect');
-                    const chosenModel = (modelEl && modelEl.value) || 'gpt-5-mini';
-
-                    response = await fetch(ATTACHMENT_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + ATTACHMENT_API_KEY
+            const modelElTop = document.getElementById('modelSelectTop');
+            const chosenModel = (modelElTop && modelElTop.value) || (document.getElementById('miniModelSelect') && document.getElementById('miniModelSelect').value) || 'gpt-5-mini';
+            let response;
+            if (apiSource === 'cola-proxy') {
+                // use server-side proxy that keeps keys secret
+                response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: chosenModel,
+                        messages: [
+                            { role: 'user', content: message }
+                        ]
+                    })
+                });
+            } else if (apiSource === 'attachment-key') {
+                // Call server-side attachment proxy which uses ATTACHMENT_API_KEY from env
+                response = await fetch('/api/ai/attachment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                             model: chosenModel,
@@ -1111,25 +1101,14 @@
 
         setInterval(updateRateLimitUI, 1000);
 
-        // Sync API source selects (top chrome + sidebar) and model selection
+        // Sync top model select with mini select in the input area
         (function(){
-            const top = document.getElementById('apiSourceSelect');
-            const side = document.getElementById('apiSourceSelectSidebar');
-            const hidden = document.getElementById('apiSourceSelectHidden');
-            function syncSource(val){
-                if(top) top.value = val;
-                if(side) side.value = val;
-                if(hidden) hidden.value = val;
-            }
-            [top, side, hidden].forEach(el => {
-                if(!el) return;
-                el.addEventListener('change', e => syncSource(e.target.value));
-            });
-
-            // Sync model dropdown placeholder behavior so users see selection
-            const modelSel = document.getElementById('attachmentModelSelect');
-            if(modelSel){
-                modelSel.addEventListener('change', ()=>{}); // placeholder in case future needs
+            const modelTop = document.getElementById('modelSelectTop');
+            const mini = document.getElementById('miniModelSelect');
+            if(modelTop && mini){
+                // keep them in sync
+                modelTop.addEventListener('change', ()=> { mini.value = modelTop.value; });
+                mini.addEventListener('change', ()=> { modelTop.value = mini.value; });
             }
         })();
     </script>
