@@ -573,17 +573,18 @@
       </div>
       <div id="toolbar-row">
         <div style="flex:1"></div>
-        <div style="display:flex;align-items:center;gap:12px;padding-right:12px;">
-          <select id="apiSourceSelect" title="Choose API source" style="padding:8px;border-radius:8px;background:#171717;border:1px solid rgba(255,255,255,0.04);color:#ecedee;">
+        <div style="display:flex;align-items:center;gap:8px;padding-right:12px;">
+          <select id="apiSourceSelect" title="Choose API source" style="padding:8px;border-radius:8px;background:#171717;border:1px solid rgba(255,255,255,0.04);color:#ecedee;min-width:220px;">
             <option value="cola-proxy" selected>Cola AI V1 (Proxy)</option>
             <option value="attachment-key">Onyx AI (Attachment Key)</option>
           </select>
-          <select id="modelSelectTop" title="Choose model" style="padding:8px;border-radius:8px;background:#171717;border:1px solid rgba(255,255,255,0.04);color:#ecedee;">
+          <select id="modelSelectTop" title="Choose model" style="padding:8px;border-radius:8px;background:#171717;border:1px solid rgba(255,255,255,0.04);color:#ecedee;min-width:160px;">
             <option value="gpt-5.4-mini">gpt-5.4-mini</option>
             <option value="gpt-5-mini">gpt-5-mini</option>
             <option value="gpt-4o-mini">gpt-4o-mini</option>
             <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
           </select>
+          <button id="manageProvidersBtn" title="Manage providers & models" style="background:transparent;border:1px solid rgba(255,255,255,0.04);color:#ecedee;padding:6px 8px;border-radius:8px;">Manage</button>
           <div class="rate-limit-indicator" id="rateLimitIndicatorTop" style="background:transparent;border:none;color:#b4b4b4;">5/5 requests available</div>
         </div>
       </div>
@@ -642,7 +643,54 @@
             </div>
         </div>
 
+        <!-- Management modal (hidden) -->
+        <div id="manageModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:500;">
+          <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);"></div>
+          <div style="background:#0f0f10;border:1px solid rgba(255,255,255,0.04);width:720px;border-radius:12px;padding:18px;position:relative;z-index:510;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                      <strong style="color:#ecedee;font-size:16px;">Manage AI Providers & Models</strong>
+                      <div>
+                        <button id="closeManage" style="background:transparent;border:1px solid rgba(255,255,255,0.04);color:#ecedee;padding:6px 8px;border-radius:8px;">Close</button>
+                      </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                      <div>
+                        <div style="color:#8a8a8a;margin-bottom:8px;font-size:13px;">Providers</div>
+                        <div id="providersList" style="max-height:240px;overflow:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;"></div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                          <input id="providerName" placeholder="Display name" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
+                          <input id="providerEndpoint" placeholder="Endpoint (e.g. /api/ai/custom or https://api.example.com)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                          <select id="providerType" style="padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;">
+                            <option value="proxy">server-proxy</option>
+                            <option value="direct">direct (client key)</option>
+                          </select>
+                          <input id="providerApiKey" placeholder="API key (optional, stored locally)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
+                          <button id="addProviderBtn" style="padding:8px;border-radius:8px;background:linear-gradient(90deg,var(--amber),var(--amber-bright));border:none;color:#000;">Add</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style="color:#8a8a8a;margin-bottom:8px;font-size:13px;">Models</div>
+                        <div id="modelsList" style="max-height:240px;overflow:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;"></div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                          <input id="modelNameInput" placeholder="model name (e.g. gpt-5.4-mini)" style="flex:1;padding:8px;border-radius:8px;background:#121212;border:1px solid rgba(255,255,255,0.03);color:#ecedee;" />
+                          <button id="addModelBtn" style="padding:8px;border-radius:8px;background:linear-gradient(90deg,var(--amber),var(--amber-bright));border:none;color:#000;">Add</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin-top:12px;color:#8a8a8a;font-size:12px;">Note: server-proxy endpoints should be server routes (recommended). Direct endpoints with keys will store the key in your browser localStorage (not recommended for sensitive keys).</div>
+          </div>
+        </div>
+
         <!-- Messages area (hidden until a chat begins) -->
+        <div id="chatEmpty" class="chat-empty" style="display:flex;flex-direction:column;justify-content:center;align-items:center;flex:1;gap:24px;padding:40px 20px;">
+            <h2 style="font-size:28px;margin:0;color:#ecedee;">Welcome to Cola AI</h2>
+            <p style="color:#8a8a8a;max-width:700px;text-align:center;margin:0;">Type a message or pick a starter. Use the Manage button to add custom models or providers.</p>
+        </div>
         <div class="messages" id="messagesContainer" style="display:none; padding:24px; max-width:1100px; margin:0 auto;"></div>
 
         <!-- Input bar pinned to bottom and centered like home UI -->
@@ -1089,6 +1137,104 @@
             document.getElementById('chatTitle').textContent = 'New Chat';
             renderChatHistory();
         }
+
+        // Providers & models management and persistence
+        const DEFAULT_PROVIDERS = [
+            { id: 'cola-proxy', name: 'Cola AI V1 (Proxy)', type: 'proxy', endpoint: '/api/ai/chat' },
+            { id: 'attachment-key', name: 'Onyx AI (Attachment Key)', type: 'proxy', endpoint: '/api/ai/attachment' },
+        ];
+        const DEFAULT_MODELS = ['gpt-5.4-mini','gpt-5-mini','gpt-4o-mini','gpt-3.5-turbo'];
+
+        function loadSavedProvidersModels(){
+            const savedProviders = JSON.parse(localStorage.getItem('cola_ai_providers') || '[]');
+            const savedModels = JSON.parse(localStorage.getItem('cola_ai_models') || '[]');
+            const providers = DEFAULT_PROVIDERS.concat(savedProviders);
+            const models = Array.from(new Set(DEFAULT_MODELS.concat(savedModels)));
+            return { providers, models };
+        }
+
+        function renderProviderOptions(){
+            const { providers } = loadSavedProvidersModels();
+            const sel = document.getElementById('apiSourceSelect');
+            if(!sel) return;
+            sel.innerHTML = '';
+            providers.forEach(p => {
+                const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; sel.appendChild(o);
+            });
+        }
+
+        function renderModelOptions(){
+            const { models } = loadSavedProvidersModels();
+            const top = document.getElementById('modelSelectTop');
+            const mini = document.getElementById('miniModelSelect');
+            if(top){ top.innerHTML = ''; models.forEach(m => { const o=document.createElement('option'); o.value=m; o.textContent=m; top.appendChild(o); }); }
+            if(mini){ mini.innerHTML=''; models.forEach(m => { const o=document.createElement('option'); o.value=m; o.textContent=m; mini.appendChild(o); }); }
+        }
+
+        function openManageModal(){
+            const modal = document.getElementById('manageModal');
+            const providersList = document.getElementById('providersList');
+            const modelsList = document.getElementById('modelsList');
+            modal.style.display = 'flex';
+
+            // populate lists
+            const { providers, models } = loadSavedProvidersModels();
+            providersList.innerHTML = '';
+            providers.forEach(p => {
+                const row = document.createElement('div');
+                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='6px 4px';
+                const left = document.createElement('div'); left.style.color='#ecedee'; left.textContent = p.name + ' (' + p.type + ')';
+                const right = document.createElement('div');
+                if(!DEFAULT_PROVIDERS.find(dp=>dp.id===p.id)){
+                    const del = document.createElement('button'); del.textContent='Remove'; del.style.marginLeft='8px'; del.onclick=()=>{ removeProvider(p.id); openManageModal(); };
+                    right.appendChild(del);
+                }
+                row.appendChild(left); row.appendChild(right); providersList.appendChild(row);
+            });
+
+            modelsList.innerHTML = '';
+            models.forEach(m => {
+                const row = document.createElement('div');
+                row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';row.style.padding='6px 4px';
+                const left = document.createElement('div'); left.style.color='#ecedee'; left.textContent = m;
+                const right = document.createElement('div');
+                if(!DEFAULT_MODELS.includes(m)){
+                    const del = document.createElement('button'); del.textContent='Remove'; del.style.marginLeft='8px'; del.onclick=()=>{ removeModel(m); openManageModal(); };
+                    right.appendChild(del);
+                }
+                row.appendChild(left); row.appendChild(right); modelsList.appendChild(row);
+            });
+        }
+
+        function closeManageModal(){ document.getElementById('manageModal').style.display='none'; }
+
+        function addProvider(){
+            const name = document.getElementById('providerName').value.trim();
+            const endpoint = document.getElementById('providerEndpoint').value.trim();
+            const type = document.getElementById('providerType').value;
+            const apiKey = document.getElementById('providerApiKey').value.trim();
+            if(!name || !endpoint){ alert('Please provide name and endpoint'); return; }
+            const id = 'custom_' + Date.now().toString(36);
+            const saved = JSON.parse(localStorage.getItem('cola_ai_providers') || '[]');
+            saved.push({ id, name, type, endpoint, apiKey: apiKey || null });
+            localStorage.setItem('cola_ai_providers', JSON.stringify(saved));
+            renderProviderOptions(); renderModelOptions(); openManageModal();
+        }
+
+        function removeProvider(id){ const saved = JSON.parse(localStorage.getItem('cola_ai_providers') || '[]'); localStorage.setItem('cola_ai_providers', JSON.stringify(saved.filter(p=>p.id!==id))); renderProviderOptions(); }
+        function addModel(){ const m = document.getElementById('modelNameInput').value.trim(); if(!m) return; const saved = JSON.parse(localStorage.getItem('cola_ai_models') || '[]'); if(saved.includes(m)) return; saved.push(m); localStorage.setItem('cola_ai_models', JSON.stringify(saved)); renderModelOptions(); openManageModal(); }
+        function removeModel(m){ const saved = JSON.parse(localStorage.getItem('cola_ai_models') || '[]'); localStorage.setItem('cola_ai_models', JSON.stringify(saved.filter(x=>x!==m))); renderModelOptions(); }
+
+        // Wire manage modal buttons
+        document.addEventListener('click', function(e){
+            if(e.target && e.target.id === 'manageProvidersBtn') openManageModal();
+            if(e.target && e.target.id === 'closeManage') closeManageModal();
+            if(e.target && e.target.id === 'addProviderBtn') addProvider();
+            if(e.target && e.target.id === 'addModelBtn') addModel();
+        });
+
+        // Replace init sequence to include providers/models
+        renderProviderOptions(); renderModelOptions();
 
         // Initialize
         loadChats();
