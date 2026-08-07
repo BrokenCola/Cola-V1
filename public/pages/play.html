@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cola | Play Game</title>
+    <title>Cola | Play</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
@@ -13,232 +12,402 @@
 
     <style>
         :root {
-            --bg-dark: #07070a;
-            --card-bg: rgba(15, 15, 22, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-amber: rgba(245, 158, 11, 0.4);
-            --accent-gold: #fbbf24;
-            --accent-amber: #f59e0b;
-            --accent-glow: rgba(245, 158, 11, 0.25);
-            --sidebar-width: 64px;
+            --bg: #070710;
+            --surface: rgba(12,12,22,0.9);
+            --border: rgba(255,255,255,0.07);
+            --border-gold: rgba(251,191,36,0.4);
+            --gold: #fbbf24;
+            --amber: #f59e0b;
+            --glow: rgba(251,191,36,0.2);
+            --text: #f1f1f3;
+            --muted: #9ca3af;
+            --sidebar: 64px;
+            --green: #4ade80;
+            --red: #ef4444;
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
 
         html, body {
             width: 100%;
             height: 100%;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(rgba(245, 158, 11, 0.07) 1px, transparent 1px);
+            background: var(--bg);
+            background-image: radial-gradient(rgba(251,191,36,0.06) 1px, transparent 1px);
             background-size: 28px 28px;
-            color: #f4f4f5;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
             overflow: hidden;
-            transition: margin-left 0.25s ease;
         }
 
         body {
-            margin-left: var(--sidebar-width) !important;
+            margin-left: var(--sidebar) !important;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 12px 16px;
+            transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
         }
 
-        body.sidebar-collapsed {
-            margin-left: 0px !important;
-        }
+        body.no-sidebar { margin-left: 0 !important; }
 
-        /* ─── GAME CONTAINER & VIEWPORT ──────────────────── */
-        .game-wrapper {
-            width: calc(100vw - var(--sidebar-width) - 40px);
-            height: calc(100vh - 90px);
-            max-width: 1500px;
+        /* ─── GAME WRAPPER ────────────────────────────────── */
+        .game-shell {
+            width: calc(100vw - var(--sidebar) - 32px);
+            height: calc(100vh - 80px);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.8), 0 0 0 1px var(--border-gold), 0 0 60px var(--glow);
+            transition: width 0.3s cubic-bezier(.4,0,.2,1), height 0.3s ease;
             position: relative;
-            transition: width 0.25s ease;
         }
 
-        body.sidebar-collapsed .game-wrapper {
-            width: calc(100vw - 40px);
+        body.no-sidebar .game-shell {
+            width: calc(100vw - 32px);
         }
 
+        /* Neon top accent bar */
+        .game-shell::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--amber) 40%, var(--gold) 60%, transparent 100%);
+            z-index: 10;
+        }
+
+        /* ─── GAME IFRAME ─────────────────────────────────── */
         #gameframe {
             width: 100%;
             flex: 1;
             background: #000;
-            border: 1px solid var(--border-amber);
-            border-radius: 18px 18px 0 0;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 24px var(--accent-glow);
+            border: none;
         }
 
-        /* ─── CONTROL TOOLBAR ────────────────────────────── */
-        .game-toolbar {
+        /* ─── TOOLBAR ─────────────────────────────────────── */
+        .toolbar {
             width: 100%;
-            height: 54px;
-            background: rgba(14, 14, 22, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-top: none;
-            border-radius: 0 0 18px 18px;
+            height: 52px;
+            flex-shrink: 0;
+            background: rgba(10,10,18,0.96);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            padding: 0 16px;
+            gap: 12px;
+            position: relative;
+        }
+
+        /* Ambient glow beneath toolbar */
+        .toolbar::before {
+            content:'';
+            position:absolute;
+            bottom:0; left:0; right:0;
+            height:1px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
+            opacity: 0.4;
         }
 
         .tb-left, .tb-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .game-title-display {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
+        /* Game title section */
+        .game-id {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .game-title-display img {
+        .game-id img {
             width: 22px;
             height: 22px;
             object-fit: contain;
-            filter: drop-shadow(0 0 8px rgba(245,158,11,0.4));
+            filter: drop-shadow(0 0 8px rgba(251,191,36,0.5));
         }
 
-        .status-pill {
-            font-size: 11px;
+        .game-id-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .game-name {
+            font-size: 13px;
             font-weight: 700;
-            color: #4ade80;
-            background: rgba(74, 222, 128, 0.12);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 2px 8px;
-            border-radius: 100px;
+            color: var(--text);
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-status {
             display: flex;
             align-items: center;
             gap: 5px;
+            font-size: 10.5px;
+            color: var(--green);
+            font-weight: 700;
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
+        .status-led {
+            width: 6px; height: 6px;
             border-radius: 50%;
-            background: #4ade80;
-            box-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: blink 2s ease-in-out infinite;
         }
 
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+        /* Toolbar buttons */
         .tb-btn {
-            height: 38px;
-            padding: 0 14px;
+            height: 36px;
+            padding: 0 13px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 13px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: rgba(255,255,255,0.8);
+            font-size: 12.5px;
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 7px;
-            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.18s cubic-bezier(.4,0,.2,1);
+            white-space: nowrap;
         }
 
+        .tb-btn i { font-size: 12px; }
+
         .tb-btn:hover {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: var(--border-amber);
-            color: var(--accent-gold);
+            background: rgba(251,191,36,0.12);
+            border-color: var(--border-gold);
+            color: var(--gold);
             transform: translateY(-2px);
             box-shadow: 0 4px 14px rgba(0,0,0,0.3);
         }
 
-        .tb-btn.highlight {
-            background: linear-gradient(135deg, var(--accent-amber) 0%, var(--accent-gold) 100%);
+        .tb-btn.primary {
+            background: linear-gradient(135deg, var(--amber), var(--gold));
             border: none;
             color: #000;
-            font-weight: 700;
-            box-shadow: 0 0 16px var(--accent-glow);
+            font-weight: 800;
+            box-shadow: 0 0 20px var(--glow);
         }
 
-        .tb-btn.highlight:hover {
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 0 22px rgba(245, 158, 11, 0.45);
+        .tb-btn.primary:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 0 28px rgba(251,191,36,0.5);
         }
 
-        .rec-dot {
-            width: 8px;
-            height: 8px;
+        .tb-btn.danger {
+            background: rgba(239,68,68,0.12);
+            border-color: rgba(239,68,68,0.3);
+            color: var(--red);
+        }
+
+        .tb-btn.danger:hover {
+            background: rgba(239,68,68,0.22);
+            border-color: rgba(239,68,68,0.5);
+            transform: translateY(-2px);
+        }
+
+        .tb-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        /* Volume Slider */
+        .vol-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .vol-wrap i { font-size: 13px; color: var(--muted); }
+
+        .vol-slider {
+            -webkit-appearance: none;
+            width: 72px;
+            height: 4px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.15);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: #ef4444;
-            animation: pulseRec 1.2s infinite ease-in-out;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--glow);
+            cursor: pointer;
         }
-        @keyframes pulseRec { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* Rec dot */
+        .rec-dot { width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1s ease-in-out infinite; }
+
+        /* ─── LOADING OVERLAY ─────────────────────────────── */
+        #loadOverlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(7,7,16,0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 100;
+            transition: opacity 0.4s ease;
+        }
+
+        #loadOverlay.hidden { opacity:0; pointer-events:none; }
+
+        .load-spinner {
+            width: 52px;
+            height: 52px;
+            border: 3px solid rgba(251,191,36,0.15);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { 100%{transform:rotate(360deg)} }
+
+        .load-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        /* ─── ERROR OVERLAY ───────────────────────────────── */
+        #errOverlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(7,7,16,0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 101;
+            text-align: center;
+            padding: 32px;
+        }
+
+        #errOverlay.show { display:flex; }
+
+        .err-icon { font-size: 48px; color: rgba(239,68,68,0.6); }
+
+        .err-title { font-size: 22px; font-weight: 800; color: var(--text); }
+        .err-sub { font-size: 14px; color: var(--muted); max-width: 400px; line-height: 1.6; }
+
+        .err-actions { display:flex; gap:12px; margin-top:8px; }
     </style>
 </head>
 
 <body class="obfuscate">
 
-    <!-- ─── GAME CONTAINER ──────────────────────────────── -->
-    <div class="game-wrapper">
-        <iframe id="gameframe" frameborder="0" allowfullscreen allow="autoplay; fullscreen; pointer-lock; gamepad"></iframe>
+    <div class="game-shell">
+        <!-- LOADING OVERLAY -->
+        <div id="loadOverlay">
+            <div class="load-spinner"></div>
+            <div class="load-text" id="loadText">Loading game...</div>
+        </div>
+
+        <!-- ERROR OVERLAY -->
+        <div id="errOverlay">
+            <i class="fas fa-triangle-exclamation err-icon"></i>
+            <div class="err-title">Couldn't Load Game</div>
+            <div class="err-sub">This game couldn't be loaded. Try reloading, or head back to the library to pick another one.</div>
+            <div class="err-actions">
+                <button class="tb-btn primary" onclick="reloadGame()"><i class="fas fa-rotate-right"></i> Reload</button>
+                <button class="tb-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back to Library</button>
+            </div>
+        </div>
+
+        <!-- GAME IFRAME -->
+        <iframe id="gameframe" frameborder="0" allowfullscreen
+            allow="autoplay; fullscreen; pointer-lock; gamepad; camera; microphone; gyroscope; accelerometer"></iframe>
 
         <!-- CONTROL TOOLBAR -->
-        <div class="game-toolbar">
+        <div class="toolbar">
             <div class="tb-left">
-                <div class="game-title-display">
+                <div class="game-id">
                     <img src="/assets/img/fav.png" alt="Cola" />
-                    <span id="gameNameText">Playing Game</span>
+                    <div class="game-id-text">
+                        <div class="game-name" id="gameName">Loading...</div>
+                        <div class="game-status">
+                            <div class="status-led"></div>
+                            <span>Unblocked</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="status-pill">
-                    <div class="status-dot"></div>
-                    <span>Unblocked & Ready</span>
+
+                <div class="tb-divider"></div>
+
+                <!-- SIDEBAR TOGGLE -->
+                <button class="tb-btn" id="sidebarBtn" onclick="toggleSidebar()" title="Minimize sidebar for more space">
+                    <i class="fas fa-sidebar-flip"></i>
+                    <span>Sidebar</span>
+                </button>
+
+                <!-- VOLUME -->
+                <div class="vol-wrap" title="Game Volume">
+                    <i class="fas fa-volume-medium" id="volIcon"></i>
+                    <input class="vol-slider" id="volSlider" type="range" min="0" max="1" step="0.02" value="1" oninput="setVolume(this.value)" />
                 </div>
             </div>
 
             <div class="tb-right">
-                <!-- Minimize Sidebar Toggle -->
-                <button class="tb-btn" onclick="toggleSidebarCollapse()" title="Toggle Sidebar (Expand Game Width)" id="toggleSbBtn">
-                    <i class="fas fa-arrows-left-right"></i>
-                    <span>Minimize Sidebar</span>
-                </button>
-
-                <!-- Fullscreen Button -->
-                <button class="tb-btn highlight" onclick="fullscreenGame()" title="Fullscreen Game">
+                <!-- FULLSCREEN -->
+                <button class="tb-btn primary" onclick="doFullscreen()" title="Fullscreen (F11)">
                     <i class="fas fa-expand"></i>
                     <span>Fullscreen</span>
                 </button>
 
-                <!-- Reload Button -->
-                <button class="tb-btn" onclick="refreshGame()" title="Reload Game">
+                <div class="tb-divider"></div>
+
+                <!-- RELOAD -->
+                <button class="tb-btn" onclick="reloadGame()" title="Reload game">
                     <i class="fas fa-rotate-right"></i>
                 </button>
 
-                <!-- Popout Button -->
-                <button class="tb-btn" onclick="popoutGame()" title="Open in new window">
+                <!-- POPOUT -->
+                <button class="tb-btn" onclick="popOut()" title="Open in new window">
                     <i class="fas fa-external-link"></i>
                 </button>
 
-                <!-- Record Button -->
-                <button class="tb-btn" id="recordBtn" onclick="toggleRecording()" title="Record Gameplay">
-                    <i class="fas fa-circle-dot"></i>
-                    <span id="recBtnText">Record</span>
+                <!-- SCREENSHOT -->
+                <button class="tb-btn" onclick="takeScreenshot()" title="Screenshot">
+                    <i class="fas fa-camera"></i>
                 </button>
 
-                <!-- Return Home/Games -->
-                <button class="tb-btn" onclick="window.location.href='/pages/games.html'" title="Back to Games">
+                <!-- RECORD -->
+                <button class="tb-btn" id="recBtn" onclick="toggleRecord()" title="Record gameplay">
+                    <i class="fas fa-circle-dot"></i>
+                    <span id="recLabel">Record</span>
+                </button>
+
+                <div class="tb-divider"></div>
+
+                <!-- BACK -->
+                <button class="tb-btn" onclick="goBack()" title="Back to Games Library">
                     <i class="fas fa-arrow-left"></i>
                     <span>Back</span>
                 </button>
@@ -246,157 +415,212 @@
         </div>
     </div>
 
-    <!-- ─── SCRIPTS ───────────────────────────────────── -->
-    <script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js"></script>
     <script>
+        const params = new URLSearchParams(window.location.search);
+        const rawLaunch = params.get("launch") || params.get("url") || "";
         const gameframe = document.getElementById("gameframe");
-        const urlParams = new URLSearchParams(window.location.search);
-        const rawLaunch = urlParams.get("launch") || urlParams.get("url");
+        let sidebarOpen = true;
+        let recState = false;
+        let mediaRec, recChunks = [];
+        let loadTimer;
 
-        // ── DIRECT MONOCHROME & CDN GAME RESOLVER ─────────────
-        function resolveGameUrl(raw) {
-            if (!raw) return "/pages/games.html";
+        /* ── RESOLVE GAME URL ──────────────────────────────── */
+        function resolveUrl(raw) {
+            const dec = decodeURIComponent(raw).trim();
 
-            const decoded = decodeURIComponent(raw).trim();
-
-            // 1. Lumin launch
-            if (decoded.startsWith("lumin:")) {
-                const gameId = decoded.slice("lumin:".length);
-                if (window.Lumin && window.Lumin.getGameUrl) {
-                    return window.Lumin.getGameUrl(gameId).then(res => res?.url || `https://main.monochrome-507.pages.dev/stores/lumin/${gameId}`);
-                }
-                return `https://main.monochrome-507.pages.dev/stores/lumin/${gameId}`;
+            // Lumin protocol
+            if (dec.startsWith("lumin:")) {
+                const id = dec.slice(6);
+                return `https://main.monochrome-507.pages.dev/stores/lumin/${id}`;
             }
 
-            // 2. Relative store paths -> directly load on monochrome CDN (100% Working, NO 404, NO Black Screen)
-            if (decoded.startsWith("/stores/")) {
-                return `https://main.monochrome-507.pages.dev${decoded}`;
+            // Relative /stores/ path — served via Vercel rewrite from Render backend
+            if (dec.startsWith("/stores/") || dec.startsWith("stores/")) {
+                // Just return the relative path — Vercel proxies /stores/* → Render
+                return dec.startsWith("/") ? dec : "/" + dec;
             }
 
-            // 3. Full HTTP/HTTPS URLs
-            if (decoded.startsWith("http://") || decoded.startsWith("https://")) {
-                return decoded;
+            // Already a full URL
+            if (dec.startsWith("http://") || dec.startsWith("https://")) {
+                return dec;
             }
 
-            // 4. Relative fallback
-            return `https://main.monochrome-507.pages.dev/${decoded.replace(/^\/+/, '')}`;
+            // Relative path fallback
+            return "/" + dec.replace(/^\/+/, "");
         }
 
-        async function loadGame() {
-            if (!rawLaunch) {
-                window.location.href = "/pages/games.html";
-                return;
-            }
+        /* ── LOAD GAME ─────────────────────────────────────── */
+        function loadGame() {
+            if (!rawLaunch) { goBack(); return; }
 
-            const targetUrl = await Promise.resolve(resolveGameUrl(rawLaunch));
-            gameframe.src = targetUrl;
+            const url = resolveUrl(rawLaunch);
+            setLoadText("Loading " + extractName(rawLaunch) + "...");
+            showLoader(true);
 
-            // Extract game name for display
+            gameframe.src = url;
+
+            // Timeout fallback — if frame doesn't load in 12s show error
+            loadTimer = setTimeout(() => {
+                if (document.getElementById("loadOverlay").classList.contains("hidden")) return;
+                showLoader(false);
+                showError(true);
+            }, 12000);
+        }
+
+        function extractName(raw) {
             try {
-                let name = "Game";
-                if (rawLaunch.includes("/stores/")) {
-                    const parts = rawLaunch.split("/");
-                    const lastPart = parts[parts.length - 1];
-                    name = lastPart.replace(".html", "").replace(/[-_]/g, " ").toUpperCase();
-                } else {
-                    const u = new URL(targetUrl, window.location.origin);
-                    name = u.hostname.replace(/^www\./, "");
-                }
-                document.getElementById("gameNameText").textContent = name;
+                const dec = decodeURIComponent(raw);
+                const parts = dec.split("/");
+                const last = parts[parts.length-1].replace(".html","").replace(/[-_]/g," ");
+                return last.charAt(0).toUpperCase() + last.slice(1);
+            } catch { return "Game"; }
+        }
+
+        /* ── OVERLAY HELPERS ───────────────────────────────── */
+        function showLoader(show) {
+            const el = document.getElementById("loadOverlay");
+            if (show) el.classList.remove("hidden");
+            else el.classList.add("hidden");
+        }
+
+        function showError(show) {
+            const el = document.getElementById("errOverlay");
+            if (show) el.classList.add("show");
+            else el.classList.remove("show");
+        }
+
+        function setLoadText(t) {
+            document.getElementById("loadText").textContent = t;
+        }
+
+        /* ── FRAME EVENTS ──────────────────────────────────── */
+        gameframe.addEventListener("load", () => {
+            clearTimeout(loadTimer);
+            showLoader(false);
+            showError(false);
+
+            const name = extractName(rawLaunch);
+            document.getElementById("gameName").textContent = name;
+            document.title = `Cola | ${name}`;
+        });
+
+        gameframe.addEventListener("error", () => {
+            clearTimeout(loadTimer);
+            showLoader(false);
+            showError(true);
+        });
+
+        /* ── TOOLBAR ACTIONS ────────────────────────────────── */
+        function reloadGame() {
+            showError(false);
+            showLoader(true);
+            setLoadText("Reloading...");
+            gameframe.src = gameframe.src;
+            loadTimer = setTimeout(() => { showLoader(false); showError(true); }, 12000);
+        }
+
+        function goBack() { window.location.href = "/pages/games.html"; }
+
+        function popOut() { window.open(gameframe.src, "_blank"); }
+
+        function doFullscreen() {
+            const el = gameframe;
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+        }
+
+        function toggleSidebar() {
+            sidebarOpen = !sidebarOpen;
+            document.body.classList.toggle("no-sidebar", !sidebarOpen);
+            const btn = document.getElementById("sidebarBtn");
+            if (sidebarOpen) {
+                btn.innerHTML = '<i class="fas fa-sidebar-flip"></i> <span>Sidebar</span>';
+                btn.classList.remove("primary");
+            } else {
+                btn.innerHTML = '<i class="fas fa-expand-wide"></i> <span>Expand</span>';
+                btn.classList.add("primary");
+            }
+        }
+
+        function setVolume(v) {
+            const icon = document.getElementById("volIcon");
+            if (v == 0) icon.className = "fas fa-volume-xmark";
+            else if (v < 0.5) icon.className = "fas fa-volume-low";
+            else icon.className = "fas fa-volume-medium";
+
+            // Try to set volume on the iframe content (if same origin)
+            try {
+                const iframeDoc = gameframe.contentDocument || gameframe.contentWindow?.document;
+                const audios = iframeDoc?.querySelectorAll("audio, video");
+                audios?.forEach(a => a.volume = v);
             } catch (e) {}
         }
 
-        function refreshGame() {
-            gameframe.src = gameframe.src;
-        }
-
-        function popoutGame() {
-            window.open(gameframe.src, "_blank");
-        }
-
-        function fullscreenGame() {
-            if (gameframe.requestFullscreen) {
-                gameframe.requestFullscreen();
-            } else if (gameframe.webkitRequestFullscreen) {
-                gameframe.webkitRequestFullscreen();
-            } else if (gameframe.msRequestFullscreen) {
-                gameframe.msRequestFullscreen();
+        /* ── SCREENSHOT ─────────────────────────────────────── */
+        async function takeScreenshot() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                const track = stream.getVideoTracks()[0];
+                const cap = new ImageCapture(track);
+                const blob = await cap.takePhoto();
+                track.stop();
+                stream.getTracks().forEach(t => t.stop());
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `Cola_Screenshot_${Date.now()}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch {
+                // Fallback: trigger native screenshot prompt
+                alert("Use the Fullscreen button then take a screenshot with your OS shortcut (Win+Shift+S).");
             }
         }
 
-        function toggleSidebarCollapse() {
-            document.body.classList.toggle("sidebar-collapsed");
-            const collapsed = document.body.classList.contains("sidebar-collapsed");
-            const btn = document.getElementById("toggleSbBtn");
-            if (collapsed) {
-                btn.innerHTML = '<i class="fas fa-arrows-left-right"></i> <span>Expand Sidebar</span>';
-                btn.classList.add("highlight");
-            } else {
-                btn.innerHTML = '<i class="fas fa-arrows-left-right"></i> <span>Minimize Sidebar</span>';
-                btn.classList.remove("highlight");
-            }
-        }
+        /* ── RECORDING ──────────────────────────────────────── */
+        async function toggleRecord() {
+            const btn = document.getElementById("recBtn");
+            const lbl = document.getElementById("recLabel");
 
-        // ── SCREEN RECORDING ─────────────────────────────────
-        let mediaRecorder;
-        let recordedChunks = [];
-        let isRecording = false;
-
-        async function toggleRecording() {
-            const btn = document.getElementById("recordBtn");
-            const text = document.getElementById("recBtnText");
-
-            if (isRecording) {
-                mediaRecorder?.stop();
-                isRecording = false;
-                btn.classList.remove("highlight");
-                text.textContent = "Record";
-                btn.querySelector("i").className = "fas fa-circle-dot";
+            if (recState) {
+                mediaRec?.stop();
+                recState = false;
+                btn.classList.remove("danger");
+                btn.innerHTML = '<i class="fas fa-circle-dot"></i> <span id="recLabel">Record</span>';
                 return;
             }
 
             try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: { width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: 60 },
-                    audio: true
-                });
-
-                recordedChunks = [];
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
-                mediaRecorder.onstop = saveRecording;
-                mediaRecorder.start();
-
-                isRecording = true;
-                btn.classList.add("highlight");
-                text.textContent = "Stop Recording";
-                btn.innerHTML = '<div class="rec-dot"></div> <span id="recBtnText">Stop Recording</span>';
-            } catch (err) {
-                console.error("Recording error:", err);
-            }
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                recChunks = [];
+                mediaRec = new MediaRecorder(stream);
+                mediaRec.ondataavailable = e => { if (e.data.size > 0) recChunks.push(e.data); };
+                mediaRec.onstop = () => {
+                    const blob = new Blob(recChunks, { type: "video/webm" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url; a.download = `Cola_Gameplay_${Date.now()}.webm`;
+                    a.click(); URL.revokeObjectURL(url);
+                };
+                mediaRec.start();
+                recState = true;
+                btn.classList.add("danger");
+                btn.innerHTML = '<div class="rec-dot"></div> <span id="recLabel">Stop</span>';
+            } catch (e) {}
         }
 
-        function saveRecording() {
-            const blob = new Blob(recordedChunks, { type: "video/mp4" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `Cola_Gameplay_${Date.now()}.mp4`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-        }
+        /* ── KEYBOARD SHORTCUTS ─────────────────────────────── */
+        document.addEventListener("keydown", e => {
+            if (e.key === "F11") { e.preventDefault(); doFullscreen(); }
+            if (e.key === "Escape" && !document.fullscreenElement) goBack();
+        });
 
-        // Theme sync
-        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
-
-        // Load Game
+        /* ── INIT ───────────────────────────────────────────── */
+        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme")??"default"}.css`;
         loadGame();
     </script>
 
-    <!-- Global Cola Sidebar Injection -->
     <script src="/assets/js/cola.sidebar.js"></script>
 </body>
-
 </html>

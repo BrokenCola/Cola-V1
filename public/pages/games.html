@@ -1,249 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cola | Games Library</title>
+    <title>Cola | Games Hub</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon">
     <link rel="stylesheet" href="/assets/css/font.css?v=4">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-dark: #07070a;
-            --card-bg: rgba(16, 16, 24, 0.85);
-            --card-hover: rgba(26, 26, 38, 0.92);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-amber: rgba(245, 158, 11, 0.4);
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --text-dim: #71717a;
-            --accent-gold: #fbbf24;
-            --accent-amber: #f59e0b;
-            --accent-glow: rgba(245, 158, 11, 0.25);
-            --sidebar-width: 64px;
+            --bg: #07070b;
+            --surface: rgba(14,14,22,0.92);
+            --surface-hov: rgba(22,22,34,0.95);
+            --border: rgba(255,255,255,0.07);
+            --border-gold: rgba(251,191,36,0.4);
+            --gold: #fbbf24;
+            --amber: #f59e0b;
+            --glow: rgba(251,191,36,0.22);
+            --text: #f1f1f3;
+            --muted: #9ca3af;
+            --dim: #6b7280;
+            --sidebar: 64px;
+            --green: #4ade80;
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
             width: 100%;
             min-height: 100%;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(rgba(245, 158, 11, 0.06) 1px, transparent 1px);
-            background-size: 28px 28px;
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(251,191,36,0.08) 0%, transparent 60%),
+                radial-gradient(rgba(251,191,36,0.05) 1px, transparent 1px);
+            background-size: auto, 28px 28px;
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
             overflow-x: hidden;
         }
 
         body {
-            margin-left: var(--sidebar-width) !important;
-            padding: 28px 40px 60px;
+            margin-left: var(--sidebar) !important;
+            padding: 0 0 80px;
         }
 
-        /* ─── PAGE HEADER & HERO SHOWCASE ─────────────────── */
-        .games-header {
-            max-width: 1400px;
-            margin: 0 auto 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .header-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .header-title-wrap img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 16px rgba(245,158,11,0.5));
-        }
-
-        .header-title {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -0.8px;
-            background: linear-gradient(135deg, #ffffff 30%, var(--accent-gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-badge {
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid var(--border-amber);
-            color: var(--accent-gold);
-            padding: 5px 12px;
-            border-radius: 100px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 0 12px var(--accent-glow);
-        }
-
-        /* HERO SHOWCASE CARD */
-        .hero-banner {
-            width: 100%;
-            height: 220px;
-            border-radius: 22px;
-            background: linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(16,16,24,0.9) 60%), url('/assets/img/g/gn-math/0.png');
-            background-size: cover;
-            background-position: center;
-            border: 1px solid var(--border-amber);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 25px var(--accent-glow);
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+        /* ─── HERO ───────────────────────────────────────── */
+        .hero {
             position: relative;
+            width: 100%;
+            height: 340px;
             overflow: hidden;
+            display: flex;
+            align-items: flex-end;
         }
 
-        .hero-banner::before {
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a0a00 0%, #0d0d18 60%, #070710 100%);
+            z-index: 0;
+        }
+
+        /* Animated ambient particles */
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%);
+            top: -200px;
+            right: 100px;
+            border-radius: 50%;
+            animation: floatGlow 8s ease-in-out infinite;
+        }
+
+        .hero-bg::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to right, rgba(9,9,11,0.95) 30%, rgba(9,9,11,0.4) 100%);
+            background: linear-gradient(to top, var(--bg) 0%, transparent 50%);
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+            50% { transform: translateY(-30px) scale(1.1); opacity: 1; }
+        }
+
+        .hero-featured-img {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 55%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.3;
+            mask-image: linear-gradient(to left, black 30%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to left, black 30%, transparent 100%);
             z-index: 1;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 500px;
+            padding: 40px 48px;
+            max-width: 580px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
         .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
             font-size: 11px;
             font-weight: 800;
-            color: var(--accent-gold);
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            color: var(--gold);
+            background: rgba(251,191,36,0.12);
+            border: 1px solid var(--border-gold);
+            padding: 4px 12px;
+            border-radius: 100px;
+            width: fit-content;
         }
 
-        .hero-game-title {
-            font-size: 26px;
+        .hero-tag .tag-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .hero-title {
+            font-size: 42px;
             font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.5px;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 30%, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.4;
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: 420px;
         }
 
-        .btn-play-hero {
-            margin-top: 6px;
-            width: fit-content;
-            padding: 10px 22px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-amber) 0%, var(--accent-gold) 100%);
-            border: none;
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .btn-hero-play {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 28px;
+            background: linear-gradient(135deg, var(--amber), var(--gold));
             color: #000;
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 800;
+            border: none;
+            border-radius: 14px;
             cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(251,191,36,0.45);
+            transition: all 0.2s cubic-bezier(.4,0,.2,1);
+        }
+
+        .btn-hero-play:hover {
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 8px 30px rgba(251,191,36,0.65);
+        }
+
+        .btn-hero-info {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(245,158,11,0.4);
-            text-decoration: none;
+            padding: 13px 22px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .btn-play-hero:hover {
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 6px 24px rgba(245,158,11,0.6);
+        .btn-hero-info:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
         }
 
-        /* ─── CONTROLS BAR ────────────────────────────────── */
+        /* ─── MAIN CONTENT AREA ───────────────────────────── */
+        .page-body {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* ─── FLOATING CONTROLS BAR ────────────────────────── */
         .controls-bar {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
-            background: rgba(14, 14, 22, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 18px;
-            padding: 12px 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            background: var(--surface);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 10px 14px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset;
         }
 
-        .search-input-wrap {
+        .search-wrap {
             position: relative;
             flex: 1;
-            min-width: 260px;
+            min-width: 240px;
         }
 
-        .search-input-wrap i {
+        .search-wrap i {
             position: absolute;
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-dim);
-            font-size: 14px;
+            color: var(--dim);
+            font-size: 13px;
+            pointer-events: none;
         }
 
-        .games-search-input {
+        .search-input {
             width: 100%;
             padding: 11px 14px 11px 40px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-subtle);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            color: var(--text-main);
+            color: var(--text);
             font-size: 13.5px;
             font-family: inherit;
             outline: none;
             transition: all 0.2s ease;
         }
 
-        .games-search-input::placeholder {
-            color: var(--text-dim);
-        }
+        .search-input::placeholder { color: var(--dim); }
 
-        .games-search-input:focus {
-            border-color: var(--border-amber);
-            background: rgba(245, 158, 11, 0.06);
-            box-shadow: 0 0 0 3px var(--accent-glow);
+        .search-input:focus {
+            border-color: var(--border-gold);
+            background: rgba(251,191,36,0.05);
+            box-shadow: 0 0 0 3px var(--glow);
         }
 
         .provider-select {
             padding: 11px 16px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-subtle);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            color: var(--text-main);
+            color: var(--text);
             font-size: 13px;
             font-weight: 600;
             font-family: inherit;
@@ -253,227 +283,262 @@
         }
 
         .provider-select:hover, .provider-select:focus {
-            border-color: var(--border-amber);
-            background: rgba(245, 158, 11, 0.08);
-            color: var(--accent-gold);
+            border-color: var(--border-gold);
+            background: rgba(251,191,36,0.06);
+            color: var(--gold);
         }
 
-        .provider-select option {
-            background: #121218;
-            color: #fff;
-        }
+        .provider-select option { background: #111118; color: #fff; }
 
-        /* ─── CATEGORY PILLS ─────────────────────────────── */
-        .category-pills {
+        .pills {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 7px;
+            flex-wrap: nowrap;
             overflow-x: auto;
             scrollbar-width: none;
         }
-        .category-pills::-webkit-scrollbar { display: none; }
+        .pills::-webkit-scrollbar { display: none; }
 
-        .pill-btn {
-            padding: 7px 16px;
+        .pill {
+            padding: 8px 16px;
             border-radius: 100px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-muted);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            color: var(--muted);
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.18s ease;
             display: flex;
             align-items: center;
             gap: 7px;
+            transition: all 0.18s ease;
         }
 
-        .pill-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-main);
-            border-color: rgba(255, 255, 255, 0.15);
+        .pill:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+
+        .pill.active {
+            background: rgba(251,191,36,0.15);
+            border-color: var(--border-gold);
+            color: var(--gold);
+            box-shadow: 0 0 16px var(--glow);
         }
 
-        .pill-btn.active {
-            background: rgba(245, 158, 11, 0.18);
-            border-color: var(--border-amber);
-            color: var(--accent-gold);
-            box-shadow: 0 0 14px var(--accent-glow);
-        }
-
-        /* ─── MAIN CONTAINER & SECTIONS ──────────────────── */
-        .games-container {
-            max-width: 1400px;
-            margin: 0 auto;
+        /* ─── SECTION HEADING ─────────────────────────────── */
+        .section-head {
             display: flex;
-            flex-direction: column;
-            gap: 32px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
 
-        /* ─── GAMES GRID & CARDS (POP EFFECT) ─────────────── */
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i { color: var(--gold); font-size: 16px; }
+
+        .section-count {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--dim);
+            background: rgba(255,255,255,0.05);
+            padding: 3px 10px;
+            border-radius: 100px;
+        }
+
+        /* ─── GAMES GRID ──────────────────────────────────── */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+            gap: 18px;
         }
 
+        /* ─── GAME CARD (OUT-OF-THIS-WORLD DESIGN) ─────────── */
         .game-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
             overflow: hidden;
-            text-decoration: none;
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
             position: relative;
+            transition: all 0.28s cubic-bezier(.4,0,.2,1);
+            group: true;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(251,191,36,0.12) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.28s ease;
+            z-index: 1;
+            pointer-events: none;
         }
 
         .game-card:hover {
-            background: var(--card-hover);
-            border-color: var(--border-amber);
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 24px var(--accent-glow);
+            border-color: var(--border-gold);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px var(--glow);
         }
 
-        .card-img-wrap {
+        .game-card:hover::before { opacity: 1; }
+
+        .card-thumb {
             width: 100%;
-            aspect-ratio: 16 / 10;
-            background: #101018;
+            aspect-ratio: 16/10;
+            background: #0d0d1a;
             overflow: hidden;
             position: relative;
         }
 
-        .card-img-wrap img {
+        .card-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.35s ease;
+            transition: transform 0.4s ease;
         }
 
-        .game-card:hover .card-img-wrap img {
-            transform: scale(1.08);
-        }
+        .game-card:hover .card-thumb img { transform: scale(1.1); }
 
-        /* Play Overlay Button popping up on hover */
-        .card-play-overlay {
+        /* Neon glow ring on hover */
+        .card-thumb::after {
+            content: '';
             position: absolute;
             inset: 0;
-            background: rgba(9, 9, 14, 0.6);
-            backdrop-filter: blur(3px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s ease;
+            background: linear-gradient(to bottom, transparent 40%, rgba(9,9,14,0.7) 100%);
+            transition: opacity 0.3s ease;
         }
 
-        .game-card:hover .card-play-overlay {
-            opacity: 1;
-        }
-
-        .play-btn-pop {
-            padding: 8px 16px;
-            border-radius: 100px;
-            background: linear-gradient(135deg, var(--accent-amber), var(--accent-gold));
-            color: #000;
-            font-size: 12px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-            transform: scale(0.9);
-            transition: transform 0.2s ease;
-        }
-
-        .game-card:hover .play-btn-pop {
-            transform: scale(1);
-        }
-
-        .card-fav-btn {
+        .card-play {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            border-radius: 9px;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.6);
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.18s ease;
+            background: rgba(7,7,11,0.65);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.22s ease;
             z-index: 3;
         }
 
-        .card-fav-btn:hover {
-            color: var(--accent-gold);
-            background: rgba(10, 10, 15, 0.95);
-            transform: scale(1.1);
-        }
+        .game-card:hover .card-play { opacity: 1; }
 
-        .card-fav-btn.active {
-            color: var(--accent-gold);
-            background: rgba(245, 158, 11, 0.25);
-            border-color: var(--border-amber);
-        }
-
-        .card-content {
-            padding: 14px;
+        .play-pill {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--amber), var(--gold));
+            color: #000;
+            font-size: 13px;
+            font-weight: 800;
+            border-radius: 100px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.5);
+            transform: translateY(6px) scale(0.9);
+            transition: transform 0.22s ease;
         }
 
-        .card-title {
-            font-size: 14px;
+        .game-card:hover .play-pill {
+            transform: translateY(0) scale(1);
+        }
+
+        .fav-btn {
+            position: absolute;
+            top: 9px;
+            right: 9px;
+            z-index: 4;
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: rgba(9,9,14,0.82);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .fav-btn:hover { color: var(--gold); transform: scale(1.15); }
+        .fav-btn.on { color: var(--gold); background: rgba(251,191,36,0.22); border-color: var(--border-gold); }
+
+        .card-info {
+            padding: 13px 14px 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-name {
+            font-size: 13.5px;
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-bottom: 5px;
         }
 
         .card-meta {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 11.5px;
-            color: var(--text-dim);
         }
 
         .card-tag {
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            padding: 2px 7px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 800;
-            color: var(--accent-gold);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--gold);
+            background: rgba(251,191,36,0.1);
+            border: 1px solid rgba(251,191,36,0.2);
+            padding: 2px 7px;
+            border-radius: 5px;
         }
 
-        .loading-state, .empty-state {
+        .card-badge {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--dim);
+        }
+
+        /* ─── EMPTY & LOADING STATES ──────────────────────── */
+        .state-box {
+            grid-column: 1/-1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 80px 20px;
+            gap: 16px;
+            color: var(--muted);
             text-align: center;
-            gap: 14px;
-            color: var(--text-muted);
         }
 
-        .loading-spinner {
-            font-size: 32px;
-            color: var(--accent-gold);
+        .state-box i {
+            font-size: 40px;
+            color: var(--gold);
+            opacity: 0.5;
+        }
+
+        .spinner {
+            font-size: 38px;
+            color: var(--gold);
             animation: spin 1s linear infinite;
         }
 
@@ -483,268 +548,234 @@
 
 <body class="obfuscate">
 
-    <!-- ─── PAGE HEADER & HERO SHOWCASE ─────────────────── -->
-    <header class="games-header">
-        <div class="header-top">
-            <div class="header-title-wrap">
-                <img src="/assets/img/fav.png" alt="Cola Games" />
-                <h1 class="header-title">Games Hub</h1>
-                <span class="header-badge" id="totalGamesBadge"><i class="fas fa-gamepad"></i> Loading 200+ Games...</span>
+    <!-- ─── HERO SECTION ─────────────────────────────────── -->
+    <div class="hero">
+        <div class="hero-bg"></div>
+        <img id="heroBgImg" class="hero-featured-img" src="/assets/img/fav.png" alt="Featured Game" />
+        <div class="hero-content">
+            <div class="hero-tag">
+                <span class="tag-dot"></span>
+                <span id="heroTagText">⭐ FEATURED GAME</span>
             </div>
-        </div>
-
-        <!-- HERO FEATURED GAME BANNER -->
-        <div class="hero-banner" id="heroBanner">
-            <div class="hero-content">
-                <div class="hero-tag"><i class="fas fa-fire"></i> FEATURED UNBLOCKED GAME</div>
-                <div class="hero-game-title" id="heroGameTitle">Bowmasters</div>
-                <div class="hero-desc">Experience intense 2D archery battles with awesome physics and unique characters!</div>
-                <a href="/pages/play.html?launch=%2Fstores%2Fgn-math%2F0.html" class="btn-play-hero" id="heroPlayBtn">
+            <h1 class="hero-title" id="heroTitle">Games Hub</h1>
+            <p class="hero-desc" id="heroDesc">Explore hundreds of unblocked games — all free, all instant.</p>
+            <div class="hero-actions">
+                <a id="heroPlayBtn" href="#" class="btn-hero-play">
                     <i class="fas fa-play"></i> PLAY NOW
                 </a>
+                <button class="btn-hero-info" onclick="shuffleHero()">
+                    <i class="fas fa-shuffle"></i> Shuffle
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- CONTROLS & FILTER BAR -->
+    <!-- ─── MAIN BODY ─────────────────────────────────────── -->
+    <div class="page-body">
+
+        <!-- CONTROLS BAR -->
         <div class="controls-bar">
-            <div class="search-input-wrap">
+            <div class="search-wrap">
                 <i class="fas fa-search"></i>
-                <input type="text" class="games-search-input" id="gameSearchInput" placeholder="Search 200+ unblocked games..." oninput="handleSearchInput()" />
+                <input type="text" class="search-input" id="searchInput" placeholder="Search 200+ unblocked games..." oninput="onSearch()" />
             </div>
-
-            <select class="provider-select" id="providerSelect" onchange="handleProviderChange()">
-                <option value="all">🎮 All Game Libraries</option>
-                <option value="gn-math">🧠 GN Math Games</option>
-                <option value="ugs">⚡ UGS Library</option>
-                <option value="truffled">🍬 Truffled Games</option>
-                <option value="ngg">🚀 NowGG Games</option>
+            <select class="provider-select" id="providerSel" onchange="onProviderChange()">
+                <option value="all">🎮 All Libraries</option>
+                <option value="gn-math">🧠 GN Math</option>
+                <option value="truffled">🍬 Truffled</option>
+                <option value="ugs">⚡ UGS</option>
+                <option value="ngg">🚀 NowGG</option>
             </select>
-
-            <div class="category-pills">
-                <button class="pill-btn active" onclick="setCategoryFilter('all', this)"><i class="fas fa-grid-2"></i> All</button>
-                <button class="pill-btn" onclick="setCategoryFilter('featured', this)"><i class="fas fa-fire"></i> Featured</button>
-                <button class="pill-btn" onclick="setCategoryFilter('favorites', this)"><i class="fas fa-star"></i> Favorites</button>
-                <button class="pill-btn" onclick="setCategoryFilter('recent', this)"><i class="fas fa-clock"></i> Recent</button>
+            <div class="pills">
+                <button class="pill active" onclick="setPill('all', this)"><i class="fas fa-grid-2"></i> All</button>
+                <button class="pill" onclick="setPill('featured', this)"><i class="fas fa-fire"></i> Featured</button>
+                <button class="pill" onclick="setPill('favorites', this)"><i class="fas fa-star"></i> Favorites</button>
+                <button class="pill" onclick="setPill('recent', this)"><i class="fas fa-clock"></i> Recent</button>
             </div>
         </div>
-    </header>
 
-    <!-- ─── MAIN GAMES GRID ───────────────────────────── -->
-    <main class="games-container" id="gamesContainer">
-        <div class="loading-state">
-            <i class="fas fa-spinner loading-spinner"></i>
-            <div>Loading unblocked games library...</div>
+        <!-- GAMES SECTION -->
+        <div>
+            <div class="section-head">
+                <div class="section-title"><i class="fas fa-gamepad"></i> <span id="sectionLabel">All Games</span></div>
+                <span class="section-count" id="countBadge">Loading...</span>
+            </div>
+            <div class="games-grid" id="gamesGrid">
+                <div class="state-box"><i class="fas fa-spinner spinner"></i><div>Loading your games...</div></div>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <!-- ─── SCRIPT LOGIC ───────────────────────────────── -->
-    <script src="/assets/js/Cola.data.js"></script>
+    <!-- ─── SCRIPTS ─────────────────────────────────────── -->
     <script>
-        const FAVS_KEY = "Cola_favorites";
-        const RECENT_KEY = "Cola_recent";
-        const MAX_RECENT = 20;
+        const FKEY = "Cola_favorites";
+        const RKEY = "Cola_recent";
+        const MAX_R = 24;
 
-        let allGamesData = [];
-        let currentProvider = "all";
-        let currentCategory = "all";
-        let searchQuery = "";
+        let allGames = [];
+        let provider = "all";
+        let category = "all";
+        let q = "";
 
-        function getFavs() {
-            try { return JSON.parse(localStorage.getItem(FAVS_KEY)) || []; } catch { return []; }
+        /* ── STORAGE HELPERS ──────────────────────────────── */
+        const getFavs = () => { try { return JSON.parse(localStorage.getItem(FKEY)) || []; } catch { return []; }};
+        const saveFavs = f => localStorage.setItem(FKEY, JSON.stringify(f));
+        const isFav = u => getFavs().includes(u);
+        const getRecent = () => { try { return JSON.parse(localStorage.getItem(RKEY)) || []; } catch { return []; }};
+        function recordRecent(u) {
+            let r = getRecent().filter(x => x !== u);
+            r.unshift(u);
+            if (r.length > MAX_R) r = r.slice(0, MAX_R);
+            localStorage.setItem(RKEY, JSON.stringify(r));
         }
 
-        function saveFavs(favs) {
-            localStorage.setItem(FAVS_KEY, JSON.stringify(favs));
-        }
-
-        function isFav(launchUrl) {
-            return getFavs().includes(launchUrl);
-        }
-
-        function toggleFav(launchUrl, btnElement) {
+        /* ── TOGGLE FAVORITE ──────────────────────────────── */
+        function toggleFav(url, btn) {
             let favs = getFavs();
-            const isCurrentlyFav = favs.includes(launchUrl);
-
-            if (isCurrentlyFav) {
-                favs = favs.filter(u => u !== launchUrl);
-                btnElement.classList.remove("active");
-                btnElement.innerHTML = '<i class="far fa-star"></i>';
+            if (favs.includes(url)) {
+                favs = favs.filter(u => u !== url);
+                btn.classList.remove("on");
+                btn.innerHTML = '<i class="far fa-star"></i>';
             } else {
-                favs.push(launchUrl);
-                btnElement.classList.add("active");
-                btnElement.innerHTML = '<i class="fas fa-star"></i>';
+                favs.push(url);
+                btn.classList.add("on");
+                btn.innerHTML = '<i class="fas fa-star"></i>';
             }
             saveFavs(favs);
-
-            if (currentCategory === "favorites") {
-                renderGames();
-            }
+            if (category === "favorites") render();
         }
 
-        function getRecent() {
-            try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch { return []; }
-        }
-
-        function recordRecent(launchUrl) {
-            let recent = getRecent().filter(u => u !== launchUrl);
-            recent.unshift(launchUrl);
-            if (recent.length > MAX_RECENT) recent = recent.slice(0, MAX_RECENT);
-            localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
-        }
-
-        // ── LOAD GAME DATA FROM JSON PROVIDERS ─────────────────
-        async function fetchProviderJson(providerKey) {
+        /* ── LOAD GAME DATA ───────────────────────────────── */
+        async function fetchProvider(key) {
             try {
-                const res = await fetch(`/assets/json/${providerKey}.json?v=${Date.now()}`);
-                if (!res.ok) return [];
-                const json = await res.json();
-                return json.map(g => ({
-                    name: g.name || "Game",
+                const r = await fetch(`/assets/json/${key}.json`);
+                if (!r.ok) return [];
+                const data = await r.json();
+                return data.filter(g => g.name && g.name !== "1" && g.url).map(g => ({
+                    name: g.name,
                     img: g.img || "/assets/img/fav.png",
-                    launch: g.url || g.launch || "",
-                    provider: providerKey
-                })).filter(g => g.launch && g.name && g.name !== "1");
-            } catch (e) {
-                return [];
-            }
+                    url: g.url,
+                    provider: key
+                }));
+            } catch { return []; }
         }
 
-        async function loadAllGames() {
-            const [gnMath, truffled, ugs, ngg] = await Promise.all([
-                fetchProviderJson("gn-math"),
-                fetchProviderJson("truffled"),
-                fetchProviderJson("ugs"),
-                fetchProviderJson("ngg")
+        async function loadGames() {
+            const [g1, g2, g3, g4] = await Promise.all([
+                fetchProvider("gn-math"),
+                fetchProvider("truffled"),
+                fetchProvider("ugs"),
+                fetchProvider("ngg")
             ]);
+            allGames = [...g1, ...g2, ...g3, ...g4];
 
-            allGamesData = [...gnMath, ...truffled, ...ugs, ...ngg];
-
-            // Set Featured Flag
-            allGamesData.forEach((g, idx) => {
-                if (idx % 8 === 0 || g.name.toLowerCase().includes("ovo") || g.name.toLowerCase().includes("bowmaster")) {
+            // Mark every ~7th as featured
+            allGames.forEach((g, i) => {
+                if (i % 7 === 0 || ["ovo","bowmaster","krunker","1v1","2048"].some(kw => g.name.toLowerCase().includes(kw))) {
                     g.featured = true;
                 }
             });
 
-            document.getElementById("totalGamesBadge").innerHTML = `<i class="fas fa-gamepad"></i> ${allGamesData.length} Unblocked Games`;
-            
-            // Set Hero Game
-            if (allGamesData.length > 0) {
-                const hero = allGamesData.find(g => g.name.toLowerCase().includes("ovo")) || allGamesData[0];
-                document.getElementById("heroGameTitle").textContent = hero.name;
-                document.getElementById("heroPlayBtn").href = `/pages/play.html?launch=${encodeURIComponent(hero.launch)}`;
-                if (hero.img && !hero.img.includes("placeholder")) {
-                    document.getElementById("heroBanner").style.backgroundImage = `linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(9,9,11,0.92) 70%), url('${hero.img}')`;
-                }
-            }
-
-            renderGames();
+            setHero(allGames[Math.floor(Math.random() * Math.min(20, allGames.length))]);
+            render();
         }
 
-        // ── RENDER GAMES GRID ───────────────────────────────
-        function renderGames() {
-            const container = document.getElementById("gamesContainer");
-            container.innerHTML = "";
+        /* ── HERO LOGIC ───────────────────────────────────── */
+        function setHero(game) {
+            if (!game) return;
+            document.getElementById("heroTitle").textContent = game.name;
+            document.getElementById("heroDesc").textContent = `One of ${allGames.length}+ unblocked games, all ready to play instantly in your browser.`;
+            document.getElementById("heroPlayBtn").href = `/pages/play.html?launch=${encodeURIComponent(game.url)}`;
+            const img = document.getElementById("heroBgImg");
+            img.src = game.img;
+            img.onerror = () => { img.src = "/assets/img/fav.png"; };
+        }
 
-            let filtered = [...allGamesData];
+        function shuffleHero() {
+            const picks = allGames.filter(g => g.featured);
+            const game = picks[Math.floor(Math.random() * picks.length)];
+            setHero(game);
+        }
 
-            // Provider Filter
-            if (currentProvider !== "all") {
-                filtered = filtered.filter(g => g.provider === currentProvider);
+        /* ── RENDER GRID ──────────────────────────────────── */
+        function render() {
+            const grid = document.getElementById("gamesGrid");
+            let filtered = [...allGames];
+
+            if (provider !== "all") filtered = filtered.filter(g => g.provider === provider);
+
+            if (category === "featured") filtered = filtered.filter(g => g.featured);
+            else if (category === "favorites") {
+                const favs = getFavs();
+                filtered = filtered.filter(g => favs.includes(g.url));
+            } else if (category === "recent") {
+                const rec = getRecent();
+                filtered = filtered.filter(g => rec.includes(g.url));
+                filtered.sort((a,b) => rec.indexOf(a.url) - rec.indexOf(b.url));
             }
 
-            // Category Filter
-            if (currentCategory === "featured") {
-                filtered = filtered.filter(g => g.featured);
-            } else if (currentCategory === "favorites") {
-                const favUrls = getFavs();
-                filtered = filtered.filter(g => favUrls.includes(g.launch));
-            } else if (currentCategory === "recent") {
-                const recentUrls = getRecent();
-                filtered = filtered.filter(g => recentUrls.includes(g.launch));
+            if (q.trim()) {
+                const sq = q.trim().toLowerCase();
+                filtered = filtered.filter(g => g.name.toLowerCase().includes(sq));
             }
 
-            // Search Query Filter
-            if (searchQuery.trim()) {
-                const q = searchQuery.trim().toLowerCase();
-                filtered = filtered.filter(g => g.name.toLowerCase().includes(q));
-            }
+            document.getElementById("countBadge").textContent = `${filtered.length} game${filtered.length !== 1 ? "s" : ""}`;
 
             if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-ghost" style="font-size: 36px; color: var(--accent-gold);"></i>
-                        <div>No games found matching your search. Try adjusting filters!</div>
-                    </div>
-                `;
+                grid.innerHTML = `<div class="state-box"><i class="fas fa-ghost"></i><div>No games found. Try a different search!</div></div>`;
                 return;
             }
 
-            const grid = document.createElement("div");
-            grid.className = "games-grid";
-
+            grid.innerHTML = "";
             filtered.forEach(game => {
+                const favOn = isFav(game.url);
                 const card = document.createElement("a");
-                card.className = "game-card obfuscate";
-                card.href = `/pages/play.html?launch=${encodeURIComponent(game.launch)}`;
-                card.onclick = () => recordRecent(game.launch);
-
-                const favActive = isFav(game.launch) ? "active" : "";
-
+                card.className = "game-card";
+                card.href = `/pages/play.html?launch=${encodeURIComponent(game.url)}`;
+                card.onclick = () => recordRecent(game.url);
                 card.innerHTML = `
-                    <div class="card-img-wrap">
-                        <img src="${game.img}" loading="lazy" alt="${escapeAttr(game.name)}" onerror="this.src='/assets/img/fav.png'" />
-                        <div class="card-play-overlay">
-                            <span class="play-btn-pop"><i class="fas fa-play"></i> PLAY NOW</span>
-                        </div>
-                        <button class="card-fav-btn ${favActive}" title="Favorite" onclick="event.preventDefault(); event.stopPropagation(); toggleFav('${escapeAttr(game.launch)}', this)">
-                            <i class="${favActive ? 'fas' : 'far'} fa-star"></i>
+                    <div class="card-thumb">
+                        <img src="${esc(game.img)}" loading="lazy" alt="${esc(game.name)}" onerror="this.src='/assets/img/fav.png'">
+                        <div class="card-play"><span class="play-pill"><i class="fas fa-play"></i> PLAY</span></div>
+                        <button class="fav-btn ${favOn ? "on" : ""}" title="${favOn ? "Unfavorite" : "Favorite"}"
+                            onclick="event.preventDefault();event.stopPropagation();toggleFav('${escA(game.url)}',this)">
+                            <i class="${favOn ? "fas" : "far"} fa-star"></i>
                         </button>
                     </div>
-                    <div class="card-content">
-                        <div class="card-title">${escapeHtml(game.name)}</div>
+                    <div class="card-info">
+                        <div class="card-name">${escH(game.name)}</div>
                         <div class="card-meta">
-                            <span class="card-tag">${game.provider}</span>
-                            <span>Unblocked</span>
+                            <span class="card-tag">${esc(game.provider)}</span>
+                            <span class="card-badge">Free</span>
                         </div>
-                    </div>
-                `;
-
+                    </div>`;
                 grid.appendChild(card);
             });
-
-            container.appendChild(grid);
         }
 
-        function handleSearchInput() {
-            searchQuery = document.getElementById("gameSearchInput").value;
-            renderGames();
+        /* ── EVENT HANDLERS ───────────────────────────────── */
+        function onSearch() { q = document.getElementById("searchInput").value; render(); }
+        function onProviderChange() { provider = document.getElementById("providerSel").value; render(); }
+        function setPill(cat, el) {
+            category = cat;
+            document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+            el.classList.add("active");
+            const labels = { all:"All Games", featured:"Featured", favorites:"My Favorites", recent:"Recently Played" };
+            document.getElementById("sectionLabel").textContent = labels[cat] || "All Games";
+            render();
         }
 
-        function handleProviderChange() {
-            currentProvider = document.getElementById("providerSelect").value;
-            renderGames();
-        }
+        /* ── ESCAPE HELPERS ───────────────────────────────── */
+        const escH = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        const esc = s => String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+        const escA = s => String(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;");
 
-        function setCategoryFilter(category, btnElement) {
-            currentCategory = category;
-            document.querySelectorAll(".pill-btn").forEach(el => el.classList.remove("active"));
-            btnElement.classList.add("active");
-            renderGames();
-        }
-
-        function escapeHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-        function escapeAttr(s) { return String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
-
-        // Theme sync
-        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
-
-        // Start loading
-        loadAllGames();
+        /* ── INIT ─────────────────────────────────────────── */
+        document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme")??"default"}.css`;
+        loadGames();
     </script>
 
     <script src="/assets/js/Cola.ads.js"></script>
     <script src="/assets/js/cola.sidebar.js"></script>
-
 </body>
 </html>

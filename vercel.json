@@ -4,6 +4,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://cola-v1.onrender.com/api/:path*"
+    },
+    {
+      "source": "/stores/:path*",
+      "destination": "https://cola-v1.onrender.com/stores/:path*"
     }
   ]
 }
