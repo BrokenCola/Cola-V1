@@ -4,722 +4,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cola | play</title>
+    <title>Cola | Play Game</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
-    <link rel="stylesheet" href="/assets/icons/fonts/remixicon.css">
-    <link rel="stylesheet" href="/assets/css/overlay.css">
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<body class="obfuscate" style="background: none !important;">
     <style>
-        html {
-            background: black;
-            overflow: hidden;
+        :root {
+            --bg-dark: #09090b;
+            --card-bg: rgba(18, 18, 24, 0.85);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-amber: rgba(245, 158, 11, 0.35);
+            --accent-gold: #fbbf24;
+            --accent-amber: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.2);
+            --sidebar-width: 64px;
         }
 
-        #particles-container {
-            position: fixed;
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: 0.5;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #f4f4f5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+            transition: margin-left 0.25s ease;
+        }
+
+        body {
+            margin-left: var(--sidebar-width) !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        body.sidebar-collapsed {
+            margin-left: 0px !important;
+        }
+
+        /* ─── GAME CONTAINER & VIEWPORT ──────────────────── */
+        .game-wrapper {
+            width: calc(100vw - var(--sidebar-width) - 40px);
+            height: calc(100vh - 110px);
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: width 0.25s ease;
+        }
+
+        body.sidebar-collapsed .game-wrapper {
+            width: calc(100vw - 40px);
         }
 
         #gameframe {
-            width: 95vw;
-            height: 80vh;
-            background: var(--bg-3);
-            border: 1px solid var(--border-4);
-            border-radius: 20px;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        .gamecontrols {
-            background: var(--bg-2);
-            height: 60px;
-            width: 95vw;
-            position: relative;
-            top: -6px;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            border: 1px solid var(--border-4);
-            overflow: hidden;
-            display: flex;
-            text-align: center;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .gamestuff {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            top: 50%;
-            width: fit-content;
-        }
-
-        .gamestuff button {
-            width: 33.35%;
-            border-radius: 0;
-            border: 0;
-            background: transparent;
-            color: white;
-            font-size: 25px;
-            cursor: pointer;
-            text-align: center;
-            height: 100%;
-            transition: 0.2s;
-            margin-right: -2px;
-            margin-left: -2px;
+            width: 100%;
             flex: 1;
+            background: #000;
+            border: 1px solid var(--border-amber);
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
+        }
+
+        /* ─── CONTROL TOOLBAR ────────────────────────────── */
+        .game-toolbar {
+            width: 100%;
+            height: 52px;
+            background: rgba(14, 14, 20, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .gamestuff button:hover {
-            background: var(--bg-4);
-        }
-
-        #bottom-tip {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 5px;
-            font-size: 14px;
-            font-weight: 500;
-            font-style: italic;
-            opacity: .5;
-        }
-
-        .overlay-notice {
-            background: var(--bg);
-            color: var(--text);
-            padding: 10px;
-            border: 1px solid var(--border-4);
-            border-radius: 15px;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: 0.4s;
-            z-index: 3298746986;
-        }
-
-        .invite-widget {
-            background: var(--bg-2);
-            border: 1px solid var(--border-4);
-            border-radius: 25px;
-            position: absolute;
-            left: 10px;
-            top: 160px;
-            padding: 15px;
-            min-width: 111px;
-            font-family: 'figtree normal', sans-serif;
-        }
-
-        .invite-widget h1 {
-            font-size: 24px;
-            color: var(--bright-text);
-            margin: 5px;
-            margin-left: 0;
-            margin-bottom: 7px;
-        }
-
-        .invite-widget > button {
-            height: 50px;
-            width: 50px;
-            padding: 10px;
-            border-radius: 15px;
-            aspect-ratio: 1;
-            background: var(--bg-3);
-            border: 1px solid var(--border-4);
-            transition: 0.2s;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 20px;
-            margin: 3px;
-        }
-
-        .invite-widget > button:hover { background: var(--bg-4); }
-
-        #invite-panel {
-            margin-top: 10px;
-            max-height: 260px;
-            overflow-y: auto;
+        .tb-left, .tb-right {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 200px;
+            align-items: center;
+            gap: 10px;
         }
 
-        .invite-friend-row {
+        .game-title-display {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 5px 6px;
-            border-radius: 12px;
-            background: var(--bg-3);
         }
 
-        .invite-friend-row img {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
+        .game-title-display img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
         }
 
-        .invite-friend-name {
-            flex: 1;
+        .tb-btn {
+            height: 36px;
+            padding: 0 12px;
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .invite-friend-btn {
-            padding: 4px 10px;
-            border-radius: 8px;
-            border: none;
-            background: var(--accent);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .15s;
-            white-space: nowrap;
+            font-weight: 500;
             font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.15s ease;
         }
 
-        .invite-friend-btn:hover { filter: brightness(1.1); }
-        .invite-friend-btn:disabled { opacity: .5; pointer-events: none; }
-
-        .invite-empty {
-            font-size: 13px;
-            opacity: .5;
-            text-align: center;
-            padding: 10px 0;
+        .tb-btn:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: var(--border-amber);
+            color: var(--accent-gold);
+            transform: translateY(-1px);
         }
+
+        .tb-btn.highlight {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: var(--border-amber);
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .tb-btn.highlight:hover {
+            background: var(--accent-amber);
+            color: #000;
+        }
+
+        /* ─── RECORDING DOT INDICATOR ───────────────────── */
+        .rec-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulseRec 1.2s infinite ease-in-out;
+        }
+        @keyframes pulseRec { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
+</head>
 
-    <div id="particles-container"></div>
+<body class="obfuscate">
 
-    <div class="gamestuff">
-        <iframe frameborder="0" id="gameframe" allowfullscreen allow="autoplay; fullscreen; pointer-lock; gamepad"></iframe>
-        <div class="gamecontrols">
-            <button onclick="refreshGame()">
-                <i class="far fa-refresh"></i>
-            </button>
-            <button onclick="fullscreenGame()">
-                <i class="far fa-expand"></i>
-            </button>
-            <button onclick="popoutGame()">
-                <i class="far fa-external-link"></i>
-            </button>
+    <!-- ─── GAME CONTAINER ──────────────────────────────── -->
+    <div class="game-wrapper">
+        <iframe id="gameframe" frameborder="0" allowfullscreen allow="autoplay; fullscreen; pointer-lock; gamepad"></iframe>
+
+        <!-- CONTROL TOOLBAR -->
+        <div class="game-toolbar">
+            <div class="tb-left">
+                <div class="game-title-display">
+                    <img src="/assets/img/fav.png" alt="Cola" />
+                    <span id="gameNameText">Playing Game</span>
+                </div>
+            </div>
+
+            <div class="tb-right">
+                <!-- Minimize Sidebar Toggle -->
+                <button class="tb-btn" onclick="toggleSidebarCollapse()" title="Toggle Sidebar (Expand Game Width)" id="toggleSbBtn">
+                    <i class="fas fa-arrows-left-right"></i>
+                    <span>Minimize Sidebar</span>
+                </button>
+
+                <!-- Fullscreen Button -->
+                <button class="tb-btn highlight" onclick="fullscreenGame()" title="Fullscreen Game">
+                    <i class="fas fa-expand"></i>
+                    <span>Fullscreen</span>
+                </button>
+
+                <!-- Reload Button -->
+                <button class="tb-btn" onclick="refreshGame()" title="Reload Game">
+                    <i class="fas fa-rotate-right"></i>
+                </button>
+
+                <!-- Popout Button -->
+                <button class="tb-btn" onclick="popoutGame()" title="Open in new window">
+                    <i class="fas fa-external-link"></i>
+                </button>
+
+                <!-- Record Button -->
+                <button class="tb-btn" id="recordBtn" onclick="toggleRecording()" title="Record Gameplay">
+                    <i class="fas fa-circle-dot"></i>
+                    <span id="recBtnText">Record</span>
+                </button>
+
+                <!-- Return Home/Games -->
+                <button class="tb-btn" onclick="window.location.href='/pages/games.html'" title="Back to Games">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div class="overlay-notice" style="text-align: center; padding: 15px;">
-        <strong style="font-size: 19px; font-weight: 700;">Press Alt + G to open the Game Overlay</strong><br>
-        <small style="color: var(--border);">If your game does not load, please open the overlay and pop it out.</small>
-    </div>
-
-    <div id="gameOverlay">
-        <div class="Cola-info">
-            <span id="currentTime">Loading time...</span>
-            <span class="divider"></span>
-            <span id="temperature">Loading temp...</span>
-            <span class="divider"></span>
-            <span id="sessionTime">Loading session time...</span>
-        </div>
-        <div class="record-widget">
-            <h1>Record</h1>
-            <button id="startRecording" style="margin-left: 0;" onclick="startRecording()">
-                <i class="far fa-circle-dot"></i>
-            </button>
-            <button id="stopRecording" disabled style="margin-right: 0;" onclick="stopRecording()">
-                <i class="fas fa-stop"></i>
-            </button>
-        </div>
-        <div class="game-controls">
-            <h1>Game Controls</h1>
-            <button style="margin-left: 0;" onclick="refreshGame()">
-                <i class="far fa-refresh"></i>
-            </button>
-            <button onclick="popoutGame()">
-                <i class="far fa-external-link"></i>
-            </button>
-            <button onclick="downloadGame()" id="downloadBtn">
-                <i class="far fa-download"></i>
-            </button>
-            <button style="margin-right: 0;" onclick="window.parent.location.href = '/'">
-                <i class="far fa-arrow-right-from-bracket"></i>
-            </button>
-        </div>
-        <div class="invite-widget">
-            <h1>Invite</h1>
-            <button onclick="toggleInvitePanel(this)" title="Invite friends">
-                <i class="far fa-user-plus"></i>
-            </button>
-            <div id="invite-panel" style="display:none;"></div>
-        </div>
-
-        <iframe src="/pages/minibrowse.html" frameborder="0" class="proxy-widget"></iframe>
-        <iframe src="/pages/embed.html?link=https://main.monochrome-507.pages.dev/"
-            style="left: 10px; width: 450px; height: 450px; background: var(--bg);" frameborder="0"
-            class="proxy-widget"></iframe>
-    </div>
-
-    <p id="bottom-tip" style="color: var(--text);">If a game doesn't work, try popping it out!</p>
-
+    <!-- ─── SCRIPTS ───────────────────────────────────── -->
     <script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js"></script>
     <script>
         const gameframe = document.getElementById("gameframe");
         const urlParams = new URLSearchParams(window.location.search);
-        const gameurl = urlParams.get("launch");
+        const rawLaunch = urlParams.get("launch") || urlParams.get("url");
 
-        let networkDetailsPromise;
-        let luminReady;
+        // ── SMART RESOLVE LAUNCH URL ─────────────────────────
+        function resolveGameUrl(raw) {
+            if (!raw) return "/pages/games.html";
 
-        function isLuminLaunch(raw) {
-            return typeof raw === "string" && raw.startsWith("lumin:");
-        }
+            const decoded = decodeURIComponent(raw).trim();
 
-        function getLuminGameId(raw) {
-            return isLuminLaunch(raw) ? raw.slice("lumin:".length) : null;
-        }
-
-        async function ensureLumin() {
-            if (!window.Lumin) {
-                throw new Error("Lumin SDK is unavailable");
-            }
-
-            if (!luminReady) {
-                luminReady = window.Lumin.init({
-                    headless: true,
-                    onError: (err) => console.error("Lumin error:", err)
-                });
-            }
-
-            return luminReady;
-        }
-
-        function sanitizeGameUrl(raw) {
-            if (!raw) return null;
-
-            let url;
-            const decoded = decodeURIComponent(raw);
-
-            try {
-                url = new URL(decoded, window.location.origin);
-            } catch {
-                return null;
-            }
-
-            if (url.protocol !== "https:" && url.protocol !== "http:") {
-                return null;
-            }
-
-            return url.href;
-        }
-
-        async function getNetworkDetails() {
-            if (!networkDetailsPromise) {
-                networkDetailsPromise = fetch("/api/system/network", {
-                    headers: {
-                        Accept: "application/json"
-                    }
-                })
-                    .then((r) => {
-                        if (!r.ok) {
-                            throw new Error("Failed to load network details");
-                        }
-                        return r.json();
-                    })
-                    .catch(() => null);
-            }
-
-            return networkDetailsPromise;
-        }
-
-        async function getNowggPrefix() {
-            const details = await getNetworkDetails();
-            return details?.nowggPrefix ?? null;
-        }
-
-        async function resolveLaunchUrl(raw) {
-            if (isLuminLaunch(raw)) {
-                await ensureLumin();
-                const gameId = getLuminGameId(raw);
-                if (!gameId) return null;
-
-                const result = await window.Lumin.getGameUrl(gameId);
-                return result?.url ?? null;
-            }
-
-            const safe = sanitizeGameUrl(raw);
-            if (!safe) return null;
-
-            const url = new URL(safe);
-
-            if (url.pathname === "/pages/embed.html") {
-                const embedded = url.searchParams.get("link");
-                if (!embedded) return url.href;
-
-                let embeddedUrl;
-                try {
-                    embeddedUrl = new URL(embedded);
-                } catch {
-                    return url.href;
+            // 1. Lumin launch
+            if (decoded.startsWith("lumin:")) {
+                const gameId = decoded.slice("lumin:".length);
+                if (window.Lumin && window.Lumin.getGameUrl) {
+                    return window.Lumin.getGameUrl(gameId).then(res => res?.url || `/pages/embed.html?link=https://main.monochrome-507.pages.dev/stores/lumin/${gameId}`);
                 }
-
-                if (embeddedUrl.hostname === "75.ip.nowgg.fun") {
-                    const prefix = await getNowggPrefix();
-                    if (prefix) {
-                        embeddedUrl.hostname = `${prefix}.ip.nowgg.fun`;
-                        url.searchParams.set("link", embeddedUrl.href);
-                    }
-                }
-            } else if (url.hostname === "75.ip.nowgg.fun") {
-                const prefix = await getNowggPrefix();
-                if (prefix) {
-                    url.hostname = `${prefix}.ip.nowgg.fun`;
-                }
+                return `/pages/embed.html?link=https://main.monochrome-507.pages.dev/stores/lumin/${gameId}`;
             }
 
-            return url.href;
-        }
-
-        function attachOverlayShortcut() {
-            try {
-                const doc = gameframe.contentDocument;
-                if (!doc?.head) return;
-
-                const script = doc.createElement("script");
-                script.textContent = `
-                    window.addEventListener("keydown", (e) => {
-                        if (e.altKey && e.code === "KeyG") {
-                            parent.postMessage({ type: "alt-g" }, "*");
-                        }
-                    });
-                `;
-                doc.head.appendChild(script);
-            } catch {
-                // Cross-origin games cannot be modified directly.
+            // 2. Relative store paths (/stores/gn-math/0.html -> embed via proxy CDN)
+            if (decoded.startsWith("/stores/")) {
+                const cdnUrl = `https://main.monochrome-507.pages.dev${decoded}`;
+                return `/pages/embed.html?link=${encodeURIComponent(cdnUrl)}`;
             }
+
+            // 3. Full HTTP/HTTPS URLs
+            if (decoded.startsWith("http://") || decoded.startsWith("https://")) {
+                if (decoded.includes("pages.dev") || decoded.includes("github.io")) {
+                    return decoded;
+                }
+                return `/pages/embed.html?link=${encodeURIComponent(decoded)}`;
+            }
+
+            // 4. Fallback relative path
+            return `/pages/embed.html?link=${encodeURIComponent(decoded)}`;
         }
 
         async function loadGame() {
-            if (!gameurl) return;
-
-            try {
-                const resolved = await resolveLaunchUrl(gameurl);
-                if (resolved) {
-                    gameframe.onload = attachOverlayShortcut;
-                    gameframe.src = resolved;
-                    gameframe.focus();
-                    return;
-                }
-            } catch (error) {
-                console.error("Failed to resolve game launch URL", error);
-            }
-
-            if (!gameframe.src || gameframe.src !== "/pages/unsafegame.html") {
-                gameframe.src = "/pages/unsafegame.html";
-            }
-        }
-
-        if (gameurl) {
-            loadGame();
-        }
-
-        async function refreshGame() {
-            if (gameurl) {
-                await loadGame();
+            if (!rawLaunch) {
+                window.location.href = "/pages/games.html";
                 return;
             }
 
-            gameframe.src = gameframe.src;
-            gameframe.focus();
+            const targetUrl = await Promise.resolve(resolveGameUrl(rawLaunch));
+            gameframe.src = targetUrl;
+
+            // Extract game name for display
+            try {
+                let name = "Game";
+                if (rawLaunch.includes("/stores/")) {
+                    const parts = rawLaunch.split("/");
+                    name = parts[parts.length - 1].replace(".html", "").toUpperCase();
+                } else {
+                    const u = new URL(targetUrl, window.location.origin);
+                    name = u.hostname.replace(/^www\./, "");
+                }
+                document.getElementById("gameNameText").textContent = name;
+            } catch (e) {}
         }
 
-        function fullscreenGame() {
-            const requestFullscreen =
-                gameframe.requestFullscreen ||
-                gameframe.mozRequestFullScreen ||
-                gameframe.webkitRequestFullscreen ||
-                gameframe.msRequestFullscreen;
-
-            if (requestFullscreen) {
-                requestFullscreen.call(gameframe);
-            }
-
-            gameframe.focus();
+        function refreshGame() {
+            gameframe.src = gameframe.src;
         }
 
         function popoutGame() {
             window.open(gameframe.src, "_blank");
-            gameframe.focus();
         }
 
-        const useOverlay = localStorage.getItem("Cola_useOverlay") ?? "yes";
-
-        if (useOverlay === "yes") {
-            initOverlay();
+        function fullscreenGame() {
+            if (gameframe.requestFullscreen) {
+                gameframe.requestFullscreen();
+            } else if (gameframe.webkitRequestFullscreen) {
+                gameframe.webkitRequestFullscreen();
+            } else if (gameframe.msRequestFullscreen) {
+                gameframe.msRequestFullscreen();
+            }
         }
 
-        function toggleOverlay() {
-            const overlay = document.getElementById("gameOverlay");
-            overlay.classList.toggle("active");
+        function toggleSidebarCollapse() {
+            document.body.classList.toggle("sidebar-collapsed");
+            const collapsed = document.body.classList.contains("sidebar-collapsed");
+            const btn = document.getElementById("toggleSbBtn");
+            if (collapsed) {
+                btn.innerHTML = '<i class="fas fa-arrows-left-right"></i> <span>Expand Sidebar</span>';
+                btn.classList.add("highlight");
+            } else {
+                btn.innerHTML = '<i class="fas fa-arrows-left-right"></i> <span>Minimize Sidebar</span>';
+                btn.classList.remove("highlight");
+            }
         }
 
-        function initOverlay() {
-            const controls = document.querySelector(".gamecontrols");
-            const overlayNotice = document.querySelector(".overlay-notice");
-            document.querySelector("#bottom-tip").style.display = "none";
-            controls.style.display = "none";
-            gameframe.style.height = "100vh";
-            gameframe.style.width = "100vw";
-            gameframe.style.border = "none";
-            gameframe.style.borderRadius = "0";
+        // ── SCREEN RECORDING ─────────────────────────────────
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
 
-            setTimeout(() => {
-                overlayNotice.style.opacity = 1;
-            }, 500);
-            setTimeout(() => {
-                overlayNotice.style.opacity = 0;
-            }, 4700);
-            setTimeout(() => {
-                overlayNotice.style.display = "none";
-            }, 5002);
+        async function toggleRecording() {
+            const btn = document.getElementById("recordBtn");
+            const text = document.getElementById("recBtnText");
 
-            window.addEventListener("message", (ev) => {
-                if (ev.data?.type === "alt-g") {
-                    toggleOverlay();
-                }
-            });
+            if (isRecording) {
+                mediaRecorder?.stop();
+                isRecording = false;
+                btn.classList.remove("highlight");
+                text.textContent = "Record";
+                btn.querySelector("i").className = "fas fa-circle-dot";
+                return;
+            }
 
-            document.addEventListener("keydown", (e) => {
-                if (e.altKey && e.key.toLowerCase() === "g") {
-                    toggleOverlay();
-                }
-            });
-        }
-
-        async function getTemp() {
-            const position = await new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject(new Error("Geolocation is unavailable"));
-                    return;
-                }
-
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: false,
-                    timeout: 5000,
-                    maximumAge: 1000 * 60 * 10
-                });
-            });
-
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-            const weather = await fetch(url).then((r) => r.json());
-            return weather.current_weather.temperature;
-        }
-
-        getTemp()
-            .then((t) => {
-                document.getElementById("temperature").textContent = Math.trunc((t * 1.8) + 32) + "°F";
-            })
-            .catch(() => {
-                document.getElementById("temperature").textContent = "--°F";
-            });
-
-        function getOSTime() {
-            const now = new Date();
-            return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        }
-
-        function updateTime() {
-            document.getElementById("currentTime").textContent = getOSTime();
-        }
-
-        updateTime();
-        setInterval(updateTime, 60000);
-
-        let recorder;
-        let chunks = [];
-
-        async function startRecording() {
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: {
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 },
-                        frameRate: { ideal: 60 }
-                    },
+                    video: { width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: 60 },
                     audio: true
                 });
 
-                document.getElementById("stopRecording").disabled = false;
-                document.getElementById("startRecording").style.background = "var(--accent)";
-                document.getElementById("startRecording").style.pointerEvents = "none";
+                recordedChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = saveRecording;
+                mediaRecorder.start();
 
-                recorder = new MediaRecorder(stream);
-                recorder.ondataavailable = (e) => chunks.push(e.data);
-
-                recorder.onstop = async () => {
-                    const blob = new Blob(chunks, { type: "video/mp4" });
-                    chunks = [];
-                    stream.getTracks().forEach((track) => track.stop());
-
-                    try {
-                        const handle = await window.showSaveFilePicker({
-                            suggestedName: "Cola_Game_Recording" + Date.now() + ".mp4",
-                            types: [{
-                                description: "Video Files",
-                                accept: { "video/mp4": [".mp4"] }
-                            }]
-                        });
-
-                        const writable = await handle.createWritable();
-                        await writable.write(blob);
-                        await writable.close();
-                    } catch (err) {
-                        if (err.name !== "AbortError") {
-                            console.error(err);
-                        }
-                    }
-                };
-
-                recorder.start();
-            } catch {
+                isRecording = true;
+                btn.classList.add("highlight");
+                text.textContent = "Stop Recording";
+                btn.innerHTML = '<div class="rec-dot"></div> <span id="recBtnText">Stop Recording</span>';
+            } catch (err) {
+                console.error("Recording error:", err);
             }
         }
 
-        function stopRecording() {
-            if (!recorder) return;
-
-            recorder.stop();
-            document.getElementById("stopRecording").disabled = true;
-            document.getElementById("startRecording").style.background = "var(--bg-2)";
-            document.getElementById("startRecording").style.pointerEvents = "auto";
+        function saveRecording() {
+            const blob = new Blob(recordedChunks, { type: "video/mp4" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `Cola_Gameplay_${Date.now()}.mp4`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
         }
 
-        const sessionTime = document.getElementById("sessionTime");
-        window.addEventListener("DOMContentLoaded", () => {
-            let elapsed = 0;
-
-            function format(ms) {
-                let totalSeconds = Math.floor(ms / 1000);
-                let hours = Math.floor(totalSeconds / 3600);
-                let minutes = Math.floor((totalSeconds % 3600) / 60);
-                let seconds = totalSeconds % 60;
-
-                hours = hours < 10 ? "0" + hours : hours;
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                return `${hours}:${minutes}:${seconds}`;
-            }
-
-            setInterval(() => {
-                elapsed += 1000;
-                sessionTime.textContent = format(elapsed);
-            }, 1000);
-        });
-
-        if (!gameurl || isLuminLaunch(gameurl)) {
-            document.getElementById("downloadBtn").style.display = "none";
-        } else if (!gameurl.includes("gn-math") && !gameurl.includes("ugs")) {
-            document.getElementById("downloadBtn").style.display = "none";
-        }
-
-        function downloadGame() {
-            const src = gameframe.src;
-            const download = document.createElement("a");
-            download.href = src;
-            download.download = src.replace(`${window.location.origin}/stores/gn-math/`, "");
-            document.body.appendChild(download);
-            download.click();
-            download.remove();
-        }
-
+        // Theme sync
         document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
 
-        function getGameName() {
-            const nameParam = new URLSearchParams(window.location.search).get("name");
-            if (nameParam) return nameParam;
-            try {
-                const u = new URL(gameurl || "", window.location.origin);
-                const host = u.hostname.replace(/^www\./, "");
-                return host || "a game";
-            } catch {
-                return "a game";
-            }
-        }
-
-        let invitePanelOpen = false;
-
-        async function toggleInvitePanel(btn) {
-            const panel = document.getElementById("invite-panel");
-            invitePanelOpen = !invitePanelOpen;
-            panel.style.display = invitePanelOpen ? "" : "none";
-            btn.querySelector("i").className = invitePanelOpen ? "far fa-xmark" : "far fa-user-plus";
-            if (invitePanelOpen) await loadInviteFriends();
-        }
-
-        async function loadInviteFriends() {
-            const panel = document.getElementById("invite-panel");
-            panel.innerHTML = `<div class="invite-empty"><i class="far fa-spinner fa-spin"></i></div>`;
-            try {
-                const res = await fetch("/api/friends", { credentials: "same-origin" });
-                const data = await res.json();
-                const friends = data.friends || [];
-                if (!friends.length) {
-                    panel.innerHTML = `<div class="invite-empty">No friends yet.</div>`;
-                    return;
-                }
-                panel.innerHTML = friends.map(f => `
-                    <div class="invite-friend-row">
-                        <img src="${escapeAttr(f.pfp || "/assets/img/fav.png")}" onerror="this.src='/assets/img/fav.png'" alt="">
-                        <span class="invite-friend-name">${escapeHtml(f.display || f.username)}</span>
-                        <button class="invite-friend-btn" onclick="sendGameInvite('${escapeAttr(f.id)}', this)">Invite</button>
-                    </div>`).join("");
-            } catch {
-                panel.innerHTML = `<div class="invite-empty">Failed to load friends.</div>`;
-            }
-        }
-
-        async function sendGameInvite(friendId, btn) {
-            btn.disabled = true;
-            btn.textContent = "Sent!";
-            try {
-                await fetch(`/api/friends/invite/${encodeURIComponent(friendId)}`, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ gameName: getGameName(), gameUrl: window.location.href }),
-                });
-            } catch {
-                btn.textContent = "Failed";
-            }
-        }
-
-        function escapeHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-        function escapeAttr(s) { return String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+        // Load Game
+        loadGame();
     </script>
+
+    <!-- Global Cola Sidebar Injection -->
+    <script src="/assets/js/cola.sidebar.js"></script>
 </body>
 
 </html>
-
