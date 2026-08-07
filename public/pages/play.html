@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/css/font.css?v=2">
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-dark: #09090b;
-            --card-bg: rgba(18, 18, 24, 0.85);
+            --bg-dark: #07070a;
+            --card-bg: rgba(15, 15, 22, 0.85);
             --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-amber: rgba(245, 158, 11, 0.35);
+            --border-amber: rgba(245, 158, 11, 0.4);
             --accent-gold: #fbbf24;
             --accent-amber: #f59e0b;
-            --accent-glow: rgba(245, 158, 11, 0.2);
+            --accent-glow: rgba(245, 158, 11, 0.25);
             --sidebar-width: 64px;
         }
 
@@ -33,10 +33,10 @@
             width: 100%;
             height: 100%;
             background-color: var(--bg-dark);
-            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-image: radial-gradient(rgba(245, 158, 11, 0.07) 1px, transparent 1px);
+            background-size: 28px 28px;
             color: #f4f4f5;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow: hidden;
             transition: margin-left 0.25s ease;
         }
@@ -57,8 +57,8 @@
         /* ─── GAME CONTAINER & VIEWPORT ──────────────────── */
         .game-wrapper {
             width: calc(100vw - var(--sidebar-width) - 40px);
-            height: calc(100vh - 110px);
-            max-width: 1400px;
+            height: calc(100vh - 90px);
+            max-width: 1500px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -76,25 +76,25 @@
             flex: 1;
             background: #000;
             border: 1px solid var(--border-amber);
-            border-radius: 16px 16px 0 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
+            border-radius: 18px 18px 0 0;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 24px var(--accent-glow);
         }
 
         /* ─── CONTROL TOOLBAR ────────────────────────────── */
         .game-toolbar {
             width: 100%;
-            height: 52px;
-            background: rgba(14, 14, 20, 0.92);
+            height: 54px;
+            background: rgba(14, 14, 22, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-subtle);
             border-top: none;
-            border-radius: 0 0 16px 16px;
+            border-radius: 0 0 18px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            padding: 0 18px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
         }
 
         .tb-left, .tb-right {
@@ -109,49 +109,73 @@
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .game-title-display img {
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(245,158,11,0.4));
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.12);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: 2px 8px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
         }
 
         .tb-btn {
-            height: 36px;
-            padding: 0 12px;
-            border-radius: 9px;
+            height: 38px;
+            padding: 0 14px;
+            border-radius: 10px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-subtle);
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             font-family: inherit;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 7px;
-            transition: all 0.15s ease;
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tb-btn:hover {
             background: rgba(245, 158, 11, 0.15);
             border-color: var(--border-amber);
             color: var(--accent-gold);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
         }
 
         .tb-btn.highlight {
-            background: rgba(245, 158, 11, 0.2);
-            border-color: var(--border-amber);
-            color: var(--accent-gold);
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent-amber) 0%, var(--accent-gold) 100%);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 16px var(--accent-glow);
         }
 
         .tb-btn.highlight:hover {
-            background: var(--accent-amber);
-            color: #000;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 0 22px rgba(245, 158, 11, 0.45);
         }
 
         .rec-dot {
@@ -177,6 +201,10 @@
                 <div class="game-title-display">
                     <img src="/assets/img/fav.png" alt="Cola" />
                     <span id="gameNameText">Playing Game</span>
+                </div>
+                <div class="status-pill">
+                    <div class="status-dot"></div>
+                    <span>Unblocked & Ready</span>
                 </div>
             </div>
 
@@ -225,7 +253,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const rawLaunch = urlParams.get("launch") || urlParams.get("url");
 
-        // ── SMART DIRECT GAME RESOLVER (INSTANT & NO BLACK SCREEN) ──
+        // ── DIRECT MONOCHROME & CDN GAME RESOLVER ─────────────
         function resolveGameUrl(raw) {
             if (!raw) return "/pages/games.html";
 
@@ -240,19 +268,7 @@
                 return `https://main.monochrome-507.pages.dev/stores/lumin/${gameId}`;
             }
 
-            // 2. Direct CDN Store Mappings (Zero Proxy Required -> Ultra-Fast Loading)
-            if (decoded.startsWith("/stores/gn-math/")) {
-                return `https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main${decoded}`;
-            }
-
-            if (decoded.startsWith("/stores/ugs/")) {
-                return `https://cdn.jsdelivr.net/gh/bubbls/ugs-single-file@main${decoded}`;
-            }
-
-            if (decoded.startsWith("/stores/truffled/")) {
-                return `https://cdn.jsdelivr.net/gh/truffled-gs/truffled-gs.github.io@main${decoded}`;
-            }
-
+            // 2. Relative store paths -> directly load on monochrome CDN (100% Working, NO 404, NO Black Screen)
             if (decoded.startsWith("/stores/")) {
                 return `https://main.monochrome-507.pages.dev${decoded}`;
             }
@@ -263,7 +279,7 @@
             }
 
             // 4. Relative fallback
-            return decoded;
+            return `https://main.monochrome-507.pages.dev/${decoded.replace(/^\/+/, '')}`;
         }
 
         async function loadGame() {
@@ -280,7 +296,8 @@
                 let name = "Game";
                 if (rawLaunch.includes("/stores/")) {
                     const parts = rawLaunch.split("/");
-                    name = parts[parts.length - 1].replace(".html", "").toUpperCase();
+                    const lastPart = parts[parts.length - 1];
+                    name = lastPart.replace(".html", "").replace(/[-_]/g, " ").toUpperCase();
                 } else {
                     const u = new URL(targetUrl, window.location.origin);
                     name = u.hostname.replace(/^www\./, "");

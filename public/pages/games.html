@@ -9,21 +9,21 @@
     <link rel="stylesheet" href="/assets/css/font.css?v=4">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
     <link rel="stylesheet" href="/assets/icons/css/all-pro.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-dark: #09090b;
-            --card-bg: rgba(18, 18, 24, 0.75);
-            --card-hover: rgba(28, 28, 38, 0.88);
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-amber: rgba(245, 158, 11, 0.35);
+            --bg-dark: #07070a;
+            --card-bg: rgba(16, 16, 24, 0.85);
+            --card-hover: rgba(26, 26, 38, 0.92);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-amber: rgba(245, 158, 11, 0.4);
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --text-dim: #71717a;
             --accent-gold: #fbbf24;
             --accent-amber: #f59e0b;
-            --accent-glow: rgba(245, 158, 11, 0.18);
+            --accent-glow: rgba(245, 158, 11, 0.25);
             --sidebar-width: 64px;
         }
 
@@ -37,25 +37,25 @@
             width: 100%;
             min-height: 100%;
             background-color: var(--bg-dark);
-            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-image: radial-gradient(rgba(245, 158, 11, 0.06) 1px, transparent 1px);
+            background-size: 28px 28px;
             color: var(--text-main);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow-x: hidden;
         }
 
         body {
             margin-left: var(--sidebar-width) !important;
-            padding: 28px 36px 60px;
+            padding: 28px 40px 60px;
         }
 
-        /* ─── PAGE HEADER ─────────────────────────────────── */
+        /* ─── PAGE HEADER & HERO SHOWCASE ─────────────────── */
         .games-header {
-            max-width: 1300px;
-            margin: 0 auto 28px;
+            max-width: 1400px;
+            margin: 0 auto 32px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 24px;
         }
 
         .header-top {
@@ -69,21 +69,21 @@
         .header-title-wrap {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
         }
 
         .header-title-wrap img {
-            width: 36px;
-            height: 36px;
+            width: 42px;
+            height: 42px;
             object-fit: contain;
-            filter: drop-shadow(0 0 12px rgba(245,158,11,0.4));
+            filter: drop-shadow(0 0 16px rgba(245,158,11,0.5));
         }
 
         .header-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ffffff 40%, var(--accent-gold) 100%);
+            letter-spacing: -0.8px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -94,32 +94,116 @@
             background: rgba(245, 158, 11, 0.15);
             border: 1px solid var(--border-amber);
             color: var(--accent-gold);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 100px;
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
-        /* ─── CONTROLS & CONTROLS BAR ─────────────────────── */
+        /* HERO SHOWCASE CARD */
+        .hero-banner {
+            width: 100%;
+            height: 220px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(16,16,24,0.9) 60%), url('/assets/img/g/gn-math/0.png');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--border-amber);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 25px var(--accent-glow);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(9,9,11,0.95) 30%, rgba(9,9,11,0.4) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hero-tag {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-game-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .btn-play-hero {
+            margin-top: 6px;
+            width: fit-content;
+            padding: 10px 22px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-amber) 0%, var(--accent-gold) 100%);
+            border: none;
+            color: #000;
+            font-size: 13.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(245,158,11,0.4);
+            text-decoration: none;
+        }
+
+        .btn-play-hero:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 24px rgba(245,158,11,0.6);
+        }
+
+        /* ─── CONTROLS BAR ────────────────────────────────── */
         .controls-bar {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            background: rgba(15, 15, 22, 0.8);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(14, 14, 22, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 10px 14px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            border-radius: 18px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
         .search-input-wrap {
             position: relative;
             flex: 1;
-            min-width: 240px;
+            min-width: 260px;
         }
 
         .search-input-wrap i {
@@ -133,15 +217,15 @@
 
         .games-search-input {
             width: 100%;
-            padding: 10px 14px 10px 38px;
+            padding: 11px 14px 11px 40px;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
-            border-radius: 10px;
+            border-radius: 12px;
             color: var(--text-main);
             font-size: 13.5px;
             font-family: inherit;
             outline: none;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
         .games-search-input::placeholder {
@@ -150,22 +234,22 @@
 
         .games-search-input:focus {
             border-color: var(--border-amber);
-            background: rgba(245, 158, 11, 0.05);
+            background: rgba(245, 158, 11, 0.06);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
         .provider-select {
-            padding: 10px 14px;
+            padding: 11px 16px;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
-            border-radius: 10px;
+            border-radius: 12px;
             color: var(--text-main);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             font-family: inherit;
             outline: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
         .provider-select:hover, .provider-select:focus {
@@ -179,31 +263,30 @@
             color: #fff;
         }
 
-        /* ─── CATEGORY FILTER PILLS ───────────────────────── */
+        /* ─── CATEGORY PILLS ─────────────────────────────── */
         .category-pills {
             display: flex;
             align-items: center;
             gap: 8px;
             overflow-x: auto;
             scrollbar-width: none;
-            padding-bottom: 2px;
         }
         .category-pills::-webkit-scrollbar { display: none; }
 
         .pill-btn {
-            padding: 6px 14px;
+            padding: 7px 16px;
             border-radius: 100px;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
             color: var(--text-muted);
-            font-size: 12.5px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.15s ease;
+            transition: all 0.18s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
         }
 
         .pill-btn:hover {
@@ -213,75 +296,52 @@
         }
 
         .pill-btn.active {
-            background: rgba(245, 158, 11, 0.15);
+            background: rgba(245, 158, 11, 0.18);
             border-color: var(--border-amber);
             color: var(--accent-gold);
-            font-weight: 600;
+            box-shadow: 0 0 14px var(--accent-glow);
         }
 
         /* ─── MAIN CONTAINER & SECTIONS ──────────────────── */
         .games-container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 32px;
         }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 16px;
-        }
-
-        .section-header i {
-            color: var(--accent-gold);
-        }
-
-        .section-count {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-dim);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2px 8px;
-            border-radius: 6px;
-        }
-
-        /* ─── GAMES GRID & CARDS ──────────────────────────── */
+        /* ─── GAMES GRID & CARDS (POP EFFECT) ─────────────── */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 20px;
         }
 
         .game-card {
             background: var(--card-bg);
             border: 1px solid var(--border-subtle);
-            border-radius: 14px;
+            border-radius: 16px;
             overflow: hidden;
             text-decoration: none;
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
 
         .game-card:hover {
             background: var(--card-hover);
             border-color: var(--border-amber);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 24px var(--accent-glow);
         }
 
         .card-img-wrap {
             width: 100%;
-            aspect-ratio: 16 / 11;
-            background: #121218;
+            aspect-ratio: 16 / 10;
+            background: #101018;
             overflow: hidden;
             position: relative;
         }
@@ -290,55 +350,91 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.35s ease;
         }
 
         .game-card:hover .card-img-wrap img {
-            transform: scale(1.06);
+            transform: scale(1.08);
+        }
+
+        /* Play Overlay Button popping up on hover */
+        .card-play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(9, 9, 14, 0.6);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .game-card:hover .card-play-overlay {
+            opacity: 1;
+        }
+
+        .play-btn-pop {
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, var(--accent-amber), var(--accent-gold));
+            color: #000;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+
+        .game-card:hover .play-btn-pop {
+            transform: scale(1);
         }
 
         .card-fav-btn {
             position: absolute;
             top: 8px;
             right: 8px;
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: rgba(10, 10, 15, 0.75);
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: rgba(10, 10, 15, 0.8);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.15s;
-            z-index: 2;
+            transition: all 0.18s ease;
+            z-index: 3;
         }
 
         .card-fav-btn:hover {
             color: var(--accent-gold);
-            background: rgba(10, 10, 15, 0.9);
+            background: rgba(10, 10, 15, 0.95);
             transform: scale(1.1);
         }
 
         .card-fav-btn.active {
             color: var(--accent-gold);
-            background: rgba(245, 158, 11, 0.2);
+            background: rgba(245, 158, 11, 0.25);
             border-color: var(--border-amber);
         }
 
         .card-content {
-            padding: 12px 14px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
 
         .card-title {
-            font-size: 13.5px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
@@ -349,21 +445,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--text-dim);
         }
 
         .card-tag {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1px 6px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            padding: 2px 7px;
             border-radius: 4px;
             text-transform: uppercase;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--accent-gold);
         }
 
-        /* ─── LOADING STATE & EMPTY STATE ─────────────────── */
         .loading-state, .empty-state {
             display: flex;
             flex-direction: column;
@@ -371,12 +467,12 @@
             justify-content: center;
             padding: 60px 20px;
             text-align: center;
-            gap: 12px;
+            gap: 14px;
             color: var(--text-muted);
         }
 
         .loading-spinner {
-            font-size: 28px;
+            font-size: 32px;
             color: var(--accent-gold);
             animation: spin 1s linear infinite;
         }
@@ -387,29 +483,41 @@
 
 <body class="obfuscate">
 
-    <!-- ─── PAGE HEADER & CONTROLS ─────────────────────── -->
+    <!-- ─── PAGE HEADER & HERO SHOWCASE ─────────────────── -->
     <header class="games-header">
         <div class="header-top">
             <div class="header-title-wrap">
                 <img src="/assets/img/fav.png" alt="Cola Games" />
-                <h1 class="header-title">Games Library</h1>
-                <span class="header-badge" id="totalGamesBadge"><i class="fas fa-gamepad"></i> Loading games...</span>
+                <h1 class="header-title">Games Hub</h1>
+                <span class="header-badge" id="totalGamesBadge"><i class="fas fa-gamepad"></i> Loading 200+ Games...</span>
             </div>
         </div>
 
+        <!-- HERO FEATURED GAME BANNER -->
+        <div class="hero-banner" id="heroBanner">
+            <div class="hero-content">
+                <div class="hero-tag"><i class="fas fa-fire"></i> FEATURED UNBLOCKED GAME</div>
+                <div class="hero-game-title" id="heroGameTitle">Bowmasters</div>
+                <div class="hero-desc">Experience intense 2D archery battles with awesome physics and unique characters!</div>
+                <a href="/pages/play.html?launch=%2Fstores%2Fgn-math%2F0.html" class="btn-play-hero" id="heroPlayBtn">
+                    <i class="fas fa-play"></i> PLAY NOW
+                </a>
+            </div>
+        </div>
+
+        <!-- CONTROLS & FILTER BAR -->
         <div class="controls-bar">
             <div class="search-input-wrap">
                 <i class="fas fa-search"></i>
-                <input type="text" class="games-search-input" id="gameSearchInput" placeholder="Search 200+ games..." oninput="handleSearchInput()" />
+                <input type="text" class="games-search-input" id="gameSearchInput" placeholder="Search 200+ unblocked games..." oninput="handleSearchInput()" />
             </div>
 
             <select class="provider-select" id="providerSelect" onchange="handleProviderChange()">
-                <option value="all">🎮 All Providers</option>
-                <option value="ugs">⚡ UGS Library (150+)</option>
-                <option value="gn-math">🧠 GN Math Collection</option>
+                <option value="all">🎮 All Game Libraries</option>
+                <option value="gn-math">🧠 GN Math Games</option>
+                <option value="ugs">⚡ UGS Library</option>
                 <option value="truffled">🍬 Truffled Games</option>
                 <option value="ngg">🚀 NowGG Games</option>
-                <option value="lumin">✨ Lumin SDK</option>
             </select>
 
             <div class="category-pills">
@@ -425,7 +533,7 @@
     <main class="games-container" id="gamesContainer">
         <div class="loading-state">
             <i class="fas fa-spinner loading-spinner"></i>
-            <div>Loading games collection...</div>
+            <div>Loading unblocked games library...</div>
         </div>
     </main>
 
@@ -441,7 +549,6 @@
         let currentCategory = "all";
         let searchQuery = "";
 
-        // ── FAVORITES & RECENT HELPERS ───────────────────────
         function getFavs() {
             try { return JSON.parse(localStorage.getItem(FAVS_KEY)) || []; } catch { return []; }
         }
@@ -485,7 +592,7 @@
             localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
         }
 
-        // ── LOAD GAME DATA FROM MULTIPLE SOURCES ──────────────
+        // ── LOAD GAME DATA FROM JSON PROVIDERS ─────────────────
         async function fetchProviderJson(providerKey) {
             try {
                 const res = await fetch(`/assets/json/${providerKey}.json?v=${Date.now()}`);
@@ -503,15 +610,6 @@
         }
 
         async function loadAllGames() {
-            const container = document.getElementById("gamesContainer");
-            container.innerHTML = `
-                <div class="loading-state">
-                    <i class="fas fa-spinner loading-spinner"></i>
-                    <div>Loading game libraries...</div>
-                </div>
-            `;
-
-            // Load primary lists concurrently
             const [gnMath, truffled, ugs, ngg] = await Promise.all([
                 fetchProviderJson("gn-math"),
                 fetchProviderJson("truffled"),
@@ -521,14 +619,25 @@
 
             allGamesData = [...gnMath, ...truffled, ...ugs, ...ngg];
 
-            // Mark featured games
+            // Set Featured Flag
             allGamesData.forEach((g, idx) => {
-                if (idx % 7 === 0 || g.name.toLowerCase().includes("ovo") || g.name.toLowerCase().includes("skibidi")) {
+                if (idx % 8 === 0 || g.name.toLowerCase().includes("ovo") || g.name.toLowerCase().includes("bowmaster")) {
                     g.featured = true;
                 }
             });
 
-            document.getElementById("totalGamesBadge").innerHTML = `<i class="fas fa-gamepad"></i> ${allGamesData.length} Games Available`;
+            document.getElementById("totalGamesBadge").innerHTML = `<i class="fas fa-gamepad"></i> ${allGamesData.length} Unblocked Games`;
+            
+            // Set Hero Game
+            if (allGamesData.length > 0) {
+                const hero = allGamesData.find(g => g.name.toLowerCase().includes("ovo")) || allGamesData[0];
+                document.getElementById("heroGameTitle").textContent = hero.name;
+                document.getElementById("heroPlayBtn").href = `/pages/play.html?launch=${encodeURIComponent(hero.launch)}`;
+                if (hero.img && !hero.img.includes("placeholder")) {
+                    document.getElementById("heroBanner").style.backgroundImage = `linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(9,9,11,0.92) 70%), url('${hero.img}')`;
+                }
+            }
+
             renderGames();
         }
 
@@ -564,14 +673,13 @@
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-ghost" style="font-size: 32px; color: var(--text-dim);"></i>
-                        <div>No games found matching your search.</div>
+                        <i class="fas fa-ghost" style="font-size: 36px; color: var(--accent-gold);"></i>
+                        <div>No games found matching your search. Try adjusting filters!</div>
                     </div>
                 `;
                 return;
             }
 
-            // Group into section or render clean grid
             const grid = document.createElement("div");
             grid.className = "games-grid";
 
@@ -586,6 +694,9 @@
                 card.innerHTML = `
                     <div class="card-img-wrap">
                         <img src="${game.img}" loading="lazy" alt="${escapeAttr(game.name)}" onerror="this.src='/assets/img/fav.png'" />
+                        <div class="card-play-overlay">
+                            <span class="play-btn-pop"><i class="fas fa-play"></i> PLAY NOW</span>
+                        </div>
                         <button class="card-fav-btn ${favActive}" title="Favorite" onclick="event.preventDefault(); event.stopPropagation(); toggleFav('${escapeAttr(game.launch)}', this)">
                             <i class="${favActive ? 'fas' : 'far'} fa-star"></i>
                         </button>
@@ -594,7 +705,7 @@
                         <div class="card-title">${escapeHtml(game.name)}</div>
                         <div class="card-meta">
                             <span class="card-tag">${game.provider}</span>
-                            <span>Play Now</span>
+                            <span>Unblocked</span>
                         </div>
                     </div>
                 `;
@@ -605,7 +716,6 @@
             container.appendChild(grid);
         }
 
-        // ── HANDLERS ─────────────────────────────────────────
         function handleSearchInput() {
             searchQuery = document.getElementById("gameSearchInput").value;
             renderGames();
@@ -629,7 +739,7 @@
         // Theme sync
         document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme") ?? "default"}.css`;
 
-        // Load data on start
+        // Start loading
         loadAllGames();
     </script>
 
