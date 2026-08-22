@@ -434,24 +434,25 @@
         function resolveUrl(raw) {
             const dec = decodeURIComponent(raw).trim();
 
-            // Cloud gaming protocol
+            // Stratus Cloud Gaming protocol
             if (dec.startsWith("cloud:")) {
                 const key = dec.slice(6);
+                // Embed Cloud Game Stream via direct proxy endpoint
                 return `https://raw.githack.com/x8rr/stratus-api/main/api?game_key=${key}`;
             }
 
-            // Lumin protocol — proxy to Render backend /stores/
+            // Lumin protocol — proxy to store CDN
             if (dec.startsWith("lumin:")) {
                 const id = dec.slice(6);
                 return `/stores/lumin/${id}`;
             }
 
-            // Relative /stores/ path — served via Vercel rewrite from Render backend
+            // Relative /stores/ path — proxied via Vercel rewrite
             if (dec.startsWith("/stores/") || dec.startsWith("stores/")) {
                 return dec.startsWith("/") ? dec : "/" + dec;
             }
 
-            // Already a full URL
+            // Full URLs
             if (dec.startsWith("http://") || dec.startsWith("https://")) {
                 return dec;
             }

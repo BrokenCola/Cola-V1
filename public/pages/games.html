@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cola | Games Hub</title>
+    <title>Cola | Ultimate Arcade & Cloud Gaming Hub</title>
     <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon">
     <link rel="stylesheet" href="/assets/css/font.css?v=4">
     <link rel="stylesheet" href="/assets/css/colors/default.css" id="csslink">
@@ -12,19 +12,20 @@
 
     <style>
         :root {
-            --bg: #07070b;
-            --surface: rgba(14,14,22,0.92);
-            --surface-hov: rgba(22,22,34,0.95);
-            --border: rgba(255,255,255,0.07);
-            --border-gold: rgba(251,191,36,0.4);
+            --bg: #06060c;
+            --surface: rgba(14,14,24,0.92);
+            --surface-hov: rgba(24,24,38,0.95);
+            --border: rgba(255,255,255,0.08);
+            --border-gold: rgba(251,191,36,0.45);
             --gold: #fbbf24;
             --amber: #f59e0b;
-            --glow: rgba(251,191,36,0.22);
-            --text: #f1f1f3;
-            --muted: #9ca3af;
-            --dim: #6b7280;
+            --glow: rgba(251,191,36,0.25);
+            --text: #f3f3f6;
+            --muted: #a1a1aa;
+            --dim: #71717a;
             --sidebar: 64px;
             --green: #4ade80;
+            --cyan: #38bdf8;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,8 +35,8 @@
             min-height: 100%;
             background: var(--bg);
             background-image:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(251,191,36,0.08) 0%, transparent 60%),
-                radial-gradient(rgba(251,191,36,0.05) 1px, transparent 1px);
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(251,191,36,0.1) 0%, transparent 60%),
+                radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
             background-size: auto, 28px 28px;
             color: var(--text);
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -47,46 +48,46 @@
             padding: 0 0 80px;
         }
 
-        /* ─── HERO ───────────────────────────────────────── */
+        /* ─── HERO SPOTLIGHT ───────────────────────────────── */
         .hero {
             position: relative;
             width: 100%;
-            height: 340px;
+            height: 360px;
             overflow: hidden;
             display: flex;
             align-items: flex-end;
+            border-bottom: 1px solid var(--border);
         }
 
         .hero-bg {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, #1a0a00 0%, #0d0d18 60%, #070710 100%);
+            background: linear-gradient(135deg, #1f0d00 0%, #0d0d1a 60%, #06060c 100%);
             z-index: 0;
         }
 
-        /* Animated ambient particles */
         .hero-bg::before {
             content: '';
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%);
-            top: -200px;
-            right: 100px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 70%);
+            top: -250px;
+            right: 80px;
             border-radius: 50%;
-            animation: floatGlow 8s ease-in-out infinite;
+            animation: floatGlow 9s ease-in-out infinite;
         }
 
         .hero-bg::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, var(--bg) 0%, transparent 50%);
+            background: linear-gradient(to top, var(--bg) 0%, transparent 60%);
         }
 
         @keyframes floatGlow {
             0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
-            50% { transform: translateY(-30px) scale(1.1); opacity: 1; }
+            50% { transform: translateY(-35px) scale(1.12); opacity: 1; }
         }
 
         .hero-featured-img {
@@ -94,57 +95,59 @@
             right: 0;
             top: 0;
             height: 100%;
-            width: 55%;
+            width: 58%;
             object-fit: cover;
             object-position: center;
-            opacity: 0.3;
-            mask-image: linear-gradient(to left, black 30%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to left, black 30%, transparent 100%);
+            opacity: 0.35;
+            mask-image: linear-gradient(to left, black 35%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to left, black 35%, transparent 100%);
             z-index: 1;
+            transition: opacity 0.5s ease;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            padding: 40px 48px;
-            max-width: 580px;
+            padding: 44px 52px;
+            max-width: 620px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .hero-tag {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             font-size: 11px;
             font-weight: 800;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.4px;
             text-transform: uppercase;
             color: var(--gold);
-            background: rgba(251,191,36,0.12);
+            background: rgba(251,191,36,0.14);
             border: 1px solid var(--border-gold);
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 100px;
             width: fit-content;
+            box-shadow: 0 0 16px var(--glow);
         }
 
         .hero-tag .tag-dot {
-            width: 6px; height: 6px;
+            width: 7px; height: 7px;
             border-radius: 50%;
             background: var(--green);
-            box-shadow: 0 0 8px var(--green);
+            box-shadow: 0 0 10px var(--green);
             animation: blink 2s ease-in-out infinite;
         }
 
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
         .hero-title {
-            font-size: 42px;
+            font-size: 46px;
             font-weight: 800;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            background: linear-gradient(135deg, #fff 30%, var(--gold));
+            letter-spacing: -1.8px;
+            line-height: 1.08;
+            background: linear-gradient(135deg, #ffffff 20%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -154,21 +157,21 @@
             font-size: 15px;
             color: var(--muted);
             line-height: 1.6;
-            max-width: 420px;
+            max-width: 460px;
         }
 
         .hero-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 4px;
+            gap: 14px;
+            margin-top: 6px;
         }
 
         .btn-hero-play {
             display: inline-flex;
             align-items: center;
-            gap: 9px;
-            padding: 13px 28px;
+            gap: 10px;
+            padding: 14px 30px;
             background: linear-gradient(135deg, var(--amber), var(--gold));
             color: #000;
             font-size: 14px;
@@ -177,20 +180,20 @@
             border-radius: 14px;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 4px 20px rgba(251,191,36,0.45);
-            transition: all 0.2s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 6px 24px rgba(251,191,36,0.45);
+            transition: all 0.22s cubic-bezier(.4,0,.2,1);
         }
 
         .btn-hero-play:hover {
             transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 8px 30px rgba(251,191,36,0.65);
+            box-shadow: 0 10px 36px rgba(251,191,36,0.65);
         }
 
         .btn-hero-info {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 13px 22px;
+            padding: 14px 24px;
             background: rgba(255,255,255,0.06);
             border: 1px solid var(--border);
             color: var(--muted);
@@ -202,59 +205,59 @@
         }
 
         .btn-hero-info:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.12);
             color: var(--text);
         }
 
-        /* ─── MAIN CONTENT AREA ───────────────────────────── */
+        /* ─── MAIN CONTENT ───────────────────────────────── */
         .page-body {
             max-width: 1440px;
             margin: 0 auto;
-            padding: 32px 40px;
+            padding: 36px 44px;
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 36px;
         }
 
-        /* ─── FLOATING CONTROLS BAR ────────────────────────── */
+        /* ─── CONTROLS HUD ───────────────────────────────── */
         .controls-bar {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
             background: var(--surface);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 10px 14px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset;
+            border-radius: 22px;
+            padding: 12px 16px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.06) inset;
         }
 
         .search-wrap {
             position: relative;
             flex: 1;
-            min-width: 240px;
+            min-width: 260px;
         }
 
         .search-wrap i {
             position: absolute;
-            left: 14px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--dim);
-            font-size: 13px;
+            font-size: 14px;
             pointer-events: none;
         }
 
         .search-input {
             width: 100%;
-            padding: 11px 14px 11px 40px;
+            padding: 12px 16px 12px 44px;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             color: var(--text);
-            font-size: 13.5px;
+            font-size: 14px;
             font-family: inherit;
             outline: none;
             transition: all 0.2s ease;
@@ -264,17 +267,17 @@
 
         .search-input:focus {
             border-color: var(--border-gold);
-            background: rgba(251,191,36,0.05);
+            background: rgba(251,191,36,0.06);
             box-shadow: 0 0 0 3px var(--glow);
         }
 
         .provider-select {
-            padding: 11px 16px;
+            padding: 12px 18px;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             color: var(--text);
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 600;
             font-family: inherit;
             outline: none;
@@ -284,15 +287,15 @@
 
         .provider-select:hover, .provider-select:focus {
             border-color: var(--border-gold);
-            background: rgba(251,191,36,0.06);
+            background: rgba(251,191,36,0.08);
             color: var(--gold);
         }
 
-        .provider-select option { background: #111118; color: #fff; }
+        .provider-select option { background: #101018; color: #fff; }
 
         .pills {
             display: flex;
-            gap: 7px;
+            gap: 8px;
             flex-wrap: nowrap;
             overflow-x: auto;
             scrollbar-width: none;
@@ -300,7 +303,7 @@
         .pills::-webkit-scrollbar { display: none; }
 
         .pill {
-            padding: 8px 16px;
+            padding: 9px 18px;
             border-radius: 100px;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
@@ -311,17 +314,17 @@
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 7px;
-            transition: all 0.18s ease;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
 
-        .pill:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+        .pill:hover { background: rgba(255,255,255,0.09); color: var(--text); }
 
         .pill.active {
-            background: rgba(251,191,36,0.15);
+            background: rgba(251,191,36,0.16);
             border-color: var(--border-gold);
             color: var(--gold);
-            box-shadow: 0 0 16px var(--glow);
+            box-shadow: 0 0 20px var(--glow);
         }
 
         /* ─── SECTION HEADING ─────────────────────────────── */
@@ -329,41 +332,42 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .section-title i { color: var(--gold); font-size: 16px; }
+        .section-title i { color: var(--gold); font-size: 18px; }
 
         .section-count {
-            font-size: 12px;
+            font-size: 12.5px;
             font-weight: 700;
             color: var(--dim);
             background: rgba(255,255,255,0.05);
-            padding: 3px 10px;
+            border: 1px solid var(--border);
+            padding: 4px 12px;
             border-radius: 100px;
         }
 
         /* ─── GAMES GRID ──────────────────────────────────── */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+            gap: 20px;
         }
 
-        /* ─── GAME CARD (OUT-OF-THIS-WORLD DESIGN) ─────────── */
+        /* ─── GAME CARD ───────────────────────────────────── */
         .game-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -377,8 +381,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(251,191,36,0.12) 0%, transparent 60%);
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(251,191,36,0.14) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.28s ease;
             z-index: 1;
@@ -388,7 +392,7 @@
         .game-card:hover {
             border-color: var(--border-gold);
             transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px var(--glow);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 32px var(--glow);
         }
 
         .game-card:hover::before { opacity: 1; }
@@ -396,7 +400,7 @@
         .card-thumb {
             width: 100%;
             aspect-ratio: 16/10;
-            background: #0d0d1a;
+            background: #090912;
             overflow: hidden;
             position: relative;
         }
@@ -410,12 +414,11 @@
 
         .game-card:hover .card-thumb img { transform: scale(1.1); }
 
-        /* Neon glow ring on hover */
         .card-thumb::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, transparent 40%, rgba(9,9,14,0.7) 100%);
+            background: linear-gradient(to bottom, transparent 35%, rgba(6,6,12,0.85) 100%);
             transition: opacity 0.3s ease;
         }
 
@@ -425,10 +428,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(7,7,11,0.65);
-            backdrop-filter: blur(4px);
+            background: rgba(6,6,12,0.68);
+            backdrop-filter: blur(5px);
             opacity: 0;
-            transition: opacity 0.22s ease;
+            transition: opacity 0.24s ease;
             z-index: 3;
         }
 
@@ -438,15 +441,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 20px;
+            padding: 11px 22px;
             background: linear-gradient(135deg, var(--amber), var(--gold));
             color: #000;
             font-size: 13px;
             font-weight: 800;
             border-radius: 100px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.5);
-            transform: translateY(6px) scale(0.9);
-            transition: transform 0.22s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 24px rgba(251,191,36,0.6);
+            transform: translateY(8px) scale(0.9);
+            transition: transform 0.24s ease;
         }
 
         .game-card:hover .play-pill {
@@ -455,41 +458,41 @@
 
         .fav-btn {
             position: absolute;
-            top: 9px;
-            right: 9px;
+            top: 10px;
+            right: 10px;
             z-index: 4;
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
-            background: rgba(9,9,14,0.82);
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(6,6,12,0.85);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.55);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 12.5px;
             cursor: pointer;
-            transition: all 0.18s ease;
+            transition: all 0.2s ease;
         }
 
         .fav-btn:hover { color: var(--gold); transform: scale(1.15); }
         .fav-btn.on { color: var(--gold); background: rgba(251,191,36,0.22); border-color: var(--border-gold); }
 
         .card-info {
-            padding: 13px 14px 14px;
+            padding: 14px 16px 16px;
             position: relative;
             z-index: 2;
         }
 
         .card-name {
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .card-meta {
@@ -499,44 +502,44 @@
         }
 
         .card-tag {
-            font-size: 9.5px;
+            font-size: 10px;
             font-weight: 800;
             letter-spacing: 0.6px;
             text-transform: uppercase;
             color: var(--gold);
-            background: rgba(251,191,36,0.1);
-            border: 1px solid rgba(251,191,36,0.2);
-            padding: 2px 7px;
-            border-radius: 5px;
+            background: rgba(251,191,36,0.12);
+            border: 1px solid rgba(251,191,36,0.25);
+            padding: 3px 8px;
+            border-radius: 6px;
         }
 
         .card-badge {
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--dim);
         }
 
-        /* ─── EMPTY & LOADING STATES ──────────────────────── */
+        /* ─── STATE MESSAGES ─────────────────────────────── */
         .state-box {
             grid-column: 1/-1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 80px 20px;
-            gap: 16px;
+            padding: 90px 20px;
+            gap: 18px;
             color: var(--muted);
             text-align: center;
         }
 
         .state-box i {
-            font-size: 40px;
+            font-size: 44px;
             color: var(--gold);
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         .spinner {
-            font-size: 38px;
+            font-size: 40px;
             color: var(--gold);
             animation: spin 1s linear infinite;
         }
@@ -547,38 +550,38 @@
 
 <body class="obfuscate">
 
-    <!-- ─── HERO SECTION ─────────────────────────────────── -->
+    <!-- HERO SECTION -->
     <div class="hero">
         <div class="hero-bg"></div>
         <img id="heroBgImg" class="hero-featured-img" src="/assets/img/fav.png" alt="Featured Game" />
         <div class="hero-content">
             <div class="hero-tag">
                 <span class="tag-dot"></span>
-                <span id="heroTagText">⭐ FEATURED GAME</span>
+                <span id="heroTagText">⭐ SPOTLIGHT GAME</span>
             </div>
             <h1 class="hero-title" id="heroTitle">Games Hub</h1>
-            <p class="hero-desc" id="heroDesc">Explore hundreds of unblocked games — all free, all instant.</p>
+            <p class="hero-desc" id="heroDesc">2000+ Unblocked & Stratus Cloud Games. Instant access, zero limits.</p>
             <div class="hero-actions">
                 <a id="heroPlayBtn" href="#" class="btn-hero-play">
                     <i class="fas fa-play"></i> PLAY NOW
                 </a>
-                <button class="btn-hero-info" onclick="shuffleHero()">
-                    <i class="fas fa-shuffle"></i> Shuffle
+                <button class="btn-hero-info" onclick="window.shuffleHero()">
+                    <i class="fas fa-shuffle"></i> Shuffle Spotlight
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ─── MAIN BODY ─────────────────────────────────────── -->
+    <!-- MAIN BODY -->
     <div class="page-body">
 
-        <!-- CONTROLS BAR -->
+        <!-- CONTROLS HUD -->
         <div class="controls-bar">
             <div class="search-wrap">
                 <i class="fas fa-search"></i>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search 200+ unblocked games..." oninput="onSearch()" />
+                <input type="text" class="search-input" id="searchInput" placeholder="Search 2000+ unblocked & cloud games..." oninput="window.onSearch()" />
             </div>
-            <select class="provider-select" id="providerSel" onchange="onProviderChange()">
+            <select class="provider-select" id="providerSel" onchange="window.onProviderChange()">
                 <option value="all">🎮 All Libraries</option>
                 <option value="gn-math">🧠 GN Math</option>
                 <option value="truffled">🍬 Truffled</option>
@@ -587,43 +590,46 @@
                 <option value="cloud">☁️ Cloud Gaming</option>
             </select>
             <div class="pills">
-                <button class="pill active" onclick="setPill('all', this)"><i class="fas fa-grid-2"></i> All</button>
-                <button class="pill" onclick="setPill('featured', this)"><i class="fas fa-fire"></i> Featured</button>
-                <button class="pill" onclick="setPill('favorites', this)"><i class="fas fa-star"></i> Favorites</button>
-                <button class="pill" onclick="setPill('recent', this)"><i class="fas fa-clock"></i> Recent</button>
-                <button class="pill" onclick="setPill('cloud', this)"><i class="fas fa-cloud"></i> Cloud</button>
+                <button class="pill active" onclick="window.setPill('all', this)"><i class="fas fa-grid-2"></i> All</button>
+                <button class="pill" onclick="window.setPill('featured', this)"><i class="fas fa-fire"></i> Featured</button>
+                <button class="pill" onclick="window.setPill('cloud', this)"><i class="fas fa-cloud"></i> Cloud</button>
+                <button class="pill" onclick="window.setPill('favorites', this)"><i class="fas fa-star"></i> Favorites</button>
+                <button class="pill" onclick="window.setPill('recent', this)"><i class="fas fa-clock"></i> Recent</button>
             </div>
         </div>
 
-        <!-- GAMES SECTION -->
+        <!-- GAMES GRID -->
         <div>
             <div class="section-head">
                 <div class="section-title"><i class="fas fa-gamepad"></i> <span id="sectionLabel">All Games</span></div>
-                <span class="section-count" id="countBadge">Loading...</span>
+                <span class="section-count" id="countBadge">Loading Games...</span>
             </div>
             <div class="games-grid" id="gamesGrid">
-                <div class="state-box"><i class="fas fa-spinner spinner"></i><div>Loading your games...</div></div>
+                <div class="state-box">
+                    <i class="fas fa-spinner spinner"></i>
+                    <div>Loading games catalog...</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ─── SCRIPTS ─────────────────────────────────────── -->
+    <!-- SCRIPTS -->
     <script type="module">
         import { fetchGameCatalog } from '/assets/js/gameCatalog.js';
 
         const FKEY = "Cola_favorites";
         const RKEY = "Cola_recent";
-        const MAX_R = 24;
+        const MAX_R = 30;
 
         let allGames = [];
         let provider = "all";
         let category = "all";
         let q = "";
 
-        /* ── STORAGE HELPERS ──────────────────────────────── */
         const getFavs = () => { try { return JSON.parse(localStorage.getItem(FKEY)) || []; } catch { return []; }};
         const saveFavs = f => localStorage.setItem(FKEY, JSON.stringify(f));
         const isFav = u => getFavs().includes(u);
+
         const getRecent = () => { try { return JSON.parse(localStorage.getItem(RKEY)) || []; } catch { return []; }};
         function recordRecent(u) {
             let r = getRecent().filter(x => x !== u);
@@ -632,7 +638,6 @@
             localStorage.setItem(RKEY, JSON.stringify(r));
         }
 
-        /* ── TOGGLE FAVORITE ──────────────────────────────── */
         window.toggleFav = function(url, btn) {
             let favs = getFavs();
             if (favs.includes(url)) {
@@ -648,29 +653,23 @@
             if (category === "favorites") render();
         };
 
-        /* ── LOAD GAME DATA ───────────────────────────────── */
-        async function loadGames() {
+        async function initGames() {
             try {
                 allGames = await fetchGameCatalog();
-                allGames.forEach((g, i) => {
-                    if (g.featured) return;
-                    if (i % 7 === 0) g.featured = true;
-                });
                 if (allGames.length > 0) {
-                    setHero(allGames[Math.floor(Math.random() * Math.min(20, allGames.length))]);
+                    setHero(allGames[Math.floor(Math.random() * Math.min(25, allGames.length))]);
                 }
                 render();
             } catch (err) {
-                console.error("Failed to load catalog", err);
+                console.error("Catalog load error", err);
                 document.getElementById("gamesGrid").innerHTML = `<div class="state-box"><i class="fas fa-exclamation-triangle"></i><div>Failed to load games catalog. Please refresh.</div></div>`;
             }
         }
 
-        /* ── HERO LOGIC ───────────────────────────────────── */
         function setHero(game) {
             if (!game) return;
             document.getElementById("heroTitle").textContent = game.name;
-            document.getElementById("heroDesc").textContent = `One of ${allGames.length}+ games available instantly on Cola Cloud & Local Libraries.`;
+            document.getElementById("heroDesc").textContent = `One of ${allGames.length}+ unblocked & cloud games. Play instantly in your browser.`;
             document.getElementById("heroPlayBtn").href = `/pages/play.html?launch=${encodeURIComponent(game.url)}`;
             const img = document.getElementById("heroBgImg");
             img.src = game.img;
@@ -683,7 +682,6 @@
             setHero(game);
         };
 
-        /* ── RENDER GRID ──────────────────────────────────── */
         function render() {
             const grid = document.getElementById("gamesGrid");
             let filtered = [...allGames];
@@ -694,6 +692,8 @@
 
             if (category === "featured") {
                 filtered = filtered.filter(g => g.featured);
+            } else if (category === "cloud") {
+                filtered = filtered.filter(g => g.provider === "cloud");
             } else if (category === "favorites") {
                 const favs = getFavs();
                 filtered = filtered.filter(g => favs.includes(g.url));
@@ -701,8 +701,6 @@
                 const rec = getRecent();
                 filtered = filtered.filter(g => rec.includes(g.url));
                 filtered.sort((a,b) => rec.indexOf(a.url) - rec.indexOf(b.url));
-            } else if (category === "cloud") {
-                filtered = filtered.filter(g => g.provider === "cloud");
             }
 
             if (q.trim()) {
@@ -713,7 +711,7 @@
             document.getElementById("countBadge").textContent = `${filtered.length} game${filtered.length !== 1 ? "s" : ""}`;
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="state-box"><i class="fas fa-ghost"></i><div>No games found. Try a different search!</div></div>`;
+                grid.innerHTML = `<div class="state-box"><i class="fas fa-ghost"></i><div>No games found matching your filters.</div></div>`;
                 return;
             }
 
@@ -729,7 +727,7 @@
                         <img src="${esc(game.img)}" loading="lazy" alt="${esc(game.name)}" onerror="this.src='/assets/img/fav.png'">
                         <div class="card-play"><span class="play-pill"><i class="fas fa-play"></i> PLAY</span></div>
                         <button class="fav-btn ${favOn ? "on" : ""}" title="${favOn ? "Unfavorite" : "Favorite"}"
-                            onclick="event.preventDefault();event.stopPropagation();toggleFav('${escA(game.url)}',this)">
+                            onclick="event.preventDefault();event.stopPropagation();window.toggleFav('${escA(game.url)}',this)">
                             <i class="${favOn ? "fas" : "far"} fa-star"></i>
                         </button>
                     </div>
@@ -744,26 +742,23 @@
             });
         }
 
-        /* ── EVENT HANDLERS ───────────────────────────────── */
         window.onSearch = function() { q = document.getElementById("searchInput").value; render(); };
         window.onProviderChange = function() { provider = document.getElementById("providerSel").value; render(); };
         window.setPill = function(cat, el) {
             category = cat;
             document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
             el.classList.add("active");
-            const labels = { all:"All Games", featured:"Featured", favorites:"My Favorites", recent:"Recently Played", cloud:"Cloud Gaming" };
+            const labels = { all:"All Games", featured:"Featured Games", cloud:"Cloud Gaming", favorites:"My Favorites", recent:"Recently Played" };
             document.getElementById("sectionLabel").textContent = labels[cat] || "All Games";
             render();
         };
 
-        /* ── ESCAPE HELPERS ───────────────────────────────── */
         const escH = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
         const escA = s => String(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;");
         const esc = s => String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 
-        /* ── INIT ─────────────────────────────────────────── */
         document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme")??"default"}.css`;
-        loadGames();
+        initGames();
     </script>
 
     <script src="/assets/js/Cola.ads.js"></script>
