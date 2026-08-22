@@ -7,7 +7,7 @@
     },
     {
       "source": "/stores/:path*",
-      "destination": "https://cola-v1.onrender.com/stores/:path*"
+      "destination": "https://main.monochrome-507.pages.dev/stores/:path*"
     }
   ]
 }
