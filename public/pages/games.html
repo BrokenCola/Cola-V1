@@ -585,12 +585,14 @@
                 <option value="truffled">🍬 Truffled</option>
                 <option value="ugs">⚡ UGS</option>
                 <option value="ngg">🚀 NowGG</option>
+                <option value="cloud">☁️ Cloud Gaming</option>
             </select>
             <div class="pills">
                 <button class="pill active" onclick="setPill('all', this)"><i class="fas fa-grid-2"></i> All</button>
                 <button class="pill" onclick="setPill('featured', this)"><i class="fas fa-fire"></i> Featured</button>
                 <button class="pill" onclick="setPill('favorites', this)"><i class="fas fa-star"></i> Favorites</button>
                 <button class="pill" onclick="setPill('recent', this)"><i class="fas fa-clock"></i> Recent</button>
+                <button class="pill" onclick="setPill('cloud', this)"><i class="fas fa-cloud"></i> Cloud</button>
             </div>
         </div>
 
@@ -607,7 +609,9 @@
     </div>
 
     <!-- ─── SCRIPTS ─────────────────────────────────────── -->
-    <script>
+    <script type="module">
+        import { fetchGameCatalog } from '/assets/js/gameCatalog.js';
+
         const FKEY = "Cola_favorites";
         const RKEY = "Cola_recent";
         const MAX_R = 24;
@@ -630,7 +634,7 @@
         }
 
         /* ── TOGGLE FAVORITE ──────────────────────────────── */
-        function toggleFav(url, btn) {
+        window.toggleFav = function(url, btn) {
             let favs = getFavs();
             if (favs.includes(url)) {
                 favs = favs.filter(u => u !== url);
@@ -643,75 +647,63 @@
             }
             saveFavs(favs);
             if (category === "favorites") render();
-        }
+        };
 
         /* ── LOAD GAME DATA ───────────────────────────────── */
-        async function fetchProvider(key) {
-            try {
-                const r = await fetch(`/assets/json/${key}.json`);
-                if (!r.ok) return [];
-                const data = await r.json();
-                return data.filter(g => g.name && g.name !== "1" && g.url).map(g => ({
-                    name: g.name,
-                    img: g.img || "/assets/img/fav.png",
-                    url: g.url,
-                    provider: key
-                }));
-            } catch { return []; }
-        }
-
         async function loadGames() {
-            const [g1, g2, g3, g4] = await Promise.all([
-                fetchProvider("gn-math"),
-                fetchProvider("truffled"),
-                fetchProvider("ugs"),
-                fetchProvider("ngg")
-            ]);
-            allGames = [...g1, ...g2, ...g3, ...g4];
-
-            // Mark every ~7th as featured
-            allGames.forEach((g, i) => {
-                if (i % 7 === 0 || ["ovo","bowmaster","krunker","1v1","2048"].some(kw => g.name.toLowerCase().includes(kw))) {
-                    g.featured = true;
+            try {
+                allGames = await fetchGameCatalog();
+                allGames.forEach((g, i) => {
+                    if (g.featured) return;
+                    if (i % 7 === 0) g.featured = true;
+                });
+                if (allGames.length > 0) {
+                    setHero(allGames[Math.floor(Math.random() * Math.min(20, allGames.length))]);
                 }
-            });
-
-            setHero(allGames[Math.floor(Math.random() * Math.min(20, allGames.length))]);
-            render();
+                render();
+            } catch (err) {
+                console.error("Failed to load catalog", err);
+                document.getElementById("gamesGrid").innerHTML = `<div class="state-box"><i class="fas fa-exclamation-triangle"></i><div>Failed to load games catalog. Please refresh.</div></div>`;
+            }
         }
 
         /* ── HERO LOGIC ───────────────────────────────────── */
         function setHero(game) {
             if (!game) return;
             document.getElementById("heroTitle").textContent = game.name;
-            document.getElementById("heroDesc").textContent = `One of ${allGames.length}+ unblocked games, all ready to play instantly in your browser.`;
+            document.getElementById("heroDesc").textContent = `One of ${allGames.length}+ games available instantly on Cola Cloud & Local Libraries.`;
             document.getElementById("heroPlayBtn").href = `/pages/play.html?launch=${encodeURIComponent(game.url)}`;
             const img = document.getElementById("heroBgImg");
             img.src = game.img;
             img.onerror = () => { img.src = "/assets/img/fav.png"; };
         }
 
-        function shuffleHero() {
+        window.shuffleHero = function() {
             const picks = allGames.filter(g => g.featured);
-            const game = picks[Math.floor(Math.random() * picks.length)];
+            const game = picks.length ? picks[Math.floor(Math.random() * picks.length)] : allGames[Math.floor(Math.random() * allGames.length)];
             setHero(game);
-        }
+        };
 
         /* ── RENDER GRID ──────────────────────────────────── */
         function render() {
             const grid = document.getElementById("gamesGrid");
             let filtered = [...allGames];
 
-            if (provider !== "all") filtered = filtered.filter(g => g.provider === provider);
+            if (provider !== "all") {
+                filtered = filtered.filter(g => g.provider === provider);
+            }
 
-            if (category === "featured") filtered = filtered.filter(g => g.featured);
-            else if (category === "favorites") {
+            if (category === "featured") {
+                filtered = filtered.filter(g => g.featured);
+            } else if (category === "favorites") {
                 const favs = getFavs();
                 filtered = filtered.filter(g => favs.includes(g.url));
             } else if (category === "recent") {
                 const rec = getRecent();
                 filtered = filtered.filter(g => rec.includes(g.url));
                 filtered.sort((a,b) => rec.indexOf(a.url) - rec.indexOf(b.url));
+            } else if (category === "cloud") {
+                filtered = filtered.filter(g => g.provider === "cloud");
             }
 
             if (q.trim()) {
@@ -754,21 +746,21 @@
         }
 
         /* ── EVENT HANDLERS ───────────────────────────────── */
-        function onSearch() { q = document.getElementById("searchInput").value; render(); }
-        function onProviderChange() { provider = document.getElementById("providerSel").value; render(); }
-        function setPill(cat, el) {
+        window.onSearch = function() { q = document.getElementById("searchInput").value; render(); };
+        window.onProviderChange = function() { provider = document.getElementById("providerSel").value; render(); };
+        window.setPill = function(cat, el) {
             category = cat;
             document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
             el.classList.add("active");
-            const labels = { all:"All Games", featured:"Featured", favorites:"My Favorites", recent:"Recently Played" };
+            const labels = { all:"All Games", featured:"Featured", favorites:"My Favorites", recent:"Recently Played", cloud:"Cloud Gaming" };
             document.getElementById("sectionLabel").textContent = labels[cat] || "All Games";
             render();
-        }
+        };
 
         /* ── ESCAPE HELPERS ───────────────────────────────── */
         const escH = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-        const esc = s => String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;");
         const escA = s => String(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;");
+        const esc = s => String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 
         /* ── INIT ─────────────────────────────────────────── */
         document.getElementById("csslink").href = `/assets/css/colors/${localStorage.getItem("Cola_theme")??"default"}.css`;

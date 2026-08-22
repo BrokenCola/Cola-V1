@@ -428,15 +428,20 @@
         function resolveUrl(raw) {
             const dec = decodeURIComponent(raw).trim();
 
-            // Lumin protocol
+            // Cloud gaming protocol
+            if (dec.startsWith("cloud:")) {
+                const key = dec.slice(6);
+                return `https://raw.githack.com/x8rr/stratus-api/main/api?game_key=${key}`;
+            }
+
+            // Lumin protocol — proxy to Render backend /stores/
             if (dec.startsWith("lumin:")) {
                 const id = dec.slice(6);
-                return `https://main.monochrome-507.pages.dev/stores/lumin/${id}`;
+                return `/stores/lumin/${id}`;
             }
 
             // Relative /stores/ path — served via Vercel rewrite from Render backend
             if (dec.startsWith("/stores/") || dec.startsWith("stores/")) {
-                // Just return the relative path — Vercel proxies /stores/* → Render
                 return dec.startsWith("/") ? dec : "/" + dec;
             }
 
